@@ -1,0 +1,24 @@
+@if (mode() === 'card') {
+  <div class="cards-grid-container">
+    @for (docu of documentales(); track docu.id) {
+      <app-documental-card [documental]="docu"></app-documental-card>
+    }
+  </div>
+}
+
+@if (mode() === 'list') {
+  <div class="container">
+    <mat-nav-list>
+      @for (docu of documentales(); track docu) {
+        <a mat-list-item [routerLink]="['/documental', docu.slug_url]">
+          <img [ngSrc]="docu.url_imagen + '_80x80'" alt="" class="avatar-list" height="80" loading="lazy" matListItemAvatar width="80" />
+          <h5 matListItemTitle >{{ docu.nombre }}</h5>
+          <span matListItemLine style="color: #ccc">
+            {{ docu.duracion }}
+          </span>
+          <mat-icon matListItemIcon color="primary"> play_circle_outline</mat-icon>
+        </a>
+      }
+    </mat-nav-list>
+  </div>
+}

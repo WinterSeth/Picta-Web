@@ -1,0 +1,18 @@
+<div class="reason-dialog-wrap">
+  <div class="reason-dialog-image">
+    <button
+      mat-icon-button
+      class="reason-dialog-close"
+      mat-dialog-close
+      aria-label="Cerrar">
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="reason-dialog-content">
+      <div class="reason-icon-wrap">
+        <fa-icon [icon]="reason.icon" [ngClass]="reason.iconColor" aria-hidden="true"></fa-icon>
+      </div>
+      <h3 class="reason-dialog-title">{{ reason.title }}</h3>
+      <p class="reason-dialog-text">{{ reason.dialog }}</p>
+    </div>
+  </div>
+</div>

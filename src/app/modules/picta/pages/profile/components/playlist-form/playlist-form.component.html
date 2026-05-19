@@ -1,0 +1,34 @@
+<div class="playlist-form">
+  <button mat-icon-button mat-dialog-close aria-label="Cerrar diálogo" class="playlist-form-close">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <div class="playlist-form-header">
+    <p class="playlist-form-kicker">Picta</p>
+    <h2 mat-dialog-title class="playlist-form-title">Adicionar lista</h2>
+    <p class="playlist-form-desc">
+      Crea una nueva lista personalizada para guardar tus publicaciones.
+    </p>
+  </div>
+
+  <mat-dialog-content class="playlist-form-content">
+    <form [formGroup]="playlistForm" class="playlist-form-field">
+      <mat-form-field appearance="fill" floatLabel="auto" class="w-full">
+        <mat-label>Nombre</mat-label>
+        <input formControlName="nombre" matInput required type="text" maxlength="120" autocomplete="off" />
+        @if (playlistForm.get('nombre')?.hasError('required') && (playlistForm.get('nombre')?.dirty || playlistForm.get('nombre')?.touched)) {
+          <mat-error>El nombre es obligatorio.</mat-error>
+        }
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="playlist-form-actions">
+    <button mat-stroked-button mat-dialog-close class="picta-ad-secondary-btn">
+      Cancelar
+    </button>
+    <button mat-raised-button [disabled]="playlistForm.invalid" [mat-dialog-close]="playlistForm.value" class="picta-ad-primary-btn">
+      Guardar
+    </button>
+  </mat-dialog-actions>
+</div>

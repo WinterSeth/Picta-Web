@@ -1,0 +1,170 @@
+// ===============================================
+// Picta Profile Shared Styles
+// Unified header and loading for all profile components
+// ===============================================
+
+// Design tokens (same as global)
+:root {
+  --picta-font-primary: 'Bebas Neue', sans-serif;
+  --picta-font-secondary: 'Abel', sans-serif;
+  --picta-font-body: 'Roboto', sans-serif;
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+}
+
+// ===============================================
+// Unified Header Style
+// ===============================================
+.profile-header {
+  margin-bottom: 20px;
+  padding: 1rem;
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+.profile-header-title {
+  font-family: var(--picta-font-primary);
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin: 0;
+  color: #f4f7fb;
+}
+
+.profile-header-subtitle {
+  font-family: var(--picta-font-body);
+  font-size: 0.95rem;
+  color: var(--picta-text-muted);
+  margin: 6px 0 0;
+}
+
+// ===============================================
+// Unified Loading Style
+// ===============================================
+.profile-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 16px;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 40px;
+}
+
+.profile-loading-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--picta-yellow);
+}
+
+.profile-loading-text {
+  font-family: var(--picta-font-body);
+  font-size: 0.95rem;
+  color: var(--picta-text-muted);
+}
+
+// Full-screen loading overlay
+.profile-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(5, 8, 20, 0.64);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.profile-loading-overlay mat-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--picta-yellow);
+}
+
+// ===============================================
+// Unified Card Style
+// ===============================================
+.profile-card {
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+// ===============================================
+// Skeleton Loading (pulse animation)
+// ===============================================
+.profile-skeleton {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+// ===============================================
+// Responsive adjustments
+// ===============================================
+@media (max-width: 767px) {
+  .profile-header {
+    padding: 14px;
+  }
+  
+  .profile-header-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .profile-loading {
+    padding: 20px;
+    min-height: 150px;
+  }
+}

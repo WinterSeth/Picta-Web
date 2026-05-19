@@ -1,0 +1,350 @@
+form {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -ms-flex-align: center;
+  align-items: center;
+
+  h5.post-video-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  & .search-icon {
+    display: none !important;
+  }
+  .search-spinner {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+
+}
+
+input[type=search] {
+  border-radius: 999px;
+  padding: 0 16px;
+  height: 40px;
+  background: linear-gradient(180deg, rgba(26, 35, 78, 0.78), rgba(17, 24, 56, 0.92));
+  color: #eef2ff;
+  border: none;
+  width: 220px;
+  max-width: 88vw;
+  transition: width 200ms ease-in-out, box-shadow 160ms ease-in-out;
+  appearance: none;
+  -webkit-appearance: none;
+
+  &::placeholder {
+    color: rgba(200, 212, 255, 0.62);
+    font-family: 'Abel', sans-serif;
+    letter-spacing: 0.02em;
+  }
+
+  &:focus {
+    border: none;
+    box-shadow: none;
+    width: 220px;
+    outline: none;
+  }
+
+}
+
+input[type=search]::-webkit-search-decoration,
+input[type=search]::-webkit-search-cancel-button,
+input[type=search]::-webkit-search-results-button,
+input[type=search]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  input[type=search] {
+    width: 300px;
+    min-width: 300px;
+    max-width: 360px;
+
+    &:focus {
+      width: 300px;
+    }
+  }
+}
+
+/* When the search form is placed inside the header mobile panel, limit and animate width */
+:host-context(.mobile-search-panel) input[type=search] {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  transition: width 140ms ease-in-out !important;
+}
+
+:host-context(.mobile-search-panel.open) input[type=search] {
+  width: 100% !important;
+}
+
+:host-context(.mobile-search-panel.open) input[type=search]:focus {
+  width: 100% !important;
+}
+
+/* Fully hide and make non-focusable when parent panel is closed */
+:host-context(.mobile-search-panel:not(.open)) input[type=search] {
+  width: 0 !important;
+  max-width: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* hide the internal search icon inside the form on mobile (we use the header icon) */
+:host-context(.mobile-search-panel) .search-icon {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Extra safety: hide internal icon on small viewports regardless of host-context */
+@media (max-width: 1023px) {
+  .search-icon {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  :host-context(.mobile-search-panel) form {
+    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+}
+
+/* Impeccable-styled autocomplete panel */
+/* Results panel (custom) */
+.impeccable-search-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  background: rgba(18,18,18,0.98);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+  z-index: 1200;
+}
+
+.impeccable-search-panel .panel-inner {
+  padding: 6px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.impeccable-search-panel .panel-spinner {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 6px 0;
+}
+
+/* list items */
+::ng-deep .impeccable-search-panel mat-nav-list { padding: 0; }
+
+::ng-deep .impeccable-search-panel mat-list-item.search-list-item {
+  display: flex;
+  align-items: center;
+  flex-direction: row; /* ensure image is on the left */
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  min-height: 88px;
+  cursor: pointer;
+}
+
+/* Strong overrides to ensure Material list items render horizontally */
+::ng-deep .impeccable-search-panel .mat-list-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+::ng-deep .impeccable-search-panel .mat-list-avatar {
+  order: 0 !important;
+  margin-right: 12px !important;
+  flex: 0 0 auto !important;
+}
+
+::ng-deep .impeccable-search-panel .mat-list-item .mat-list-item-content {
+  display: flex !important;
+  align-items: center !important;
+  flex-direction: row !important;
+}
+
+::ng-deep .impeccable-search-panel .mat-list-item .mat-line {
+  display: block;
+}
+
+::ng-deep .impeccable-search-panel mat-list-item.search-list-item:hover {
+  background: linear-gradient(90deg, rgba(232,70,46,0.04), rgba(232,70,46,0.02));
+}
+
+::ng-deep .impeccable-autocomplete-panel .mat-option.search-option:hover {
+  background: linear-gradient(90deg, rgba(232,70,46,0.06), rgba(232,70,46,0.02));
+}
+
+::ng-deep .impeccable-autocomplete-panel .mat-option.search-option .option-thumb{
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* publication: 16:9 thumb */
+/* thumb container for list */
+.impeccable-search-panel .thumb { flex: 0 0 auto; display:flex; align-items:center; justify-content:center; order: 0; margin-right: 12px; }
+
+.impeccable-search-panel .thumb-img { display:block; object-fit:cover; }
+
+.impeccable-search-panel .thumb-img.publication { width: 96px; height: 54px; border-radius: 6px; }
+.impeccable-search-panel .thumb-img.channel { width: 48px; height: 48px; border-radius: 50%; }
+.impeccable-search-panel .thumb-img.default { width: 48px; height: 48px; border-radius: 6px; }
+
+/* Material-specific avatar and line tuning */
+.impeccable-search-panel img[matListAvatar] { object-fit: cover; display: block; }
+.impeccable-search-panel img.thumb-img.publication[matListAvatar] { width: 96px; height: 54px; border-radius: 6px; }
+.impeccable-search-panel img.thumb-img.channel[matListAvatar] { width: 48px; height: 48px; border-radius: 50%; }
+.impeccable-search-panel img.thumb-img.default[matListAvatar] { width: 48px; height: 48px; border-radius: 6px; }
+
+/* matLine styling: primary (first) line heavier, secondary muted */
+.impeccable-search-panel .mat-list-item .mat-line:first-child {
+  font-weight: 600;
+  font-size: 1rem;
+  color: rgba(255,255,255,0.96);
+  /* two-line clamp */
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.impeccable-search-panel .mat-list-item .mat-line:nth-child(2) {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.64);
+}
+
+/* ensure avatar block spacing inside Material structure */
+::ng-deep .impeccable-search-panel .mat-list-avatar {
+  margin-right: 12px;
+}
+
+::ng-deep .impeccable-autocomplete-panel .option-thumb--publication img {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* channel: circular avatar (smaller) */
+/* (old autocomplete rules removed) */
+
+/* default small thumb */
+/* spacing for text */
+.impeccable-search-panel .item-title { font-weight:600; color: rgba(255,255,255,0.96); font-size:1rem; display:block; max-height: 3rem; overflow: hidden; text-overflow: ellipsis; }
+
+/* ensure img respects container rounding */
+::ng-deep .impeccable-autocomplete-panel .option-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+::ng-deep .impeccable-autocomplete-panel .mat-option .option-body {
+  display:block;
+  flex: 1 1 auto;
+  margin-left: 8px;
+}
+
+::ng-deep .impeccable-autocomplete-panel .mat-option .option-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::ng-deep .impeccable-autocomplete-panel .mat-option .option-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.96);
+}
+
+::ng-deep .impeccable-autocomplete-panel .mat-option .option-meta {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.56);
+}
+
+/* Ensure avatar and content align horizontally within our search-list-item */
+::ng-deep .impeccable-search-panel mat-list-item.search-list-item {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+}
+
+::ng-deep .impeccable-search-panel mat-list-item.search-list-item img[matListAvatar],
+::ng-deep .impeccable-search-panel mat-list-item.search-list-item .mat-list-avatar {
+  flex: 0 0 auto !important;
+  margin-right: 12px !important;
+}
+
+/* Mobile: make channel avatar smaller to show more channel info on the right */
+@media (max-width: 1023px) {
+  .impeccable-search-panel .thumb-img.channel,
+  .impeccable-search-panel img.thumb-img.channel[matListAvatar],
+  ::ng-deep .impeccable-search-panel .mat-list-avatar img.channel {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+  }
+
+  ::ng-deep .impeccable-search-panel mat-list-item.search-list-item {
+    min-height: 64px !important;
+    padding: 10px 12px !important;
+  }
+
+  ::ng-deep .impeccable-search-panel .mat-list-item .mat-list-item-content {
+    margin-left: 6px !important;
+  }
+}
+
+::ng-deep .impeccable-search-panel mat-list-item.search-list-item .item-text,
+::ng-deep .impeccable-search-panel mat-list-item.search-list-item .mat-list-item-content {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+/* Strong overrides: target Material internal avatar wrapper and images */
+::ng-deep .impeccable-search-panel .mat-list-avatar img,
+::ng-deep .impeccable-search-panel mat-list-item.search-list-item > img[matListAvatar] {
+  width: 96px !important;
+  height: 54px !important;
+  border-radius: 6px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* Channel/default avatars slightly larger square */
+::ng-deep .impeccable-search-panel .mat-list-avatar img.channel,
+::ng-deep .impeccable-search-panel img.thumb-img.channel[matListAvatar] {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+}
+
+/* Ensure content area stays to the right of avatar */
+::ng-deep .impeccable-search-panel .mat-list-item .mat-list-item-content {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+}

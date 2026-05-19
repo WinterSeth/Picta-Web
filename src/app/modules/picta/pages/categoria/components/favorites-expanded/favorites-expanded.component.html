@@ -1,0 +1,46 @@
+<section class="favorites-expanded" aria-live="polite">
+  <header class="favorites-expanded-header">
+    <div>
+      <h1 class="favorites-expanded-title">{{ pageTitle() }}</h1>
+      <p class="favorites-expanded-subtitle">Tus favoritos guardados se cargan por bloques de 20 con desplazamiento infinito.</p>
+    </div>
+
+    <a mat-stroked-button [routerLink]="backLink()" class="favorites-expanded-back" [attr.aria-label]="backLabel()">
+      <mat-icon>arrow_back</mat-icon>
+      {{ backLabel() }}
+    </a>
+  </header>
+
+  @if (loading()) {
+    <div class="favorites-expanded-skeleton" aria-hidden="true">
+      @for (item of [1,2,3,4,5,6,7,8]; track item) {
+        <div class="favorites-expanded-skeleton-card"></div>
+      }
+    </div>
+  } @else if (!favorites().length) {
+    <div class="favorites-expanded-empty">
+      <mat-icon>favorite_border</mat-icon>
+      <p>No tienes favoritos guardados todavía.</p>
+    </div>
+  } @else {
+    <div class="favorites-expanded-grid">
+      @if (isMovieView()) {
+        @for (movie of favorites(); track trackMovie($index, movie)) {
+          <app-movie-card [movie]="$any(movie)"></app-movie-card>
+        }
+      } @else {
+        @for (serie of favorites(); track trackSerie($index, serie)) {
+          <app-serie-card [serie]="$any(serie)"></app-serie-card>
+        }
+      }
+    </div>
+
+    @if (loadingMore()) {
+      <app-categoria-loading-state
+        [tone]="isMovieView() ? 'movie' : 'serie'"
+        [label]="isMovieView() ? 'Cargando más películas favoritas...' : (isAnimesView() ? 'Cargando más animes favoritos...' : (isDoramasView() ? 'Cargando más doramas favoritos...' : 'Cargando más series favoritas...'))"
+        [ariaLabel]="isMovieView() ? 'Cargando más películas favoritas' : (isAnimesView() ? 'Cargando más animes favoritos' : (isDoramasView() ? 'Cargando más doramas favoritos' : 'Cargando más series favorito'))"
+      />
+    }
+  }
+</section>

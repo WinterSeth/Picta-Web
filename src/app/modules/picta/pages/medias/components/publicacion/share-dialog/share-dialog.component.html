@@ -1,0 +1,38 @@
+<section class="picta-modal">
+  <button (click)="dialogRef.close()" aria-label="Cerrar diálogo" class="flex! justify-center! picta-modal-close" mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <header class="picta-modal-header">
+    <p class="picta-modal-kicker">Picta</p>
+    <h2 mat-dialog-title class="picta-modal-title">Compartir publicación</h2>
+    <p class="picta-modal-subtitle">Comparte esta publicación en el canal que prefieras.</p>
+  </header>
+
+  <mat-dialog-content class="picta-modal-content">
+    <div class="picta-share-grid">
+      <a (click)="dialogRef.close()" [href]="facebookHref" target="_blank" class="picta-share-item">
+        <img alt="Facebook Logo" class="picta-share-icon" title="Compartir en Facebook" src="img/Facebook.svg">
+        <div>
+          <span class="picta-share-name">Facebook</span>
+          <span class="picta-share-detail">Publicar enlace</span>
+        </div>
+      </a>
+      <a (click)="dialogRef.close()" [href]="twitterHref" target="_blank" class="picta-share-item">
+        <img alt="Twitter Logo" class="picta-share-icon" title="Compartir en X" src="img/Twitter.svg">
+        <div>
+          <span class="picta-share-name">X / Twitter</span>
+          <span class="picta-share-detail">Publicar post</span>
+        </div>
+      </a>
+      <a (click)="dialogRef.close()" [href]="telegramHref" target="_blank" class="picta-share-item">
+        <img alt="Telegram Logo" class="picta-share-icon" title="Compartir en Telegram" src="img/telegram-icon.svg">
+        <div>
+          <span class="picta-share-name">Telegram</span>
+          <span class="picta-share-detail">Enviar mensaje</span>
+        </div>
+      </a>
+    </div>
+  </mat-dialog-content>
+</section>
+

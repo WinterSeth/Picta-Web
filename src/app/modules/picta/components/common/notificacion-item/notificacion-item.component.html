@@ -1,0 +1,114 @@
+<div (click)="goTo()" [matTooltip]="tooltip" class="wrapper flex flex-row flex-md-row justify-between items-center" [class.fixed-width]="fixedWidth()">
+  @if (notification().tipo === 'notificacion_publicacion') {
+    <img [ngSrc]="notification()?.publicacion?.canal.url_avatar + '_48x48'" height="48" width="48" alt="" class="channel-noti !rounded-full" />
+    <div class="info ml-3">
+      <div class="publication-title text-white">
+        <div class="canal-title">
+          <span>
+            {{ notification().publicacion.canal.nombre }} ha subido {{ notification().publicacion?.nombre }}
+          </span>
+        </div>
+      </div>
+      <!-- <div class="time"> {{ notification.identificador === 'publicacion_nueva' ? 'Video publicado' : 'Publicación lista' }} hace {{ notification?.tiempo_creacion }}</div> -->
+      <div class="time text-gray-400"> hace {{ notification()?.tiempo_creacion }}</div>
+    </div>
+    <div class="cta">
+      <button mat-icon-button color="accent" >
+        <mat-icon>{{ notification().identificador === 'publicacion_nueva' ? 'video_library' : 'dashboard' }}</mat-icon>
+      </button>
+    </div>
+    <img [ngSrc]="notification()?.publicacion?.url_imagen + '_86x48'" width="86" height="48" alt="" class="preview-image !rounded-lg" />
+  }
+
+  @if (notification().tipo === 'notificacion_comentario') {
+    <!--
+    <img [src]="notification?.comentario?.url_imagen+'_48x48'" alt="" class="logo-image">
+    -->
+    @if (!this.notification().comentario.usuario.avatar) {
+      <span class="avatar-canal mr-3">{{ this.notification().comentario.usuario.username | capitalLead }}</span>
+    }
+    @if (this.notification().comentario.usuario.avatar) {
+      <span class="avatar-canal mr-3">
+        <img [ngSrc]="this.notification().comentario.usuario.avatar + '_48x48'" width="48" height="48" alt="" />
+      </span>
+    }
+    <div class="info">
+      <span class="mb-0" style="font-size: 16px">
+        <strong>{{ notification().comentario.usuario.username }} </strong> ha respondido tu comentario en la publicación
+        <strong>{{ notification().comentario.publicacion.nombre }}</strong>
+      </span>
+      <span class="time">Hace {{ notification()?.tiempo_creacion }}</span>
+    </div>
+    <div class="cta">
+      <button mat-icon-button>
+        <mat-icon> comment </mat-icon>
+      </button>
+    </div>
+  }
+
+  @if (notification().tipo === 'notificacion_solicitud' && notification().solicitud.tipo === 'seller') {
+    <span class="avatar-canal bg-primary mr-3">{{ this.notification().solicitud.data.name | capitalLead }}</span>
+    <div class="info">
+      <span class="mb-0" style="font-size: 16px"><strong>{{ notification().solicitud.data.name }} </strong> ha solicitado ser un publicador</span>
+      <span class="time">{{ notification()?.solicitud?.fecha | date: 'dd/MM/yyyy' }}</span>
+    </div>
+    <div class="cta">
+      <button mat-icon-button>
+        <mat-icon> attach_money </mat-icon>
+      </button>
+    </div>
+  }
+
+  @if (notification().tipo === 'notificacion_solicitud' && notification()?.solicitud?.tipo === 'creacion_canal') {
+    @if (notification()?.solicitud?.estado === 'pendiente') {
+      <span class="avatar-canal bg-primary mr-3">{{ this.notification().solicitud.data.username | capitalLead }}</span>
+      <div class="info">
+        <span class="mb-0" style="font-size: 16px">
+          <strong>{{ notification().solicitud.data.username }} </strong> ha solicitado la creación del canal <strong>{{ notification().solicitud.data.nombre }} </strong>
+        </span>
+        <span class="time">{{ notification()?.solicitud?.fecha | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="cta">
+        <button mat-icon-button>
+          <mat-icon> video_library </mat-icon>
+        </button>
+      </div>
+    }
+  }
+
+  @if (notification().tipo === 'notificacion_api') {
+    <div class="mr-4">
+      <mat-icon> feedback </mat-icon>
+    </div>
+    <div class="info">
+      <span class="mb-0" style="font-size: 16px"><strong>{{ notification().api.msg }} </strong></span>
+      <span class="time">{{ notification()?.fecha_creacion | date: 'dd/MM/yyyy' }}</span>
+    </div>
+    <div class="cta">
+      <button mat-icon-button>
+        <mat-icon> info </mat-icon>
+      </button>
+    </div>
+  }
+
+  @if (notification().tipo === 'notificacion_issue_report') {
+    <div class="mr-4">
+      <mat-icon> bug_report </mat-icon>
+    </div>
+    <div class="info">
+      <span class="mb-0" style="font-size: 16px"><strong>{{ notification().data.emisor }} </strong> ha reportado un issue</span>
+      <span class="time">{{ notification()?.fecha_creacion | date: 'dd/MM/yyyy' }}</span>
+    </div>
+    <div class="cta">
+      <button mat-icon-button>
+        <mat-icon> info </mat-icon>
+      </button>
+    </div>
+  }
+
+  @if (!notification().vista) {
+    <div class="new-indicator flex justify-center items-center">
+      {{ notification().identificador === 'publicacion_convertida' ? 'Convertido' : 'Nuevo' }}
+    </div>
+  }
+</div>

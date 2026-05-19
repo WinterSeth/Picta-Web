@@ -1,0 +1,91 @@
+:host {
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+  --picta-bg-card: rgba(16, 25, 53, 0.96);
+  --picta-bg-deep: rgba(10, 17, 38, 0.96);
+
+  padding: 32px 28px;
+  min-width: 340px;
+  max-width: 440px;
+  border-radius: 20px;
+  background:
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      var(--picta-bg-deep) 0%,
+      var(--picta-bg-card) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 80px rgba(243, 230, 40, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+    .mat-mdc-dialog-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #f4f7fb;
+    }
+
+    .mat-mdc-dialog-content p {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.9rem;
+      color: var(--picta-text-muted);
+      line-height: 1.5;
+    }
+
+    .mat-mdc-form-field {
+      --mdc-filled-text-field-container-color: rgba(255, 255, 255, 0.06);
+      --mdc-filled-text-field-focus-active-indicator-color: var(--picta-yellow);
+      --mdc-filled-text-field-focus-active-indicator-height: 2px;
+      --mdc-filled-text-field-label-text-color: var(--picta-text-muted);
+      --mdc-filled-text-field-focus-label-text-color: var(--picta-yellow);
+      --mdc-filled-text-field-input-text-color: #f4f7fb;
+      --mdc-filled-text-field-caret-color: var(--picta-yellow);
+    }
+
+    .mat-mdc-dialog-actions .mat-mdc-button {
+      font-family: 'Abel', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      color: var(--picta-text-muted);
+      border-radius: 999px;
+      transition: color 160ms ease, background 160ms ease;
+
+      &:hover {
+        color: #f4f7fb;
+        background: rgba(255, 255, 255, 0.06);
+      }
+
+      &.mat-primary {
+        color: var(--picta-yellow);
+      }
+    }
+  }
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.875rem;
+  color: var(--picta-accent);
+  background: rgba(232, 70, 46, 0.12);
+  padding: 8px 12px;
+  border-radius: 8px;
+}

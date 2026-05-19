@@ -1,0 +1,101 @@
+.wrapper {
+  padding: 1rem;
+  position: relative;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(white, .1);
+  }
+
+  & .new-indicator {
+    position: absolute;
+    top: 2px;
+    right: 5px;
+    min-width: 40px;
+    padding: 3px;
+    background-color: yellow;
+    //color: black;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 5px;
+    line-height: 14px;
+    font-style: italic;
+  }
+
+  & .preview-image {
+    width: 86px;
+    height: 48px;
+  }
+
+  .logo-image {
+    width: 48px;
+    height: 48px;
+  }
+
+  & .info {
+    padding: 5px;
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: left;
+
+    & .publication-title {
+      font-size: 16px;
+      font-weight: bold;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    & .canal-title {
+      font-size: 14px;
+    }
+
+    & .time {
+      font-size: 12px;
+      opacity: .7;
+    }
+  }
+
+  &.fixed-width .info {
+    width: 240px;
+    min-width: 240px;
+    max-width: 240px;
+  }
+}
+
+.more-notificacions_panel {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.more-notificacions {
+  flex: 1;
+  text-align: center;
+}
+
+.avatar-canal {
+  display: grid;
+  place-content: center;
+  border: 1px solid;
+  border-radius: 100%;
+  min-width: 48px;
+  height: 48px;
+  text-align: center;
+  font-size: 1.5rem;
+
+  & img {
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    border: 1px solid;
+  }
+}
+
+.channel-noti {
+  border-radius: 100%;
+  width: 48px;
+  height: 48px;
+}

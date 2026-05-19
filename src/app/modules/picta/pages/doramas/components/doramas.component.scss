@@ -1,0 +1,317 @@
+// Header de categoría centrado
+.categoria-header {
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 24px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 100%
+  );
+}
+
+.categoria-header__content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.categoria-header__title {
+  font-family: var(--picta-font-primary);
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #fff;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.categoria-header__description {
+  font-family: var(--picta-font-secondary);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .categoria-header {
+    padding: 24px 16px;
+  }
+
+  .categoria-header__title {
+    font-size: 2rem;
+  }
+
+  .categoria-header__description {
+    font-size: 0.875rem;
+  }
+}
+
+// Carrusel de doramas actualizados
+.categoria-carousel-section {
+  margin-bottom: 32px;
+}
+
+.rich-shelf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 16px;
+}
+
+.rich-shelf-title {
+  overflow-wrap: anywhere;
+  color: #f3e628;
+  position: relative;
+  font-family: var(--picta-font-primary);
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.rich-shelf-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 100%;
+  height: 2px;
+  background: color-mix(in srgb, #f3e628 65%, transparent);
+  transform: scaleX(0.25);
+  transform-origin: left center;
+  opacity: 0;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.rich-shelf-header:hover .rich-shelf-title::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+// Skeleton del carrusel
+.categoria-carousel-skeleton {
+  display: flex;
+  gap: 16px;
+  padding: 0 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-bottom: 32px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.categoria-carousel-skeleton-card {
+  flex: 0 0 200px;
+  height: 300px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Botón Ver más
+.categoria-show-all-btn {
+  min-height: 42px;
+  border-radius: 999px;
+  border-color: color-mix(in srgb, #f3e628 36%, transparent) !important;
+  color: rgba(249, 250, 251, 0.94) !important;
+  background: color-mix(in srgb, #111827 88%, transparent);
+  font-family: inherit;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.categoria-show-all-btn:hover {
+  border-color: #f3e628 !important;
+}
+
+.categoria-show-all-btn mat-icon {
+  margin-right: 8px;
+  color: #f3e628;
+}
+
+// Estado vacío de favoritos (igual que animes.component.scss)
+.categoria-favorites-empty {
+  margin: 4px auto 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px dashed color-mix(in srgb, #f3e628 42%, transparent);
+  background: color-mix(in srgb, #111827 86%, transparent);
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+}
+
+.categoria-favorites-empty-icon {
+  color: #f3e628;
+}
+
+.categoria-favorites-empty-title {
+  margin: 0;
+  color: rgba(248, 250, 252, 0.96);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+  letter-spacing: 0.02em;
+}
+
+.categoria-favorites-empty-text {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.9);
+  font-family: 'Abel', sans-serif;
+  font-size: 0.95rem;
+}
+
+// Skeleton de resultados de favoritos
+.categoria-results-skeleton {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 8px 0 10px;
+}
+
+@media only screen and (max-width: 1199px) {
+  .categoria-results-skeleton {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media only screen and (max-width: 899px) {
+  .categoria-results-skeleton {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  .categoria-results-skeleton {
+    grid-template-columns: 1fr;
+  }
+}
+
+.categoria-skeleton-card,
+.categoria-skeleton-thumb,
+.categoria-skeleton-line {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, #f3e628 14%, rgba(255, 255, 255, 0.06));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02)
+  );
+}
+
+.categoria-skeleton-card {
+  border-radius: 14px;
+  padding: 10px;
+  background:
+    radial-gradient(
+      circle at 90% 8%,
+      color-mix(in srgb, #f3e628 14%, transparent),
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.04),
+      rgba(255, 255, 255, 0.015)
+    );
+}
+
+.categoria-skeleton-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.categoria-skeleton-body {
+  display: grid;
+  gap: 8px;
+}
+
+.categoria-skeleton-line {
+  border-radius: 999px;
+  height: 0.72rem;
+}
+
+.categoria-skeleton-line-title {
+  height: 1rem;
+  width: 88%;
+}
+
+.categoria-skeleton-line-meta {
+  width: 72%;
+}
+
+.categoria-skeleton-line-meta.short {
+  width: 48%;
+}
+
+.categoria-skeleton-card::after,
+.categoria-skeleton-thumb::after,
+.categoria-skeleton-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: dorama-skeleton-shimmer 1.45s ease-in-out infinite;
+}
+
+@keyframes dorama-skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .categoria-carousel-section .categoria-show-all-btn {
+    opacity: 0;
+    transform: translateY(-2px);
+    pointer-events: none;
+  }
+
+  .categoria-carousel-section:hover .categoria-show-all-btn,
+  .categoria-carousel-section:focus-within .categoria-show-all-btn {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .categoria-carousel-section .categoria-show-all-btn {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}

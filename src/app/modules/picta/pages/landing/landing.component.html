@@ -1,0 +1,10 @@
+<main class="landing-page" role="main" aria-label="Main content">
+  <app-hero-section></app-hero-section>
+  <app-trending-section></app-trending-section>
+  <app-reasons-to-join-section></app-reasons-to-join-section>
+  @defer (on viewport) {
+    <app-faq-section></app-faq-section>
+  } @placeholder {
+    <div class="faq-loading-placeholder">Cargando FAQs...</div>
+  }
+</main>

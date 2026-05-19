@@ -1,0 +1,321 @@
+:host {
+  display: block;
+  color: #f4f7fb;
+
+  // ── Picta design tokens ────────────────────────────────────────────────
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+
+  // ── Material card overrides ────────────────────────────────────────────
+  --mat-card-elevated-container-color: rgba(15, 22, 48, 0.92);
+  --mat-card-title-text-color: #f4f7fb;
+  --mat-card-subtitle-text-color: rgba(244, 247, 251, 0.72);
+
+  // ── Material form-field fill variant overrides ──────────────────────────────
+  --mat-form-field-filled-container-color: rgba(255, 255, 255, 0.06);
+  --mat-form-field-filled-hover-container-color: rgba(255, 255, 255, 0.09);
+  --mat-form-field-filled-label-text-color: rgba(244, 247, 251, 0.60);
+  --mat-form-field-filled-hover-label-text-color: rgba(244, 247, 251, 0.80);
+  --mat-form-field-filled-focus-label-text-color: var(--picta-yellow);
+  --mat-form-field-filled-input-text-color: #f4f7fb;
+  --mat-form-field-filled-active-indicator-color: rgba(255, 255, 255, 0.28);
+  --mat-form-field-filled-hover-active-indicator-color: rgba(255, 255, 255, 0.46);
+  --mat-form-field-filled-focus-active-indicator-color: var(--picta-yellow);
+  --mat-form-field-filled-caret-color: var(--picta-yellow);
+  --mat-form-field-filled-disabled-container-color: rgba(255, 255, 255, 0.03);
+
+  // ── Material select overrides ───────────────────────────────────────
+  --mat-select-trigger-text-color: #f4f7fb;
+  --mat-select-enabled-arrow-color: rgba(244, 247, 251, 0.60);
+  --mat-select-focused-arrow-color: var(--picta-yellow);
+  --mat-select-panel-background-color: rgba(13, 20, 46, 0.98);
+  --mat-option-label-text-color: #f4f7fb;
+  --mat-option-hover-state-layer-color: var(--picta-yellow-softer);
+  --mat-option-selected-state-layer-color: var(--picta-yellow-soft);
+  --mat-option-selected-state-label-text-color: var(--picta-yellow);
+
+  // ── Material chips overrides ─────────────────────────────────────────
+  --mat-chip-elevated-container-color: rgba(255, 255, 255, 0.08);
+  --mat-chip-label-text-color: rgba(244, 247, 251, 0.85);
+}
+
+// ── Deep overrides (must be at :host level, NOT nested inside a class) ──
+:host ::ng-deep {
+  // ── Cards: Picta gradient + blur ──────────────────────────────────────
+  .mat-mdc-card {
+    background: 
+      radial-gradient(
+        circle at top right,
+        var(--picta-yellow-softer),
+        transparent 34%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(10, 17, 38, 0.98) 0%,
+        rgba(16, 25, 53, 0.98) 100%
+      ) !important;
+    border: 1px solid var(--picta-yellow-border) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.32) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .mat-mdc-card-title   { color: #f4f7fb !important; }
+  .mat-mdc-card-subtitle { color: rgba(244, 247, 251, 0.72) !important; }
+  .mat-mdc-card-content  { color: rgba(244, 247, 251, 0.88) !important; }
+
+  // ── Form field fill background ──────────────────────────────────────────
+  .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    border-radius: 8px 8px 0 0;
+  }
+  .mdc-text-field--filled:not(.mdc-text-field--disabled):hover {
+    background-color: rgba(255, 255, 255, 0.09) !important;
+  }
+
+  // ── Input text + floating label ──────────────────────────────────
+  .mdc-text-field__input       { color: #f4f7fb !important; caret-color: var(--picta-yellow) !important; }
+  .mdc-floating-label,
+  .mat-mdc-floating-label      { color: rgba(244, 247, 251, 0.62) !important; }
+  .mdc-floating-label--float-above,
+  .mat-mdc-floating-label.mdc-floating-label--float-above { color: var(--picta-yellow) !important; }
+
+  // ── Bottom indicator line ─────────────────────────────────────────
+  .mdc-line-ripple::before { border-bottom-color: rgba(255, 255, 255, 0.25) !important; }
+  .mdc-line-ripple::after  { border-bottom-color: var(--picta-yellow) !important; }
+
+  // ── Outlined borders ────────────────────────────────────────────────
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing { border-color: rgba(255, 255, 255, 0.22) !important; }
+
+  // ── Divider ──────────────────────────────────────────────────────
+  .mat-divider { border-top-color: rgba(255, 255, 255, 0.10) !important; }
+
+  // ── Textarea ───────────────────────────────────────────────────
+  textarea.mdc-text-field__input { resize: vertical; }
+}
+
+// ── Unified header (same pattern as profile module) ─────────────────────
+.profile-header {
+  margin-bottom: 20px;
+  padding: 16px;
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+.profile-header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin: 0;
+  color: #f4f7fb;
+}
+
+.profile-header-subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  color: var(--picta-text-muted);
+  margin: 6px 0 0;
+}
+
+// ── Page layout ──────────────────────────────────────────────────────────
+.help-support-page {
+  padding: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+// ── Form card ──────────────────────────────────────────────────────────────
+.report-form-card {
+  margin-top: 4px;
+}
+
+.file-upload {
+  margin: 12px 0;
+
+  input[type="file"] {
+    cursor: pointer;
+    color: var(--picta-text-muted);
+  }
+}
+
+.file-preview img {
+  margin-top: 10px;
+  max-width: 240px;
+  max-height: 160px;
+  border-radius: 8px;
+  display: block;
+}
+
+.report-form-actions {
+  justify-content: center;
+  padding: 16px;
+}
+
+// ── Action / toggle buttons ──────────────────────────────────────────────
+.actions {
+  margin: 16px 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  .otto-primary {
+    background: transparent !important;
+    color: var(--picta-text-muted) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 8px;
+    transition: all 160ms ease;
+
+    &:hover {
+      background: var(--picta-yellow-softer) !important;
+      color: #f4f7fb !important;
+    }
+
+    &.active, &[disabled].active {
+      background: var(--picta-yellow) !important;
+      color: #0a1126 !important;
+      font-weight: 700;
+      box-shadow: 0 0 22px rgba(243, 230, 40, 0.55) !important;
+      border-color: transparent !important;
+    }
+  }
+
+  .otto-secondary {
+    color: var(--picta-text-muted) !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+    background: transparent !important;
+    border-radius: 8px;
+    transition: all 160ms ease;
+
+    &:hover {
+      background: var(--picta-yellow-softer) !important;
+      color: #f4f7fb !important;
+    }
+
+    &.active, &[disabled].active {
+      background: var(--picta-yellow) !important;
+      color: #0a1126 !important;
+      border-color: transparent !important;
+      font-weight: 700;
+    }
+  }
+}
+
+// ── Reports grid ────────────────────────────────────────────────────────────
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.report-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.report-avatar {
+  background: var(--picta-yellow-soft);
+  color: var(--picta-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.issue-type {
+  font-size: 13px;
+  color: var(--picta-text-muted);
+  background: rgba(255, 255, 255, 0.07);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.status-chip {
+  font-weight: 600;
+  height: 28px;
+}
+
+.desc {
+  color: rgba(244, 247, 251, 0.80);
+  white-space: pre-wrap;
+}
+
+.image-wrap img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 8px;
+  display: block;
+  cursor: pointer;
+}
+
+.conversation-trigger {
+  margin-top: 12px;
+}
+
+// ── Loading spinner ────────────────────────────────────────────────────────────
+.support-loading {
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.support-loading mat-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--picta-yellow);
+}
+
+// ── Empty state ────────────────────────────────────────────────────────────
+.support-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--picta-text-muted);
+  font-size: 0.95rem;
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────
+@media (max-width: 600px) {
+  .reports-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}

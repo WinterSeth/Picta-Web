@@ -1,0 +1,104 @@
+<mat-card class="musical-card">
+  <div class="musical-card-media">
+    <a
+      [routerLink]="['/medias', videoclip().slug_url]"
+      class="musical-card-media-link"
+      [attr.aria-label]="'Reproducir videoclip ' + videoclip().nombre"
+    >
+      <img
+        mat-card-image
+        [ngSrc]="videoclip().url_imagen + '_350x200'"
+        width="350"
+        height="200"
+        [alt]="'Poster de ' + videoclip().nombre"
+        class="musical-card-image"
+        loading="lazy"
+        decoding="async"
+      />
+    </a>
+
+    <div class="musical-card-media-overlay"></div>
+
+    <div class="musical-card-topline">
+      <span class="musical-card-badge" matTooltip="Duración" matTooltipPosition="above">
+        <mat-icon>schedule</mat-icon>
+        {{ duration() }}
+      </span>
+    </div>
+
+    @if (videoclip().precios?.length) {
+      <div class="musical-card-price-stack">
+        @for (p of videoclip().precios; track p.tipo) {
+          @if (p.tipo == 'reproduccion') {
+            <span class="price-chip" title="Compra por reproducción">
+              <mat-icon class="price-chip-icon">play_arrow</mat-icon>
+              <span>Compra · {{ p.valor }} CUP</span>
+            </span>
+          } @else if (p.tipo == 'renta') {
+            <span class="price-chip" title="Renta temporal">
+              <mat-icon class="price-chip-icon">schedule</mat-icon>
+              <span>Renta · {{ p.valor }} CUP</span>
+            </span>
+          }
+        }
+      </div>
+    }
+  </div>
+
+  <div class="musical-card-body">
+    <div class="musical-card-heading">
+      <div class="musical-card-title-block">
+        <a
+          [routerLink]="['/medias', videoclip().slug_url]"
+          class="musical-card-title-link"
+          [matTooltip]="videoclip().nombre"
+          matTooltipPosition="above"
+          matTooltipShowDelay="180"
+          [attr.aria-label]="'Abrir videoclip ' + videoclip().nombre"
+        >
+          <h3 class="musical-card-title">{{ videoclip().nombre }}</h3>
+        </a>
+
+        <p class="musical-card-subtitle">{{ channelName() }}</p>
+      </div>
+
+      @if (videoclip().canal?.alias) {
+        <a
+          [routerLink]="['/canal', videoclip().canal.alias]"
+          class="musical-card-channel"
+          [attr.aria-label]="'Ver canal ' + videoclip().canal.nombre"
+        >
+          <img
+            [ngSrc]="videoclip().canal.url_avatar + '_48x48'"
+            width="40"
+            height="40"
+            [alt]="'Avatar de ' + videoclip().canal.nombre"
+            class="musical-card-channel-avatar"
+          />
+          <span>{{ videoclip().canal.nombre }}</span>
+        </a>
+      }
+    </div>
+
+    <p
+      class="musical-card-description"
+      [matTooltip]="description() || 'Sin descripción disponible'"
+      matTooltipPosition="below"
+      matTooltipShowDelay="180"
+    >
+      {{ description() || 'Sin descripción disponible' }}
+    </p>
+
+    <div class="musical-card-actions">
+      <a [routerLink]="['/medias', videoclip().slug_url]" class="musical-action-link musical-action-link--primary" aria-label="Reproducir videoclip">
+        <mat-icon>play_circle</mat-icon>
+        <span>Reproducir</span>
+      </a>
+
+      <a [routerLink]="['/canal', videoclip().canal?.alias]" class="musical-action-link musical-action-link--secondary" aria-label="Ver canal del videoclip">
+        <mat-icon>info</mat-icon>
+        <span>Canal</span>
+      </a>
+    </div>
+  </div>
+</mat-card>

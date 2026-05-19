@@ -1,0 +1,204 @@
+<div class="video-info-dialog">
+  <!-- Header con imagen de fondo -->
+  <div class="dialog-header">
+    @if (video()?.url_imagen) {
+      <div class="header-backdrop">
+        <img 
+          [ngSrc]="video()?.url_imagen + '_1280x720'" 
+          fill 
+          priority
+          alt="Background"
+          class="backdrop-image"
+        />
+        <div class="backdrop-overlay"></div>
+      </div>
+    }
+    
+    <div class="header-content">
+      <!-- Tipo de contenido -->
+      <div class="content-type">
+        @if (isMovie()) {
+          <span class="type-badge movie">
+            <mat-icon>movie</mat-icon>
+            Película
+          </span>
+        } @else if (isSeries()) {
+          <span class="type-badge series">
+            <mat-icon>tv</mat-icon>
+            Serie
+          </span>
+        } @else if (isLive()) {
+          <span class="type-badge live">
+            <mat-icon>live_tv</mat-icon>
+            En Vivo
+          </span>
+        }
+      </div>
+
+      <!-- Título -->
+      <h2 class="dialog-title">
+        @if (isSeries()) {
+          {{ seriesInfo()?.name }}
+        } @else {
+          {{ video()?.nombre }}
+        }
+      </h2>
+
+      <!-- Información de serie (temporada/episodio actual) -->
+      @if (isSeries() && seriesInfo()) {
+        <div class="series-episode-info">
+          <span>Temporada {{ seriesInfo()?.currentSeason }}</span>
+          <span class="separator">•</span>
+          <span>Episodio {{ seriesInfo()?.currentEpisode }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Botón cerrar -->
+    <button mat-icon-button class="close-button rounded-full! flex! justify-center!" (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Contenido -->
+  <mat-dialog-content class="dialog-content">
+    <!-- Imagen y detalles principales -->
+    <div class="main-info">
+      @if (posterImage()) {
+        <div class="poster-container">
+          <img 
+            [ngSrc]="posterImage()" 
+            width="140" 
+            height="210"
+            priority
+            [alt]="isSeries() ? seriesInfo()?.name : video()?.nombre"
+            class="poster-image"
+            [class.poster-vertical]="isSeries()"
+          />
+        </div>
+      }
+
+      <div class="details">
+        <!-- Metadatos -->
+        <div class="meta-row">
+          @if ((isMovie() && movieInfo()?.year) || (isSeries() && seriesInfo()?.year)) {
+            <span class="meta-item year">
+              <mat-icon>calendar_today</mat-icon>
+              {{ isMovie() ? movieInfo()?.year : seriesInfo()?.year }}
+            </span>
+          }
+          
+          @if ((isMovie() && movieInfo()?.country) || (isSeries() && seriesInfo()?.country)) {
+            <span class="meta-item country">
+              <mat-icon>public</mat-icon>
+              {{ isMovie() ? movieInfo()?.country : seriesInfo()?.country }}
+            </span>
+          }
+
+          @if (video()?.duracion) {
+            <span class="meta-item duration">
+              <mat-icon>schedule</mat-icon>
+              {{ video()?.duracion }}
+            </span>
+          }
+        </div>
+
+        <!-- Géneros -->
+        @if ((isMovie() && movieInfo()?.genres) || (isSeries() && seriesInfo()?.genres)) {
+          <div class="genres">
+            @for (genre of (isMovie() ? movieInfo()?.genres : seriesInfo()?.genres)?.split(', '); track genre) {
+              @if (genre) {
+                <span class="genre-tag">{{ genre }}</span>
+              }
+            }
+          </div>
+        }
+
+        <!-- Información de episodios (solo series) -->
+        @if (isSeries() && seriesInfo()) {
+          <div class="series-stats">
+            <div class="stat">
+              <span class="stat-value">{{ seriesInfo()?.totalSeasons }}</span>
+              <span class="stat-label">Temporadas</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value">{{ seriesInfo()?.totalEpisodes }}</span>
+              <span class="stat-label">Episodios</span>
+            </div>
+          </div>
+        }
+
+        <!-- Canal -->
+        @if (canal()) {
+          <div class="channel-info">
+            <span class="channel-label">Canal:</span>
+            <a [routerLink]="['/canal', canal()?.alias]" (click)="dialogRef.close()" class="channel-link">
+              {{ canal()?.nombre || canal()?.alias }}
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Sinopsis -->
+    @if ((isMovie() && movieInfo()?.synopsis) || (isSeries() && seriesInfo()?.synopsis)) {
+      <div class="synopsis-section">
+        <h3 class="section-title">Sinopsis</h3>
+        <p class="synopsis-text">
+          {{ isMovie() ? movieInfo()?.synopsis : seriesInfo()?.synopsis }}
+        </p>
+      </div>
+    }
+
+    <!-- Reparto -->
+    @if ((isMovie() && movieInfo()?.actors) || (isSeries() && seriesInfo()?.actors)) {
+      <div class="cast-section">
+        <h3 class="section-title">Reparto</h3>
+        <p class="cast-text">
+          {{ isMovie() ? movieInfo()?.actors : seriesInfo()?.actors }}
+        </p>
+      </div>
+    }
+
+    <!-- Director(es) -->
+    @if ((isMovie() && movieInfo()?.directors) || (isSeries() && seriesInfo()?.directors)) {
+      <div class="director-section">
+        <h3 class="section-title">Dirección</h3>
+        <p class="director-text">
+          {{ isMovie() ? movieInfo()?.directors : seriesInfo()?.directors }}
+        </p>
+      </div>
+    }
+
+    <!-- Información adicional (vistas, likes) -->
+    <div class="stats-section">
+      <div class="stat-item">
+        <mat-icon>visibility</mat-icon>
+        <span>{{ video()?.cantidad_visitas | number }} vistas</span>
+      </div>
+      <div class="stat-item">
+        <mat-icon>thumb_up</mat-icon>
+        <span>{{ video()?.cantidad_me_gusta | number }}</span>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Acciones -->
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-stroked-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+      Cerrar
+    </button>
+    @if (isSeries() && seriesInfo()?.name) {
+      <a 
+        mat-raised-button 
+        color="primary"
+        [routerLink]="['/serie', getSeriesSlug()]"
+        (click)="dialogRef.close()"
+      >
+        <mat-icon>info</mat-icon>
+        Ver serie
+      </a>
+    }
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,90 @@
+<ng-container>
+  @if (loading) {
+    <div class="director-skeleton">
+      <div class="director-header flex items-center justify-center gap-6 mb-12">
+        <div class="w-24 h-24 rounded-full bg-white/10 md:w-32 md:h-32"></div>
+        <div class="flex flex-col">
+          <div class="h-8 w-48 bg-white/10 rounded mb-2"></div>
+          <div class="h-5 w-32 bg-white/10 rounded"></div>
+        </div>
+      </div>
+      <div class="director-skeleton__movies">
+        <div class="h-6 w-24 bg-white/10 rounded mb-4"></div>
+        <div class="grid grid-cols-2 gap-4 lg:grid-cols-5">
+          @for (i of [1,2,3,4,5]; track i) {
+            <div class="animate-pulse bg-white/5 rounded-xl aspect-[2/3]"></div>
+          }
+        </div>
+      </div>
+      <div class="mt-8">
+        <div class="h-6 w-20 bg-white/10 rounded mb-4"></div>
+        <div class="grid grid-cols-2 gap-4 lg:grid-cols-5">
+          @for (i of [1,2,3,4,5]; track i) {
+            <div class="animate-pulse bg-white/5 rounded-xl aspect-[2/3]"></div>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    @if (movies$.length === 0 && series$.length === 0) {
+      <div class="py-20 text-center">
+        <h1 class="text-2xl text-white mb-4">Director no encontrado</h1>
+        <a routerLink="/" class="text-picta-red">Volver al inicio</a>
+      </div>
+    } @else {
+      <div class="director-page">
+        <div class="director-header">
+          <div class="director-avatar-container">
+            @if (directorImagen) {
+              <img
+                [ngSrc]="'https://www.picta.cu/' + directorImagen + '_300x300'"
+                width="200"
+                height="200"
+                class="director-avatar-img"
+                [alt]="directorName || 'Director'" />
+            } @else {
+              <img
+                [ngSrc]="'https://ui-avatars.com/api/?name=' + (directorName || 'D') + '&background=1f2937&color=9ca3af&size=200&font-size=0.4&bold=true'"
+                width="200"
+                height="200"
+                class="director-avatar-img"
+                [alt]="directorName || 'Director'" />
+            }
+          </div>
+          <div class="director-info">
+            <h1 class="director-name">{{ directorName }}</h1>
+            <p class="director-subtitle">{{ totalMovies }} películas{{ totalSeries > 0 ? ', ' + totalSeries + ' series' : '' }}</p>
+          </div>
+        </div>
+
+        @if (movies$.length > 0) {
+          <app-my-carousel-o
+            [arrows]="true"
+            [controls]="true"
+            [horizontal]="true"
+            [showSideOverlays]="false"
+            title="Películas"
+            [populares]="true"
+            [videos]="movies$"
+            [hasMore]="totalMovies > movies$.length"
+            [showMoreRoute]="['/director', directorName, 'peliculas']">
+          </app-my-carousel-o>
+        }
+
+        @if (series$.length > 0) {
+          <app-my-carousel-o
+            [arrows]="true"
+            [controls]="true"
+            [horizontal]="true"
+            [showSideOverlays]="false"
+            title="Series"
+            [series]="true"
+            [videos]="series$"
+            [hasMore]="totalSeries > series$.length"
+            [showMoreRoute]="['/director', directorName, 'series']">
+          </app-my-carousel-o>
+        }
+      </div>
+    }
+  }
+</ng-container>

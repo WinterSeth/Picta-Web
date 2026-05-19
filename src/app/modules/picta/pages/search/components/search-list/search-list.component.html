@@ -1,0 +1,221 @@
+@if (mode() === 'card') {
+  <div class="search-card-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    @for (video of videoclips(); track video) {
+      @if (video.tipo === 'canal') {
+        <a [attr.id]="'card' + video?.id" class="search-card search-card--channel" [routerLink]="getResultRoute(video)" (click)="setCoords(video)">
+          <div class="search-card__avatar">
+            <img [alt]="video.nombre" [src]="video.url_avatar + '_160x160'" width="72" height="72" loading="lazy" />
+          </div>
+          <div class="search-card__info search-card__info--channel">
+            <span class="search-card__title search-card__title--channel">{{ video.nombre }}</span>
+            <span class="search-card__meta">{{ '@' + video.alias }} · {{ video.cantidad_suscripciones || 0 }}</span>
+          </div>
+        </a>
+      } @else {
+        <a [attr.id]="'card' + video?.id" class="search-card" [routerLink]="getResultRoute(video)" (click)="setCoords(video)">
+          <div class="search-card__thumb">
+            <img [alt]="video.nombre" [src]="video.url_imagen + '_350x200'" width="350" height="200" loading="lazy" />
+            <div class="search-card__overlay">
+              <mat-icon>play_circle</mat-icon>
+            </div>
+            <span class="video-duration">{{ video.duracion }}</span>
+
+            @if (video.precios && (video.precios.length || video.precios.tipo || video.precios.valor)) {
+              <div class="price-chips">
+                @if (video.precios.length) {
+                  @for (p of video.precios; track p.tipo) {
+                    @if (p.tipo == 'reproduccion') {
+                      <span class="price-chip">
+                        <mat-icon class="price-chip-icon">play_arrow</mat-icon>
+                        <span class="leading-none">Compra · {{ p.valor || '-' }} CUP</span>
+                      </span>
+                    } @else if (p.tipo == 'renta') {
+                      <span class="price-chip">
+                        <mat-icon class="price-chip-icon">schedule</mat-icon>
+                        <span class="leading-none">Renta · {{ p.valor || '-' }} CUP</span>
+                      </span>
+                    } @else if (p.tipo == 'descarga') {
+                      <span class="price-chip">
+                        <mat-icon class="price-chip-icon">cloud_download</mat-icon>
+                        <span class="leading-none">Descarga · {{ p.valor || '-' }} CUP</span>
+                      </span>
+                    } @else {
+                      <span class="price-chip">
+                        <mat-icon class="price-chip-icon">attach_money</mat-icon>
+                        <span class="leading-none">{{ p.tipo || 'Precio' }} · {{ p.valor || '-' }}</span>
+                      </span>
+                    }
+                  }
+                } @else {
+                  @if (video.precios.reproduccion || (video.precios.reproduccion && video.precios.reproduccion.valor)) {
+                    <span class="price-chip" title="Compra por reproducción">
+                      <mat-icon class="price-chip-icon">play_arrow</mat-icon>
+                      <span class="leading-none">Compra · {{ (video.precios.reproduccion?.valor || video.precios.reproduccion) + ' CUP' }}</span>
+                    </span>
+                  }
+                  @if (video.precios.renta || (video.precios.renta && video.precios.renta.valor)) {
+                    <span class="price-chip" title="Renta temporal">
+                      <mat-icon class="price-chip-icon">schedule</mat-icon>
+                      <span class="leading-none">Renta · {{ (video.precios.renta?.valor || video.precios.renta) + ' CUP' }}</span>
+                    </span>
+                  }
+                  @if (!(video.precios.reproduccion || video.precios.renta || (video.precios.reproduccion && video.precios.reproduccion.valor) || (video.precios.renta && video.precios.renta.valor))) {
+                    <span class="price-chip">
+                      <mat-icon class="price-chip-icon">attach_money</mat-icon>
+                      <span class="leading-none">{{ video.precios.valor ? (video.precios.valor + ' CUP') : (video.precios.tipo === 'valor' ? 'Precio' : (video.precios.tipo || 'Precio')) }}</span>
+                    </span>
+                  }
+                }
+              </div>
+            }
+          </div>
+
+          <div class="search-card__info">
+            <span class="search-card__title">{{ video.nombre }}</span>
+
+            <div class="search-card__channel-row">
+              <a class="channel-link compact" (click)="goToChannel($event, video)" tabindex="0" (keydown.enter)="goToChannel($event, video)">
+                <img class="channel-avatar" [src]="video?.canal_url_avatar + '_48x48'" [alt]="video.canal?.nombre || video.canal" width="36" height="36" />
+                <span class="channel-alias">{{ '@' + (video.canal_alias || video.canal?.alias || video.canal || video.canal_nombre || '') }}</span>
+              </a>
+
+              <span class="search-card__meta">{{ video.cantidad_visitas | shortNumbers }} vistas · hace {{ video.tiempo_creacion || '' }}</span>
+            </div>
+
+            @if (video.precios) {
+              <ul class="search-list-item__price-list">
+                @if (video.precios.length) {
+                  @for (p of video.precios; track p.tipo) {
+                    <li class="price-list__item">
+                      @if (p.tipo == 'reproduccion') {
+                        <mat-icon class="price-icon">play_arrow</mat-icon>
+                        <span class="price-label">Compra</span>
+                      } @else if (p.tipo == 'renta') {
+                        <mat-icon class="price-icon">schedule</mat-icon>
+                        <span class="price-label">Renta</span>
+                      } @else if (p.tipo == 'descarga') {
+                        <mat-icon class="price-icon">cloud_download</mat-icon>
+                        <span class="price-label">Descarga</span>
+                      } @else {
+                        <mat-icon class="price-icon">attach_money</mat-icon>
+                        <span class="price-label">{{ p.tipo || 'Precio' }}</span>
+                      }
+                      <span class="price-value">{{ p.valor ? (p.valor + ' CUP') : '-' }}</span>
+                    </li>
+                  }
+                } @else {
+                  @if (video.precios.reproduccion || (video.precios.reproduccion && video.precios.reproduccion.valor)) {
+                    <li class="price-list__item">
+                      <mat-icon class="price-icon">play_arrow</mat-icon>
+                      <span class="price-label">Compra</span>
+                      <span class="price-value">{{ (video.precios.reproduccion?.valor || video.precios.reproduccion) + ' CUP' }}</span>
+                    </li>
+                  }
+                  @if (video.precios.renta || (video.precios.renta && video.precios.renta.valor)) {
+                    <li class="price-list__item">
+                      <mat-icon class="price-icon">schedule</mat-icon>
+                      <span class="price-label">Renta</span>
+                      <span class="price-value">{{ (video.precios.renta?.valor || video.precios.renta) + ' CUP' }}</span>
+                    </li>
+                  }
+                  @if (video.precios.descarga || (video.precios.descarga && video.precios.descarga.valor)) {
+                    <li class="price-list__item">
+                      <mat-icon class="price-icon">cloud_download</mat-icon>
+                      <span class="price-label">Descarga</span>
+                      <span class="price-value">{{ (video.precios.descarga?.valor || video.precios.descarga) + ' CUP' }}</span>
+                    </li>
+                  }
+                }
+              </ul>
+            }
+          </div>
+        </a>
+      }
+    }
+  </div>
+}
+
+@if (mode() === 'list') {
+  <div class="search-list-container">
+    @for (video of videoclips(); track video) {
+      @if (video.tipo === 'canal') {
+        <a class="search-list-item search-list-item--channel" [routerLink]="getResultRoute(video)">
+          <div class="search-list-item__thumb search-list-item__thumb--channel">
+            <img [src]="video.url_avatar + '_220x220'" [alt]="video.nombre" width="146" height="146" loading="lazy" />
+          </div>
+          <div class="search-list-item__content">
+            <span class="search-list-item__title">{{ video.nombre }}</span>
+            <span class="search-list-item__meta">{{ '@' + video.alias }} · {{ video.cantidad_suscripciones || 0 }}</span>
+            <p class="search-list-item__description search-list-item__description--channel">{{ video.descripcion }}</p>
+          </div>
+        </a>
+      } @else {
+        <a class="search-list-item search-list-item--publication" [routerLink]="getResultRoute(video)">
+          <div class="search-list-item__thumb search-list-item__thumb--publication">
+            <img [src]="video.url_imagen + '_350x200'" [alt]="video.nombre" width="320" height="180" loading="lazy" />
+            <mat-icon class="search-list-item__play">play_circle</mat-icon>
+            <span class="video-duration">{{ video.duracion }}</span>
+          </div>
+          <div class="search-list-item__content search-list-item__content--publication">
+            <span class="search-list-item__title">{{ video.nombre }}</span>
+            <div class="search-list-item__channel-row">
+              <span class="channel-link" (click)="goToChannel($event, video)" tabindex="0" (keydown.enter)="goToChannel($event, video)">
+                <img class="search-list-item__channel-avatar" [src]="video?.canal_url_avatar + '_80x80'" [alt]="video.canal?.nombre || 'Canal'" width="36" height="36" loading="lazy" />
+                <span class="search-list-item__channel-name">{{ video.canal?.nombre || video.canal || video.canal_nombre || video.canal_name || video.canal }}</span>
+              </span>
+            </div>
+            <span class="search-list-item__meta">{{ video.cantidad_visitas || 0 }} vistas · hace {{ video.tiempo_creacion || '' }}</span>
+            <p class="search-list-item__description">{{ video.descripcion }}</p>
+
+            @if (video.precios) {
+              <ul class="search-list-item__price-list">
+                @if (video.precios.length) {
+                  @for (p of video.precios; track p.tipo) {
+                    <li class="price-list__item">
+                      @if (p.tipo == 'reproduccion') {
+                        <mat-icon class="price-icon">play_arrow</mat-icon>
+                        <span class="price-label">Compra</span>
+                      } @else if (p.tipo == 'renta') {
+                        <mat-icon class="price-icon">schedule</mat-icon>
+                        <span class="price-label">Renta</span>
+                      } @else if (p.tipo == 'descarga') {
+                        <mat-icon class="price-icon">cloud_download</mat-icon>
+                        <span class="price-label">Descarga</span>
+                      } @else {
+                        <mat-icon class="price-icon">attach_money</mat-icon>
+                        <span class="price-label">{{ p.tipo || 'Precio' }}</span>
+                      }
+                      <span class="price-value">{{ p.valor ? (p.valor + ' CUP') : '-' }}</span>
+                    </li>
+                  }
+                } @else {
+                  @if (video.precios.reproduccion || (video.precios.reproduccion && video.precios.reproduccion.valor)) {
+                    <li class="price-list__item">
+                      <mat-icon class="price-icon">play_arrow</mat-icon>
+                      <span class="price-label">Compra</span>
+                      <span class="price-value">{{ (video.precios.reproduccion?.valor || video.precios.reproduccion) + ' CUP' }}</span>
+                    </li>
+                  }
+                  @if (video.precios.renta || (video.precios.renta && video.precios.renta.valor)) {
+                    <li class="price-list__item">
+                      <mat-icon class="price-icon">schedule</mat-icon>
+                      <span class="price-label">Renta</span>
+                      <span class="price-value">{{ (video.precios.renta?.valor || video.precios.renta) + ' CUP' }}</span>
+                    </li>
+                  }
+                  @if (video.precios.descarga || (video.precios.descarga && video.precios.descarga.valor)) {
+                    <li class="price-list__item">
+                      <mat-icon class="price-icon">cloud_download</mat-icon>
+                      <span class="price-label">Descarga</span>
+                      <span class="price-value">{{ (video.precios.descarga?.valor || video.precios.descarga) + ' CUP' }}</span>
+                    </li>
+                  }
+                }
+              </ul>
+            }
+          </div>
+        </a>
+      }
+    }
+  </div>
+}

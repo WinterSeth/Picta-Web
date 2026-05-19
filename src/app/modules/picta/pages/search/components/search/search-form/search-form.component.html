@@ -1,0 +1,38 @@
+<form #searchForm>
+  <div>
+    <input #searchInput [formControl]="searchFormControl" placeholder="Buscar" type="search" (keydown.enter)="search()">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div>
+  <!-- suggestions panel -->
+  <!-- Custom results panel using Material list for better control -->
+  @if (isSearching || optionsList?.length) {
+    <div class="impeccable-search-panel" role="listbox">
+      <div class="panel-inner">
+        @if (isSearching) {
+          <div class="panel-spinner">
+            <mat-spinner diameter="20" color="accent"></mat-spinner>
+          </div>
+        }
+        @if (optionsList?.length) {
+          <mat-nav-list>
+            @for (option of optionsList; track option) {
+              <mat-list-item (mousedown)="$event.preventDefault()" (click)="onOptionClick(option)" role="option">
+                @if (option.tipo === 'canal' && option.url_avatar) {
+                  <img src="{{ option.url_avatar + '_48x48' }}" width="48" height="48" alt="" matListItemAvatar style="border-radius:50%; object-fit:cover;" />
+                }
+                @if (option.tipo === 'publicacion' && option.url_imagen) {
+                  <img src="{{ option.url_imagen + '_120x68' }}" width="120" height="68" alt="" matListItemAvatar style="border-radius:6px; object-fit:cover;" />
+                }
+                @if (!(option.tipo === 'publicacion' && option.url_imagen) && !(option.tipo === 'canal' && option.url_avatar) && (option.url_avatar || option.url_imagen)) {
+                  <img src="{{ (option.url_avatar || option.url_imagen) + '_48x48' }}" width="48" height="48" alt="" matListItemAvatar style="border-radius:6px; object-fit:cover;" />
+                }
+
+                <h6 matListItemTitle>{{ option.nombre }}</h6>
+              </mat-list-item>
+            }
+          </mat-nav-list>
+        }
+      </div>
+    </div>
+  }
+</form>

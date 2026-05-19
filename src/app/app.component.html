@@ -1,0 +1,31 @@
+<!-- <div *ngIf="isUpdateAvailable">
+    <p>¡Hay una nueva actualización disponible!</p>
+    <button (click)="showUpdateAlert()">Actualizar ahora</button>
+    <button (click)="installApp()">Instalar aplicación</button>
+  </div> -->
+  @if (updateAvailable) {
+      <button mat-raised-button 
+              color="primary" 
+              (click)="updateApp()" 
+              class="update-button">
+        <mat-icon>system_update</mat-icon>
+        Actualizar
+        <span matBadge="Nuevo!" 
+              matBadgePosition="after" 
+              matBadgeColor="accent"
+              matBadgeSize="small">
+        </span>
+      </button>
+    }
+<app-network-status-button/>
+<div class="back-to-top-container" [class.visible]="showButton">
+  <button (click)="goTop()"
+    class="back-to-top-btn"
+    aria-label="Volver arriba">
+    <svg xmlns="http://www.w3.org/2000/svg" class="back-to-top-btn__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+    </svg>
+  </button>
+  <span class="back-to-top-label">Ir arriba</span>
+</div>
+<router-outlet />

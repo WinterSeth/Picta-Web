@@ -1,0 +1,169 @@
+<mat-card class="serie-card">
+  <div class="serie-card-media">
+    <a
+      [routerLink]="['/serie', serie().nombre]"
+      class="serie-card-media-link"
+      [attr.aria-label]="'Ver detalles de la serie ' + serie().nombre">
+      <img
+        mat-card-image
+        [ngSrc]="(serie().url_imagen || serie().imagen_secundaria) + '_350x200'"
+        width="350"
+        height="200"
+        [alt]="'Poster de ' + serie().nombre"
+        class="serie-card-image"
+        loading="lazy"
+        decoding="async" />
+    </a>
+
+    <div class="serie-card-media-overlay"></div>
+
+    <div class="serie-card-topline">
+      @if (serieYear()) {
+        <a
+          class="serie-card-badge serie-card-badge--soft serie-card-year-link"
+          [routerLink]="[baseRoute()]"
+          [queryParams]="{ ano: serieYear() }"
+          matTooltip="Año de estreno de la serie. Haz clic para filtrar por este año."
+          matTooltipPosition="above"
+          [attr.aria-label]="'Filtrar series por el año ' + serieYear()">
+          <mat-icon>calendar_month</mat-icon>
+          {{ serieYear() }}
+        </a>
+      }
+
+      @if (seasonsCount() > 0) {
+        <span
+          class="serie-card-badge"
+          matTooltip="Cantidad total de temporadas"
+          matTooltipPosition="above">
+          <mat-icon>tv</mat-icon>
+          {{ seasonsLabel() }}
+        </span>
+      }
+    </div>
+
+    <div class="serie-card-episodes-badge">
+      @if (episodesCount() > 0) {
+        <span
+          class="serie-card-badge serie-card-badge--soft"
+          matTooltip="Cantidad total de capítulos"
+          matTooltipPosition="above">
+          <mat-icon>movie</mat-icon>
+          {{ episodesLabel() }}
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="serie-card-body">
+    <div class="serie-card-heading">
+      <div class="serie-card-title-block">
+        <a
+          [routerLink]="['/serie', serie().nombre]"
+          class="serie-card-title-link"
+          [matTooltip]="serie().nombre"
+          matTooltipPosition="above"
+          matTooltipShowDelay="180"
+          [attr.aria-label]="'Abrir serie ' + serie().nombre">
+          <h3 class="serie-card-title">{{ serie().nombre }}</h3>
+        </a>
+
+        <p class="serie-card-subtitle">
+          @if (serieCountry()) {
+            <a
+              class="serie-card-country-link"
+              [routerLink]="[baseRoute()]"
+              [queryParams]="{ pais: serieCountry() }"
+              matTooltip="País de producción. Haz clic para filtrar por este país."
+              matTooltipPosition="above"
+              [attr.aria-label]="'Filtrar series por país ' + serieCountry()">
+              {{ serieCountry() }}
+            </a>
+          } @else {
+            <span>País no definido</span>
+          }
+        </p>
+      </div>
+
+      @if (serie().canal?.alias) {
+        <a
+          [routerLink]="['/canal', serie().canal.alias]"
+          class="serie-card-channel"
+          matTooltip="Canal que publica esta serie"
+          matTooltipPosition="above"
+          [attr.aria-label]="'Ver canal ' + serie().canal.nombre">
+          <img
+            [ngSrc]="serie().canal.url_avatar + '_48x48'"
+            width="40"
+            height="40"
+            [alt]="'Avatar de ' + serie().canal.nombre"
+            class="serie-card-channel-avatar" />
+          <span>{{ serie().canal.nombre }}</span>
+        </a>
+      }
+    </div>
+
+    <div class="serie-card-meta">
+      @if (genresSummary()) {
+        <span
+          class="serie-meta-pill"
+          [matTooltip]="'Géneros: ' + genresTooltip()"
+          matTooltipPosition="above">
+          <mat-icon class="serie-meta-icon">category</mat-icon>
+          <span>{{ genresSummary() }}</span>
+        </span>
+      }
+
+      @if (seasonsCount() > 0) {
+        <span
+          class="serie-meta-pill"
+          matTooltip="Número total de temporadas"
+          matTooltipPosition="above">
+          <mat-icon class="serie-meta-icon">view_module</mat-icon>
+          <span>{{ seasonsCount() }}</span>
+        </span>
+      }
+
+      @if (episodesCount() > 0) {
+        <span
+          class="serie-meta-pill"
+          matTooltip="Número total de capítulos"
+          matTooltipPosition="above">
+          <mat-icon class="serie-meta-icon">smart_display</mat-icon>
+          <span>{{ episodesCount() }}</span>
+        </span>
+      }
+    </div>
+
+    <p
+      class="serie-card-description"
+      [matTooltip]="synopsis() || 'Sin descripción disponible'"
+      matTooltipPosition="below"
+      matTooltipShowDelay="180">
+      {{ synopsis() || 'Sin descripción disponible' }}
+    </p>
+
+    <div class="serie-card-actions">
+      <a
+        [routerLink]="['/serie', serie().nombre]"
+        class="serie-action-link serie-action-link--primary"
+        matTooltip="Abrir la ficha completa de la serie"
+        matTooltipPosition="above"
+        aria-label="Ver serie">
+        <mat-icon>play_circle</mat-icon>
+        <span>Ver serie</span>
+      </a>
+
+      <a
+        [routerLink]="[baseRoute()]"
+        [queryParams]="{ pais: serieCountry() || null }"
+        class="serie-action-link serie-action-link--secondary"
+        matTooltip="Aplicar filtro por país en la vista de series"
+        matTooltipPosition="above"
+        [attr.aria-label]="'Filtrar series por país ' + (serieCountry() || '')">
+        <mat-icon>travel_explore</mat-icon>
+        <span>Filtrar país</span>
+      </a>
+    </div>
+  </div>
+</mat-card>

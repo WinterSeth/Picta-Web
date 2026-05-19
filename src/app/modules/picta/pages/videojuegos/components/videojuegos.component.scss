@@ -1,0 +1,122 @@
+// Header de categoría
+.categoria-header {
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 24px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    transparent 100%
+  );
+}
+
+.categoria-header__content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.categoria-header__title {
+  font-family: var(--picta-font-primary);
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #fff;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.categoria-header__description {
+  font-family: var(--picta-font-secondary);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .categoria-header {
+    padding: 24px 16px;
+  }
+
+  .categoria-header__title {
+    font-size: 2rem;
+  }
+
+  .categoria-header__description {
+    font-size: 0.9rem;
+  }
+}
+
+.categoria-header__content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.categoria-header__title {
+  font-family: var(--picta-font-primary);
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #fff;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.categoria-header__description {
+  font-family: var(--picta-font-secondary);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.categoria-toolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 0.75rem;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.categoria-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.categoria-header-container {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.peliculas-list {
+  display: block;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0 0.75rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .categoria-header {
+    padding: 24px 16px;
+  }
+
+  .categoria-header__title {
+    font-size: 2rem;
+  }
+
+  .categoria-header__description {
+    font-size: 0.9rem;
+  }
+}

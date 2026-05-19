@@ -1,0 +1,132 @@
+<div class="register-form-container">
+  <a href="#" class="register-logo">
+    <img ngSrc="img/logo.svg" width="80" height="80" alt="logo">
+  </a>
+
+  <div class="register-card">
+    <h1 class="register-title">Crear una cuenta</h1>
+
+    @if (generalError()) {
+      <div class="form-message form-message--error">
+        <span>{{ generalError() }}</span>
+        <button type="button" class="message-close" (click)="generalError.set('')" aria-label="Cerrar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
+    @if (userMsg()) {
+      <div class="form-message">
+        <span>{{ userMsg() }}</span>
+        <button type="button" class="message-close" (click)="userMsg.set('')" aria-label="Cerrar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
+
+    <form [formGroup]="registerForm" class="register-fields">
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Usuario</mat-label>
+        <input [required]="!registerForm.get('username').pristine" formControlName="username" matInput>
+      </mat-form-field>
+      @if (fieldErrors['username']()) {
+        <div class="field-error">
+          <span>{{ fieldErrors['username']() }}</span>
+          <button type="button" class="message-close" (click)="fieldErrors['username'].set('')" aria-label="Cerrar">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      }
+
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Contraseña</mat-label>
+        <input [required]="!registerForm.get('password').pristine" [type]="showPass() ? 'text' : 'password'" formControlName="password" matInput>
+        <button type="button" class="password-toggle" (click)="toggleVisibility($event)" [matTooltip]="showPass() ? 'Ocultar contraseña' : 'Mostrar contraseña'" mat-icon-button matSuffix>
+          <mat-icon>{{ showPass() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Confirmar contraseña</mat-label>
+        <input [required]="!registerForm.get('repeat_password').pristine" [type]="showPass() ? 'text' : 'password'" formControlName="repeat_password" matInput>
+        <button type="button" class="password-toggle" (click)="toggleVisibility($event)" [matTooltip]="showPass() ? 'Ocultar contraseña' : 'Mostrar contraseña'" mat-icon-button matSuffix>
+          <mat-icon>{{ showPass() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+      @if (passwordMismatchError()) {
+        <div class="field-error">
+          <span>Las contraseñas deben coincidir.</span>
+          <button type="button" class="message-close" (click)="registerForm.get('repeat_password').reset()" aria-label="Cerrar">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      }
+
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput [matDatepicker]="picker" [max]="maxDate" [min]="minDate" [required]="!registerForm.get('fecha_nacimiento').pristine" formControlName="fecha_nacimiento">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+      <div class="channel-toggle-wrap">
+        <mat-button-toggle-group formControlName="with_mail" class="channel-toggle">
+          <mat-button-toggle [value]="false" matTooltip="Teléfono">
+            <mat-icon>phone</mat-icon>
+          </mat-button-toggle>
+          <mat-button-toggle [value]="true" matTooltip="Correo">
+            <mat-icon>mail</mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      @if (!registerForm.get('with_mail').value) {
+        <mat-form-field appearance="fill" floatLabel="auto">
+          <mat-label>Teléfono</mat-label>
+          <input [required]="!registerForm.get('with_mail').value" [showMaskTyped]="true" formControlName="phone_number" mask="0 0000000" matInput prefix="+53 ">
+        </mat-form-field>
+        @if (fieldErrors['phone_number']()) {
+          <div class="field-error">
+            <span>{{ fieldErrors['phone_number']() }}</span>
+            <button type="button" class="message-close" (click)="fieldErrors['phone_number'].set('')" aria-label="Cerrar">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        }
+      } @else {
+        <mat-form-field appearance="fill" floatLabel="auto">
+          <mat-label>Correo</mat-label>
+          <input formControlName="email" matInput [required]="registerForm.get('with_mail').value">
+        </mat-form-field>
+        @if (fieldErrors['email']()) {
+          <div class="field-error">
+            <span>{{ fieldErrors['email']() }}</span>
+            <button type="button" class="message-close" (click)="fieldErrors['email'].set('')" aria-label="Cerrar">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        }
+      }
+
+      <mat-checkbox #checkBoxTerms labelPosition="after" class="terms-checkbox">
+        He leído y acepto los <a (click)="openTCU($event, checkBoxTerms)">términos y condiciones de uso</a>.
+      </mat-checkbox>
+
+      <button
+        type="button"
+        (click)="register()"
+        [disabled]="!checkBoxTerms.checked || registerForm.invalid || isSubmitting()"
+        class="register-submit">
+        @if (isSubmitting()) {
+          <mat-spinner [diameter]="20"></mat-spinner>
+          <span>Registrando usuario...</span>
+        } @else {
+          Crear cuenta
+        }
+      </button>
+
+      <p class="login-link">
+        ¿Ya tienes una cuenta? <a routerLink="/usuario/acceder">Iniciar Sesión</a>
+      </p>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="sms-dialog">
+  <h2 class="sms-dialog-title">Código de verificación vía {{channelTitleLabel}}</h2>
+
+  <p class="sms-dialog-desc">Por favor, introduzca el código enviado en su {{channelMessageLabel}}.</p>
+
+  @if (errorMsg) {
+    <div class="sms-error" role="alert">
+      <span>{{errorMsg}}</span>
+      <button type="button" class="sms-error-close" (click)="errorMsg = ''" aria-label="Cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+  @if (resendErrorMessage) {
+    <div class="sms-error" role="alert">
+      <span>{{resendErrorMessage}}</span>
+      <button type="button" class="sms-error-close" (click)="resendErrorMessage = ''" aria-label="Cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+
+  <mat-form-field appearance="fill" class="sms-field">
+    <mat-label>Código</mat-label>
+    <input [formControl]="codigo" [maxlength]="6" matInput type="text">
+  </mat-form-field>
+
+  <div class="sms-actions">
+    <button (click)="dialogRef.close()" class="sms-btn">Cancelar</button>
+    <button (click)="resendCode()" [disabled]="isResendingCode || resendSecondsRemaining > 0" class="sms-btn">
+      @if (isResendingCode) {
+        Reenviando...
+      } @else if (resendSecondsRemaining > 0) {
+        Reenviar en {{formatResendTime()}}
+      } @else {
+        Reenviar código
+      }
+    </button>
+    <button (click)="verifySmsCode()" class="sms-btn sms-btn--primary">Verificar</button>
+  </div>
+</div>

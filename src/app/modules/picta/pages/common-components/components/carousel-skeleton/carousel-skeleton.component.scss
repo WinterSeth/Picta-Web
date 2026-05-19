@@ -1,0 +1,169 @@
+.carousel-skeleton {
+  padding: 0;
+}
+
+.carousel-skeleton-header {
+  padding: 0 8px 16px;
+}
+
+.carousel-skeleton-title {
+  width: 200px;
+  height: 32px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+.carousel-skeleton-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 8px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.carousel-skeleton-card {
+  flex: 0 0 auto;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.carousel-skeleton-thumb {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 8px;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+
+  // Overlay oscuro como en el carrusel real
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
+    pointer-events: none;
+    border-radius: 0 0 8px 8px;
+  }
+}
+
+.carousel-skeleton-body {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px;
+}
+
+.carousel-skeleton-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 50%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.carousel-skeleton-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.carousel-skeleton-line {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 75%
+  );
+  background-size: 200% 100%;
+  border-radius: 4px;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+.carousel-skeleton-line-title {
+  height: 14px;
+  width: 85%;
+}
+
+.carousel-skeleton-line-meta {
+  height: 12px;
+  width: 60%;
+  opacity: 0.7;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Responsive
+@media (max-width: 1536px) {
+  .carousel-skeleton-card {
+    width: 180px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .carousel-skeleton-card {
+    width: 160px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .carousel-skeleton-card {
+    width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-skeleton-card {
+    width: 130px;
+  }
+
+  .carousel-skeleton-avatar {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-skeleton-card {
+    width: 120px;
+  }
+}

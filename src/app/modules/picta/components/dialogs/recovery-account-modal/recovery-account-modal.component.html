@@ -1,0 +1,44 @@
+<div class="change-dialog">
+  <h2 class="change-title">Activar cuenta vía {{ channelLabel }}</h2>
+
+  <p class="change-desc">Se le ha enviado un código a su {{ channelLabel }}.</p>
+
+  @if (errorMsg) {
+    <div class="change-error">
+      <span>{{ errorMsg }}</span>
+      <button type="button" class="change-error-close" (click)="errorMsg = ''" aria-label="Cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+
+  <form [formGroup]="changePasswordForm" class="change-fields">
+    <mat-form-field appearance="fill" class="change-field">
+      <mat-label>Código enviado</mat-label>
+      <input formControlName="short_token" matInput type="text">
+      @if (tokenInvalid) {
+        <div class="change-error change-error--field">{{ verifyErrorMessage }}</div>
+      }
+    </mat-form-field>
+  </form>
+
+  <div class="change-actions">
+    <button type="button" (click)="dialogRef.close()" class="change-btn">Cancelar</button>
+    <button type="button" (click)="resendCode()" [disabled]="isResending || resendSecondsRemaining > 0 || isVerifying" class="change-btn">
+      @if (isResending) {
+        Reenviando...
+      } @else if (resendSecondsRemaining > 0) {
+        Reenviar en {{ formatResendTime() }}
+      } @else {
+        Reenviar código
+      }
+    </button>
+    <button type="button" (click)="activateAccount()" [disabled]="isVerifying || !changePasswordForm.get('short_token').value" class="change-btn change-btn--primary">
+      @if (isVerifying) {
+        Verificando...
+      } @else {
+        Enviar
+      }
+    </button>
+  </div>
+</div>

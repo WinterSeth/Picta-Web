@@ -1,0 +1,49 @@
+a {
+  //color: white;
+  text-decoration: none;
+
+  &:hover {
+    //color: white;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}
+
+  /* Duration badge shown in bottom-right of thumbnails for publications */
+  .video-duration {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    z-index: 10;
+    background: rgba(0,0,0,0.64);
+    color: #ffffff;
+    font-size: 0.78rem;
+    padding: 4px 7px;
+    border-radius: 6px;
+    line-height: 1;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.36) inset;
+    -webkit-font-smoothing: antialiased;
+  }
+
+
+.recomended-card {
+  flex-basis: auto;
+  padding: 5px;
+
+  &.first {
+    border-bottom: 2px solid #223054;
+    padding-bottom: 5px;
+  }
+
+  &.second {
+    margin-top: 1rem;
+  }
+
+  & img {
+    max-width: none;
+    width: 168px;
+    height: 94px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+}

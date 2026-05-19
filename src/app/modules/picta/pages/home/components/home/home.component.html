@@ -1,0 +1,52 @@
+@if (isLoading) {
+  <div class="home-loading" role="status" aria-live="polite">
+    <mat-spinner aria-label="cargando" [diameter]="50" color="warn"></mat-spinner>
+    <span class="home-loading-text">Cargando contenido de inicio...</span>
+  </div>
+} @else {
+  <div class="home-container">
+    @if (newSections && newSections.length && newSections[0].videos) {
+      <section class="home-carousel-section">
+        <app-portada-carousel
+          [isLoggedIn]="!!user"
+          [portadaList]="newSections[0].videos"></app-portada-carousel>
+      </section>
+    }
+
+    @for (
+      section of newSections;
+      track section?.id ?? section?.nombre ?? $index;
+      let index = $index
+    ) {
+      <div [class.first]="index == 0 && section.estilo === 'carrusel'" class="section">
+        @if (index > 0) {
+          @if (section?.estilo === 'banner' && section?.videos?.length) {
+            <section>
+              <app-portada-carousel
+                [isLoggedIn]="!!user"
+                [portadaList]="section.videos"></app-portada-carousel>
+            </section>
+          }
+          @if (section?.estilo === 'carrusel' && section?.videos?.length) {
+            <section class="nm-collections-row">
+              <app-my-carousel-o
+                (load)="loadDataSection(section)"
+                [canal]="section?.canal"
+                [title]="section?.nombre"
+                [videos]="section?.videos"
+                [carouselOptions]="homeCarouselOptions"
+                [hasMore]="true"
+                [showMoreRoute]="['/canal', section?.canal?.alias]"></app-my-carousel-o>
+            </section>
+          }
+        }
+      </div>
+    }
+
+    @if (isRequesting && newSections?.length) {
+      <app-categoria-loading-state
+        [label]="'Cargando más secciones...'"
+        [ariaLabel]="'Cargando más secciones'"></app-categoria-loading-state>
+    }
+  </div>
+}

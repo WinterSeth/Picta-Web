@@ -1,0 +1,125 @@
+:root {
+  --picta-font-primary: 'Bebas Neue', sans-serif;
+  --picta-font-secondary: 'Abel', sans-serif;
+  --picta-font-body: 'Roboto', sans-serif;
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+}
+
+// ===============================================
+// Picta-themed Buttons (same as Login/Register)
+// ===============================================
+::ng-deep {
+  // Primary buttons - same as .login-submit / .register-submit
+  .mat-mdc-flat-button.mat-primary,
+  [color='primary'].mat-mdc-flat-button,
+  .picta-btn-primary {
+    background-color: var(--picta-yellow) !important;
+    color: #0a1126 !important;
+    font-family: var(--picta-font-secondary);
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    border-radius: 999px !important;
+    min-height: 48px;
+    padding: 0 24px;
+    transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    
+    &:hover:not(:disabled) {
+      background-color: #e8de2c !important;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(243, 230, 40, 0.28);
+    }
+    
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(243, 230, 40, 0.2);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  // Outlined buttons
+  .mat-mdc-outlined-button.mat-primary,
+  [color='primary'].mat-mdc-outlined-button,
+  .picta-btn-outlined {
+    border-color: var(--picta-yellow-border) !important;
+    color: var(--picta-yellow) !important;
+    font-family: var(--picta-font-secondary);
+    border-radius: 999px !important;
+    min-height: 44px;
+    
+    &:hover:not(:disabled) {
+      background-color: var(--picta-yellow-soft) !important;
+    }
+  }
+
+  // Danger/Cancel buttons
+  .mat-mdc-flat-button.mat-warn,
+  [color='warn'].mat-mdc-flat-button,
+  .picta-btn-danger {
+    background-color: var(--picta-accent) !important;
+    color: #fff !important;
+    font-family: var(--picta-font-secondary);
+    font-weight: 500;
+    border-radius: 999px !important;
+    min-height: 44px;
+    
+    &:hover:not(:disabled) {
+      background-color: #d13a26 !important;
+    }
+  }
+}
+
+.profile-card {
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+.subscription-history {
+  .history-table-wrap {
+    border-radius: 10px;
+    overflow: auto;
+  }
+
+  button:focus-visible {
+    outline: 2px solid rgba(232, 70, 46, 0.6);
+    outline-offset: 2px;
+  }
+
+  .status-active {
+    background: rgba(56, 142, 60, 0.8);
+  }
+
+  .status-cancelled {
+    background: rgba(198, 40, 40, 0.8);
+  }
+
+  .status-expired {
+    background: rgba(97, 97, 97, 0.8);
+  }
+
+  .status-pending {
+    background: rgba(245, 124, 0, 0.85);
+  }
+}

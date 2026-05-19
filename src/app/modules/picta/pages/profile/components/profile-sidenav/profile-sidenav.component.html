@@ -1,0 +1,49 @@
+<div class="profile-layout">
+  <header class="profile-header" aria-label="Resumen de perfil">
+    <div class="avatar-wrapper mt-2">
+      @if (user?.avatar) {
+        <img class="w-24 h-24 !rounded-full" [src]="user?.avatar + '_320x320'" [alt]="'Avatar de ' + (user?.username || 'usuario')" />
+      } @else {
+        <div class="flex justify-center items-center ring-1 ring-white h-16 w-16 !rounded-full font-bold text-2xl">
+          {{ user?.username?.charAt(0) | uppercase }}
+        </div>
+      }
+    </div>
+
+    <div class="profile-main-data">
+      <h2 class="mb-0">{{ (user?.first_name || '') + ' ' + (user?.last_name || '') }}</h2>
+      <span class="mb-0 username">{{ user?.username }}</span>
+      <span class="profile-help">Administra tu cuenta, seguridad y preferencias</span>
+    </div>
+
+    <mat-list class="profile-meta">
+      <mat-list-item class="flex items-center">
+        <mat-icon matListItemIcon>phone</mat-icon>
+        <span matLine>{{ user?.phone_number || 'Desconocido' }}</span>
+      </mat-list-item>
+      <mat-list-item class="flex items-center">
+        <mat-icon matListItemIcon>mail</mat-icon>
+        <span matLine>{{ user?.email || 'Desconocido' }}</span>
+      </mat-list-item>
+      <mat-list-item class="flex items-center">
+        <mat-icon matListItemIcon>cake</mat-icon>
+        <span matLine>{{ user?.fecha_nacimiento | date: 'dd/MM/yyyy' }}</span>
+      </mat-list-item>
+    </mat-list>
+  </header>
+
+  <nav [tabPanel]="tabPanel" class="profile-tabs" mat-tab-nav-bar>
+    <a #solicitudesRla="routerLinkActive" [active]="solicitudesRla.isActive" aria-label="Ir a Mis solicitudes" mat-tab-link routerLink="solicitudes" routerLinkActive="active">Solicitudes</a>
+    <a #subscriptionsRla="routerLinkActive" [active]="subscriptionsRla.isActive" aria-label="Ir a Siguiendo" mat-tab-link routerLink="following" routerLinkActive="active">Siguiendo</a>
+    <a #membresiaRla="routerLinkActive" [active]="membresiaRla.isActive" aria-label="Ir a Mis pagos" mat-tab-link routerLink="mis-pagos" routerLinkActive="active">Mis pagos</a>
+    <a #playlistsRla="routerLinkActive" [active]="playlistsRla.isActive" aria-label="Ir a Mis listas" mat-tab-link routerLink="playlists" routerLinkActive="active">Listas</a>
+    <a #devicesRla="routerLinkActive" [active]="devicesRla.isActive" aria-label="Ir a Mis dispositivos" mat-tab-link routerLink="devices" routerLinkActive="active">Dispositivos</a>
+    <a #configRla="routerLinkActive" [active]="configRla.isActive" aria-label="Ir a Configuracion" mat-tab-link routerLink="configuracion" routerLinkActive="active">Configuracion</a>
+  </nav>
+
+  <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+
+  <div class="profile-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

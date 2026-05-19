@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  color: var(--picta-text, #f4f7fb);
+}
+
+.picta-confirm-modal {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(243, 230, 40, 0.15);
+  background:
+    radial-gradient(
+      128% 128% at 100% 0%,
+      rgba(243, 230, 40, 0.06) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(16, 25, 53, 0.98) 0%,
+      rgba(10, 17, 38, 1) 100%
+    );
+  padding: 20px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(243, 230, 40, 0.05) inset;
+}
+
+.picta-confirm-close {
+  position: absolute !important;
+  right: 12px;
+  top: 12px;
+  color: var(--picta-text-muted, rgba(244,247,251,0.6)) !important;
+  
+  &:hover {
+    color: var(--picta-yellow, #f3e628) !important;
+  }
+}
+
+.picta-confirm-header {
+  padding: 0 36px 0 0;
+  text-align: center;
+}
+
+.picta-confirm-kicker {
+  margin: 0 0 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--picta-yellow, #f3e628);
+}
+
+.picta-confirm-title {
+  margin: 0 0 4px;
+  padding: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--picta-text, #f4f7fb);
+}
+
+.picta-confirm-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--picta-text-muted, rgba(244,247,251,0.7));
+}
+
+.picta-confirm-body {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(243, 230, 40, 0.08);
+  background: rgba(243, 230, 40, 0.03);
+  color: var(--picta-text, #f4f7fb);
+}
+
+// Acciones con mismo estilo
+.picta-confirm-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.picta-confirm-actions button {
+  flex: 1;
+  height: 44px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: none;
+}
+
+// Secondary button (No)
+.picta-confirm-actions button[mat-stroked-button] {
+  border-color: rgba(243, 230, 40, 0.3) !important;
+  color: var(--picta-yellow, #f3e628) !important;
+  background: transparent !important;
+  
+  &:hover:not([disabled]) {
+    border-color: rgba(243, 230, 40, 0.5) !important;
+    background: rgba(243, 230, 40, 0.08) !important;
+  }
+}
+
+// Primary button (Sí)
+.picta-confirm-actions button[mat-raised-button] {
+  background: var(--picta-yellow, #f3e628) !important;
+  color: rgba(10, 17, 38, 0.95) !important;
+  border: none !important;
+  box-shadow: none !important;
+  
+  &:hover:not([disabled]) {
+    background: rgba(255, 245, 157, 1) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .picta-confirm-actions {
+    flex-direction: column;
+  }
+  
+  .picta-confirm-actions button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Detalles del pago</h2>
+<mat-dialog-content>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>{{data.payment.seller}}</mat-card-title>
+      <mat-card-subtitle>{{data.payment.date | date: 'dd/MM/yyyy'}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="payment-details">
+        <div class="details-item">
+          <h6>Descripción</h6>
+          <p>{{data.payment.description}}</p>
+        </div>
+        <div class="details-item">
+          <h6>Estado</h6>
+          <p>{{data.payment.state}}</p>
+        </div>
+        <div class="details-item">
+          <h6>Monto</h6>
+          <p>{{data.payment.amount}}</p>
+        </div>
+        <div class="details-item">
+          <h6>Moneda</h6>
+          <p>{{data.payment.currency}}</p>
+        </div>
+      </div>
+
+
+
+
+    <!--  <p>
+        {{data.payment | json}}
+      </p>-->
+    </mat-card-content>
+
+  </mat-card>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

@@ -1,0 +1,781 @@
+@defer (when !loading) {
+<div class="w-full flex flex-col lg:flex-row gap-3" [class.cine-mode]="cineMode()">
+  <div class="w-full" [class.lg:w-3/4]="!cineMode()" [class.lg:w-full]="cineMode()">
+    <div id="videoContainer" #videoContainer class="youtube-theme relative video-container !rounded-md" (contextmenu)="premium ? null : handleContextMenu($event)" (mousemove)="onMouseMove()">
+      @if (mediaNotFound) {
+        <div class="wrapper">
+          <mat-icon color="accent" class="none md:block pub-icon-lg">error</mat-icon>
+          <span class="not-found-header none md:block">Publicación no encontrada.</span>
+          <mat-icon class="block md:none pub-icon-sm">error</mat-icon>
+          <span class="not-found-header block md:none">Publicación no encontrada.</span>
+          <button color="accent" [routerLink]="['/home']"  mat-button>Volver al inicio</button>
+        </div>
+      }
+      @if (premium) {
+        <div class="need-payment backdrop-blur-sm">
+          <div class="paywall-card">
+            <div class="paywall-header">
+              <div class="paywall-header-main">
+                <mat-icon class="paywall-icon">lock</mat-icon>
+                <div>
+                  @if ((!video.categoria.eventotipologia?.evento?.precio && !video.categoria?.live?.evento?.precio) && video.precios[0]?.valor) {
+                    <span class="paywall-title">Contenido de pago</span>
+                  }
+                  @if ((!video.categoria.eventotipologia?.evento?.precio && video.categoria.eventotipologia?.evento) || video.categoria.live?.evento?.precio) {
+                    <span class="paywall-title">Contenido de pago por inscripción al evento</span>
+                  }
+                  <p class="paywall-subtitle">Accede al contenido completo con una opción de pago.</p>
+                </div>
+              </div>
+              <button #paymentInfo="matTooltip" [matTooltip]="'Comprar: acceso permanente al contenido. Rentar: acceso por 3 días.'" aria-label="Información sobre compra y renta" class="paywall-info-button" mat-icon-button>
+                <mat-icon>info</mat-icon>
+              </button>
+            </div>
+            @if ((video.categoria.live?.evento && video.categoria.eventotipologia?.evento?.precio) || video.precios[0]?.valor
+              ||
+              (video.tipo == 'live' && video.precios[0]?.valor)) {
+              <div class="paywall-actions">
+                @if (precioReproduccion) {
+                  <button #tooltip10="matTooltip" (click)="isLoggedIn ? openPayment('reproduccion') : tooltip10.toggle()" [matTooltip]="isLoggedIn ? 'Comprar acceso' : 'Debes estar autenticado para pagar'" class="!rounded-full paywall-action-btn" mat-stroked-button>
+                    <mat-icon>play_circle</mat-icon>
+                    Comprar - {{ precioReproduccion | currency: '':'CUP' }}
+                  </button>
+                }
+                @if (precioRenta) {
+                  <button #tooltipRent="matTooltip" (click)="isLoggedIn ? openPayment('renta') : tooltipRent.toggle()" [matTooltip]="isLoggedIn ? 'Rentar acceso 3 días' : 'Debes estar autenticado para pagar'" class="!rounded-full paywall-action-btn" mat-stroked-button>
+                    <mat-icon>schedule</mat-icon>
+                    Rentar - {{ precioRenta | currency: '':'CUP' }}
+                  </button>
+                }
+              </div>
+            }
+            @if (video.categoria?.eventotipologia?.evento?.precio) {
+              <div class="paywall-actions">
+                <button #tooltipEvento="matTooltip" (click)="isLoggedIn ? openPayment('evento') : tooltipEvento.toggle()" [matTooltip]="isLoggedIn ? 'Comprar entrada al evento' : 'Debes estar autenticado para pagar'" class="!rounded-full paywall-action-btn" mat-stroked-button>
+                  <mat-icon>confirmation_number</mat-icon>
+                  Comprar - {{ precioReproduccion | currency: '':'CUP' }}
+                </button>
+              </div>
+            }
+            @if (!video.url_manifiesto && video.only_subs) {
+              <p class="paywall-subscription-text">Contenido exclusivo para suscriptores</p>
+              <div class="paywall-actions">
+                <button #tooltipSubs="matTooltip" routerLink="/suscripciones" [matTooltip]="isLoggedIn ? 'Ver planes' : 'Debes estar autenticado para ver los planes'" class="!rounded-full" mat-stroked-button>
+                  Ver planes de suscripción
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <video class="!rounded-md"
+        #videoPlayer width="100%" height="100%" preload="metadata" id="videoPlayer"
+        [attr.aria-label]="video?.nombre || 'Reproductor de video'"
+        poster="{{ video?.url_imagen + '_1280x720' }}"
+        >
+        @if (!hasInternalTextTracks && video?.url_subtitulo) {
+          <track label="Español" kind="subtitles" srclang="es" src="{{ video?.url_subtitulo + '.vtt' }}" type="text/vtt" >
+        }
+      </video>
+
+      <!-- Overlay del título e información del video -->
+      <div class="video-overlay-header" [class.visible]="showPlayerOverlay && titleOverlay">
+        <!-- Botón Ir atrás -->
+        <button 
+          (click)="goBack()"
+          class="back-button z-10"
+          aria-label="Volver atrás"
+        >
+          <mat-icon>arrow_back</mat-icon>
+          <span>Ir atrás</span>
+        </button>
+
+        <!-- Video title -->
+        <div id="video-title-overlay" class="video-title-overlay z-10 text-base lg:text-2xl backdrop-blur-sm !rounded-md">
+          @if (isChapterVideo() && getCurrentSeriesName()) {
+            <span >Estás viendo: </span>
+            <a
+              [routerLink]="['/serie', getCurrentSeriesName()]"
+              class="video-title-overlay-series-link"
+            >
+              {{ getCurrentSeriesName() }}
+            </a>
+            <span class="video-title-overlay-separator"> · </span>
+            @if (getCurrentSeasonName()) {
+              <span>{{ getCurrentSeasonName() }}</span>
+              <span class="video-title-overlay-separator"> · </span>
+            }
+            <span>
+              Episodio
+              @if (getCurrentEpisodeNumber()) {
+                {{ getCurrentEpisodeNumber() }}
+              }
+            </span>
+          } @else {
+            <span class="text-lg">
+              Estás viendo: {{ video?.nombre }}
+            </span>
+          }
+        </div>
+
+        <!-- Botón de información del video -->
+        <button 
+          #tooltipInfo="matTooltip"
+          matTooltip="Información del video"
+          mat-icon-button 
+          class="video-info-button z-10"
+          (click)="openVideoInfo()"
+        >
+          <mat-icon>info</mat-icon>
+        </button>
+      </div>
+
+      @if (authService.isLoggedIn()) {
+        @if (showAd && video?.url_manifiesto) {
+          <button mat-raised-button [disabled]="showAd && playTime <= 5" (click)="skipAd()" class="!rounded-full skip-button">
+            <div class="flex items-center justify-between">
+              <span>Saltar</span>
+              @if (showAd && playTime <= 5) {
+                <span class="ml-1">{{ adCountdown }}s</span>
+              }
+              <mat-icon class="!rounded-full ml-1">skip_next</mat-icon>
+            </div>
+          </button>
+        }
+        @if (showAd && playTime >= 5) {
+          <div class="html5-ypc-ads absolute">
+            @if (adsPicta[adsNumber]?.type !== 'external') {
+              <div class="html5-ypc-module">
+                <div class="html5-ypc-action-heading">Ve {{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'esta Película' : 'esta Serie' }} en Picta</div>
+                <div class="html5-ypc-thumbnail">
+                  <img [src]="adsPicta[adsNumber]?.url_imagen + '_320x180'" [alt]="adsPicta[adsNumber]?.title">
+                </div>
+                <div class="html5-ypc-title">{{ adsPicta[adsNumber]?.title }}</div>
+                <div class="html5-ypc-description">{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'La Película completa está disponible en Picta.' : 'La Serie completa está disponible en Picta.' }}</div>
+              </div>
+              <button (click)="navigateToAd()" mat-raised-button class="html5-ypc-purchase ytp-button html5-ypc-rounded">
+                <div class="flex items-center justify-between">
+                  <mat-icon class="!rounded-full ml-1">{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'movie' : 'tv' }}</mat-icon>
+                  <span class="ml-1">{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'Ver Película' : 'Ver Serie' }}</span>
+                </div>
+              </button>
+            } @else {
+              <div class="html5-ypc-module">
+                <div class="html5-ypc-thumbnail">
+                  <img [src]="adsPicta[adsNumber]?.url_imagen + '_320x180'" [alt]="adsPicta[adsNumber]?.title">
+                </div>
+                <div class="html5-ypc-title">{{ adsPicta[adsNumber]?.title }}</div>
+                <div class="html5-ypc-description">{{ adsPicta[adsNumber]?.desciption }}</div>
+              </div>
+              <a [href]="adsPicta[adsNumber]?.slug_url" target="_blank" mat-raised-button  class="html5-ypc-purchase ytp-button html5-ypc-rounded">
+                <div class="flex items-center justify-between">
+                  <mat-icon class="rounded-full ml-1">launch</mat-icon>
+                  <span>{{ adsPicta[adsNumber]?.link_title }}</span>
+                </div>
+              </a>
+            }
+          </div>
+        }
+      } @else {
+        <button mat-raised-button [style.display]="showAd ? 'block' : 'none'" [disabled]="showAd && playTime <= 10" (click)="skipAd()" class="!rounded-full skip-button">
+          <div class="flex items-center justify-between">
+            <span>Saltar</span>
+            @if (showAd && playTime <= 10) {
+              <span class="ml-2">{{ adCountdown }}s</span>
+            }
+            <mat-icon class="!rounded-full ml-1">skip_next</mat-icon>
+          </div>
+        </button>
+        @if (showAd && playTime >= 10) {
+          <div class="html5-ypc-ads absolute">
+            <div class="html5-ypc-module">
+              <div class="html5-ypc-action-heading">Ve {{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'esta Película' : 'esta Serie' }} en Picta</div>
+              <div class="html5-ypc-thumbnail">
+                <img [src]="adsPicta[adsNumber]?.url_imagen + '_320x180'" [alt]="adsPicta[adsNumber]?.title">
+              </div>
+              <div class="html5-ypc-title">{{ adsPicta[adsNumber]?.title }}</div>
+              <div class="html5-ypc-description">{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'La Película completa está disponible en Picta.' : 'La Serie completa está disponible en Picta.' }}</div>
+              <button (click)="navigateToAd()" mat-raised-button class="html5-ypc-purchase ytp-button html5-ypc-rounded">
+                <div class="flex items-center justify-between">
+                  <mat-icon class="!rounded-full ml-1">{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'movie' : 'tv' }}</mat-icon>
+                  <span>{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'Ver Película' : 'Ver Serie' }}</span>
+                </div>
+              </button>
+            </div>
+          </div>
+        }
+      }
+
+
+      @if (siguiente && displayNext) {
+        <app-next-video-card
+          [visible]="displayNext"
+          [autoPlay]="autoplayNext"
+          [thumbnail]="siguiente.url_imagen + '_320x180'"
+          [title]="siguiente.nombre"
+          [meta]="siguiente.categoria.tipologia.nombre"
+          [countdown]="autoplayCountdown"
+          (close)="dismissNextVideo()"
+          (play)="nextVideo(true, true)"
+        />
+      }
+
+      <!-- Playlist Overlay - Solo visible en modo cine -->
+      @if (showPlaylistOverlay() && hasPlayList && playlist) {
+        <app-cine-playlist 
+          [playlist]="playlist" 
+          [currentVideoId]="video.id"
+          (close)="closePlaylistOverlay()"
+          (selectVideo)="playFromPlaylist($event)"
+          (downloadVideo)="openDownloadForVideo($event)">
+        </app-cine-playlist>
+      }
+    </div>
+
+    <div id="title" class="style-scope ytd-watch-metadata my-1.5" [class.cine-hide]="cineMode()">
+      <span class="text-lg font-semibold">{{ video?.nombre }}</span>
+    </div>
+    <div id="top-row" class="style-scope ytd-watch-metadata mb-2 flex md:flex-row flex-col justify-between" [class.cine-hide]="cineMode()">
+      <div id="owner" class="style-scope ytd-watch-metadata">
+        @if (canal) {
+          <div class="channel-info flex flex-row items-center gap-2">
+            <img [alt]="canal.nombre" class="!rounded-full h-9 w-9" width="38" height="38" ngSrc="{{canal.url_avatar + '_40x40'}}" />
+            <div class="flex flex-col self-center ml-2 min-w-0 overflow-hidden">
+              <a [routerLink]="['/canal', canal.alias]" class="block overflow-hidden text-ellipsis whitespace-nowrap">{{ canal.nombre }}</a>
+              <span class="text-xs text-gray-500">{{ canal.cantidad_suscripciones !== 0 ? ( canal.cantidad_suscripciones | shortNumbers ) : 0 }} seguidores</span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              @if (canal.donar && canal.seller) {
+                <button class="mr-2 !rounded-full" #tooltip33="matTooltip" (click)="isLoggedIn ? openPayment('donacion') : tooltip33.toggle()" [matTooltip]="isLoggedIn ? 'Enviar donación' : 'Debes estar autenticado para donar'" mat-stroked-button>
+                  <mat-icon>attach_money</mat-icon>Donar
+                </button>
+              }
+              @if (!subscribed) {
+                <button #tooltip="matTooltip" (click)="isLoggedIn ? handleSubscribe() : tooltip.toggle()" [matTooltip]="isLoggedIn ? 'Seguir' : 'Debes estar autenticado para seguir'" class="align-self-center channel-follow-button" [class.is-subscribing]="subscribing" color="primary" [disabled]="subscribing || subscriptionLoading || !isLoggedIn" [ngStyle]="{ width: '130px' }" mat-stroked-button>
+                  <div class="flex items-center justify-center gap-2">
+                    @if (subscribing || subscriptionLoading) {
+                      <mat-progress-spinner diameter="18" mode="indeterminate" color="accent" style="display:inline-flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
+                    }
+                    <span class="channel-follow-label text-black" style="visibility: visible !important;">Seguir</span>
+                  </div>
+                </button>
+              } @else {
+                <button [matMenuTriggerFor]="subscribeMenu" (click)="$event.stopPropagation()" [title]="'Opciones de seguimiento'" [ngStyle]="{ width: '130px' }" class="align-self-center channel-follow-button subscribed flex items-center gap-2" [class.is-subscribing]="subscribing" [disabled]="subscribing || subscriptionLoading || !isLoggedIn" mat-stroked-button>
+                  @if (subscribing || subscriptionLoading) {
+                    <mat-progress-spinner diameter="18" mode="indeterminate" color="accent" style="display:inline-flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
+                  } @else {
+                    <mat-icon>{{ notificationMode === 'all' ? 'notifications_active' : 'notifications_off' }}</mat-icon>
+                  }
+                  <span class="channel-follow-label text-black" style="visibility: visible !important;">Siguiendo</span>
+                </button>
+                <mat-menu #subscribeMenu="matMenu" class="subscribe-menu header-menu-panel">
+                  <button mat-menu-item (click)="handleNotificationChange('all')" [class.active]="notificationMode === 'all'">
+                    <mat-icon>notifications_active</mat-icon>
+                    <span>Todas</span>
+                  </button>
+                  <button mat-menu-item (click)="handleNotificationChange('none')" [class.active]="notificationMode === 'none'">
+                    <mat-icon>notifications_off</mat-icon>
+                    <span>Ninguna</span>
+                  </button>
+                  <button mat-menu-item (click)="handleUnsubscribe()">
+                    <mat-icon>close</mat-icon>
+                    <span>Dejar de seguir</span>
+                  </button>
+                </mat-menu>
+              }
+            </div>
+          </div>
+        }
+      </div>
+      <div id="actions" class="actions-toolbar" [class.cine-hide]="cineMode()">
+        <!-- Botón de Me gusta y No me gusta -->
+        <div class="reaction-group">
+          <!-- Botón de Me gusta -->
+          <button
+            #tooltip1="matTooltip"
+            (click)="isLoggedIn ? handleLike() : tooltip1.toggle()"
+            [class.is-active]="liked"
+            [disabled]="likeLoading()"
+            [matTooltip]="isLoggedIn ? 'Me gusta' : 'Debes estar autenticado para votar'"
+            aria-label="Me gusta"
+            class="reaction-button reaction-button-left" color="primary" mat-stroked-button
+            >
+            <div class="flex items-center justify-center gap-2">
+              @if (likeLoading()) {
+                <mat-progress-spinner diameter="18" mode="indeterminate" color="accent"></mat-progress-spinner>
+              } @else {
+                <mat-icon>thumb_up</mat-icon>
+              }
+              <span>{{ this.likes !== 0 ? (this.likes | shortNumbers) : 0 }}</span>
+            </div>
+          </button>
+          <!-- Barra separadora -->
+          <div class="reaction-divider"></div>
+          <!-- Botón de No me gusta -->
+          <button
+            #tooltip2="matTooltip"
+            (click)="isLoggedIn ? handleDislike() : tooltip2.toggle()"
+            [class.is-negative-active]="disliked"
+            [disabled]="dislikeLoading()"
+            [matTooltip]="isLoggedIn ? 'No me gusta' : 'Debes estar autenticado para votar'"
+            aria-label="No me gusta"
+            class="reaction-button reaction-button-right" color="primary" mat-stroked-button
+            >
+            <div class="flex items-center justify-center gap-2">
+              @if (dislikeLoading()) {
+                <mat-progress-spinner diameter="18" mode="indeterminate" color="accent"></mat-progress-spinner>
+              } @else {
+                <mat-icon>thumb_down</mat-icon>
+              }
+              <span>{{ this.dislikes !== 0 ? (this.dislikes | shortNumbers) : 0 }}</span>
+            </div>
+          </button>
+        </div>
+        <!-- Botón de lista de reproduccion -->
+        @if (innerWidth < 1200 && hasPlayList) {
+          <button
+            (click)="openPlaylist()"
+            [matTooltip]="'Ver lista de reproducción'"
+            aria-label="Ver lista de reproducción"
+            class="action-button action-button-icon block lg:none" color="primary" mat-stroked-button
+            >
+            <mat-icon>playlist_play</mat-icon>
+          </button>
+        }
+        <!-- Botón de chat para live -->
+        @if (video?.categoria?.live && video.mostrar_chat) {
+          <button
+            (click)="openChat()"
+            [matTooltip]="'Chat en vivo'"
+            aria-label="Abrir chat"
+            class="action-button action-button-icon block lg:none"
+            color="primary"
+            mat-stroked-button
+            >
+            <mat-icon>sms</mat-icon>
+          </button>
+        }
+        <!-- Botón de Descargar -->
+        @if (video?.descargable && video?.descarga && (video?.convertido)) {
+          <button
+            #tooltip3="matTooltip"
+            (click)="isLoggedIn ? openDownload() : tooltip3.toggle()"
+            [matTooltip]="isLoggedIn ? 'Descargar video' : 'Debes estar autenticado para descargar'"
+            [disabled]="isLoggedIn ? (isAdPlaying && playTime <= 5) : (isAdPlaying && playTime <= 5)"
+            class="action-button" color="primary" mat-stroked-button
+            >
+            @if (precioDescarga && !video.pd) {
+              <mat-icon matBadge="$">get_app</mat-icon>
+            }
+            @if (!precioDescarga || video.pd) {
+              <mat-icon>get_app</mat-icon>
+            }
+            <span class="hidden lg:inline-block">Descargar</span>
+          </button>
+        }
+        <!-- Opción de Compartir -->
+        <button mat-stroked-button class="action-button" color="primary" aria-label="Compartir publicación" (click)="showShareDialog()">
+          <mat-icon>share</mat-icon>
+          <span class="hidden lg:block">Compartir</span>
+        </button>
+        <!-- Botón de 3 puntos (menú adicional) -->
+        <button class="flex! action-trigger-button" aria-label="Más opciones" mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <!-- Menú desplegable de 3 puntos -->
+        <mat-menu #menu="matMenu" class="publication-actions-menu">
+          <!-- Opción de Denunciar -->
+          <button mat-menu-item #tooltip4="matTooltip" (click)="isLoggedIn ? handleDenuncia() : tooltip4.toggle()" [matTooltip]="isLoggedIn ? 'Denunciar' : 'Debes estar autenticado para denunciar'">
+            <mat-icon>assistant_photo</mat-icon>
+            <span>Denunciar</span>
+          </button>
+          <!-- Opción de Agregar a lista de reproducción -->
+          <button
+            mat-menu-item
+            #tooltip5="matTooltip"
+            (click)="isLoggedIn ? openUserPlaylist() : tooltip5.toggle()"
+            [matTooltip]="isLoggedIn ? 'Agregar a lista de reproducción' : 'Debes estar autenticado para crear listas personalizadas.'"
+            >
+            <mat-icon>playlist_add</mat-icon>
+            <span>Agregar a lista de reproducción</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+    <mat-divider class="mb-2"></mat-divider>
+    <div id="bottom-row" class="style-scope ytd-watch-metadata">
+      <div id="description" class="style-scope ytd-watch-metadata publication-description-card !rounded-2xl border border-[#2a3258] bg-[#12183a]/95 p-3 shadow-[0_12px_28px_rgba(0,0,0,0.28)] backdrop-blur-sm" [class.cine-hide]="cineMode()">
+        <div class="w-full">
+          @if (video?.tipo == 'live' && !video?.categoria.live?.finalizado) {
+            <p class="post-video-data mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[clamp(0.95rem,1.3vw,1.55rem)] font-semibold leading-tight text-[rgba(241,244,251,0.92)]">{{ online }} usuarios</p>
+          }
+          @if (video?.categoria.live?.finalizado) {
+            <p class="post-video-data mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[clamp(0.95rem,1.3vw,1.55rem)] font-semibold leading-tight text-[rgba(241,244,251,0.92)]">
+              {{ video.cantidad_visitas !== 0 ? ( video.cantidad_visitas | shortNumbers ) : 0 }} vistas
+            </p>
+          }
+          @if (video?.tipo != 'live') {
+            <p class="post-video-data mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[clamp(0.95rem,1.3vw,1.55rem)] font-semibold leading-tight text-[rgba(241,244,251,0.92)]">
+              {{ video?.cantidad_visitas !== 0 ? ( video?.cantidad_visitas | shortNumbers ) : 0 }} vistas hace {{ video?.tiempo_creacion }}
+            </p>
+          }
+          <!-- Texto completo (cuando readMore es true) -->
+          @if (readMore) {
+            <div
+              class="markdown text-sm text-[rgba(236,240,250,0.84)]"
+              markdown
+              [data]="video.descripcion"
+              [disableSanitizer]="true">
+            </div>
+          }
+          <!-- Texto corto (preview) -->
+          @if (!readMore) {
+            <div
+              class="markdown text-sm text-[rgba(236,240,250,0.84)]"
+              markdown
+              [data]="(video?.descripcion | slice:0:200) + '...'"
+              [disableSanitizer]="true">
+            </div>
+          }
+          <!-- Botón dinámico -->
+          <button (click)="readMore = !readMore" class="read-more-btn">
+            {{ readMore ? 'Mostrar menos' : 'Mostrar más' }}
+          </button>
+
+        </div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <!-- PiatexAds -->
+    @if (innerWidth < 1200) {
+      <div id="ads-mobile" class="mt-3 mb-3 none flex flex-row" style="display:none">
+        <ins class="adsbypiatex" data-zone="1" data-medio="2553231789ef454d96ec6bfde3a052e1"></ins>
+      </div>
+    }
+    <!-- PiatexAds -->
+    <!-- Publicidad Mobile Personalizada -->
+    <div class="w-full my-3 block lg:hidden">
+      <div class="html5-ypc-ads sidebar-sponsored-card">
+        <button (click)="openAdRemovalModal()" aria-label="Ocultar publicidad" class="sidebar-sponsored-close absolute top-2 right-2 z-10 p-1 hover:bg-[rgba(0,0,0,.75)] !rounded-full transition-colors" mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
+        <div class="sidebar-sponsored-header">
+          <span class="sidebar-sponsored-badge">Patrocinado</span>
+        </div>
+        <div class="html5-ypc-module-horizontal sidebar-sponsored-body">
+          <div class="sidebar-sponsored-media">
+            <div class="html5-ypc-thumbnail-small">
+              <img [src]="adsPicta[adsNumber]?.url_imagen + '_96x96'" [alt]="adsPicta[adsNumber]?.title" loading="lazy" class="sidebar-sponsored-image !rounded-lg object-cover">
+            </div>
+            <div class="sidebar-sponsored-content">
+              <div>
+                <div class="html5-ypc-title sidebar-sponsored-title">{{ adsPicta[adsNumber]?.title }}</div>
+                <div class="html5-ypc-description sidebar-sponsored-description">
+                  @if (adsPicta[adsNumber]?.type !== 'external') {
+                    {{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'Película disponible en Picta' : 'Serie disponible en Picta' }}
+                  } @else {
+                    {{ adsPicta[adsNumber]?.desciption }}
+                  }
+                </div>
+              </div>
+              <div class="mt-2">
+                @if (adsPicta[adsNumber]?.type !== 'external') {
+                  <button (click)="navigateToAd()" mat-raised-button class="html5-ypc-purchase ytp-button html5-ypc-rounded sidebar-sponsored-cta">
+                    <div class="flex items-center justify-center gap-1">
+                      <mat-icon>{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'movie' : 'tv' }}</mat-icon>
+                      <span>{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'Ver Película' : 'Ver Serie' }}</span>
+                    </div>
+                  </button>
+                } @else {
+                  <a [href]="adsPicta[adsNumber]?.slug_url" target="_blank" mat-raised-button class="html5-ypc-purchase ytp-button html5-ypc-rounded sidebar-sponsored-cta">
+                    <div class="flex items-center justify-center gap-1">
+                      <mat-icon>launch</mat-icon>
+                      <span>{{ adsPicta[adsNumber]?.link_title }}</span>
+                    </div>
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    @if (video?.mostrar_comentarios) {
+      <div class="comment mt-2" [class.cine-hide]="cineMode()">
+        @if (isLoggedIn) {
+          <app-coment-form (dismiss)="dismiss($event)" [user]="this.loggedUser" [video]="this.video"></app-coment-form>
+        }
+        @if (video.lista_comentarios) {
+          <app-coment-box (onUpdated)="refreshComments()" [user]="this.loggedUser" [canal]="this.canal" [video]="this.video"></app-coment-box>
+        }
+        @if (commentsLoading && video?.lista_comentarios?.results?.length) {
+          <app-categoria-loading-state
+            [label]="'Cargando más comentarios...'"
+            [ariaLabel]="'Cargando más comentarios'"
+          ></app-categoria-loading-state>
+        }
+      </div>
+    }
+  </div>
+  <div class="w-full lg:w-1/4" [class.hidden]="cineMode()" [class.cine-sidebar]="cineMode()">
+    @if (video?.categoria?.live && video?.mostrar_chat && authService.isLoggedIn()) {
+      <div class="hidden lg:block px-4 mb-4">
+        @if (video) {
+          <app-chat [id]="video.id"></app-chat>
+        }
+      </div>
+    }
+
+    <!-- Publicidad Desktop Personalizada -->
+    @if (showSidebarAd) {
+      <div class="w-full mb-3 p-2">
+        <div class="html5-ypc-ads sidebar-sponsored-card">
+          <button (click)="openAdRemovalModal()" aria-label="Ocultar publicidad" class="sidebar-sponsored-close" mat-icon-button>
+            <mat-icon>close</mat-icon>
+          </button>
+          <div class="sidebar-sponsored-header">
+            <span class="sidebar-sponsored-badge">Patrocinado</span>
+          </div>
+          <div class="html5-ypc-module-horizontal sidebar-sponsored-body">
+            <div class="sidebar-sponsored-media">
+              <div class="html5-ypc-thumbnail-small">
+                <img [src]="adsPicta[adsNumber]?.url_imagen + '_96x96'" [alt]="adsPicta[adsNumber]?.title" loading="lazy" class="sidebar-sponsored-image">
+              </div>
+              <div class="sidebar-sponsored-content">
+                <div>
+                  <div class="html5-ypc-title sidebar-sponsored-title">{{ adsPicta[adsNumber]?.title }}</div>
+                  <div class="html5-ypc-description sidebar-sponsored-description">
+                    @if (adsPicta[adsNumber]?.type !== 'external') {
+                      {{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'Película disponible en Picta' : 'Serie disponible en Picta' }}
+                    } @else {
+                      {{ adsPicta[adsNumber]?.desciption }}
+                    }
+                  </div>
+                </div>
+                @if (adsPicta[adsNumber]?.type !== 'external') {
+                  <button (click)="navigateToAd()" mat-raised-button class="html5-ypc-purchase ytp-button html5-ypc-rounded sidebar-sponsored-cta">
+                    <div class="flex items-center justify-center gap-1">
+                      <mat-icon>{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'movie' : 'tv' }}</mat-icon>
+                      <span>{{ adsPicta[adsNumber]?.type === 'picta-movie' ? 'Ver Película' : 'Ver Serie' }}</span>
+                    </div>
+                  </button>
+                } @else {
+                  <a [href]="adsPicta[adsNumber]?.slug_url" target="_blank" mat-raised-button class="html5-ypc-purchase ytp-button html5-ypc-rounded sidebar-sponsored-cta">
+                    <div class="flex items-center justify-center gap-1">
+                      <mat-icon>launch</mat-icon>
+                      <span>{{ adsPicta[adsNumber]?.link_title }}</span>
+                    </div>
+                  </a>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="flex flex-row justify-end">
+      <div class="px-1 mb-2">
+        <mat-slide-toggle (change)="toggleAutoPlayNext($event)" [checked]="autoplayNext"  labelPosition="before">{{ 'Reproducción automática' | uppercase }}</mat-slide-toggle>
+      </div>
+    </div>
+
+    <!-- Programación del día (canal en vivo) -->
+    @if (canal?.idEprog) {
+      <div class="w-full mb-3">
+        <app-programacion-canal [idEprog]="canal.idEprog" [canalTitle]="video?.nombre || canal.titulo || canal.nombre"></app-programacion-canal>
+      </div>
+    }
+
+
+    @if (hasPlayList && playlist) {
+      <app-playlist (nextVideo)="playFromPlaylist($event)" [currentVideo]="video.id" [playlist]="playlist"></app-playlist>
+    }
+
+    <app-shorts-carousel title='Picta Shorts'></app-shorts-carousel>
+
+    <app-recommended-list (navigate)="playFromRecomended($event)" [videosRecomendados]="videosRecomendados"></app-recommended-list>
+  </div>
+</div>
+
+<ng-template #playlistRef class="playlistPane block lg:none">
+  @if (hasPlayList && playlist) {
+    <app-playlist (nextVideo)="playFromPlaylist($event)" [mobile]="false" [currentVideo]="video.id" [playlist]="playlist" />
+  }
+</ng-template>
+
+<ng-template #chatMobileRef class="playlistPane block lg:none">
+  @if (video) {
+    <app-chat [id]="video.id" />
+  }
+</ng-template>
+
+<!-- Modal para eliminar publicidad -->
+@if (showAdRemovalModal) {
+  <div class="picta-modal-overlay">
+    <section class="picta-ad-modal">
+      <button (click)="closeAdRemovalModal()" aria-label="Cerrar diálogo" class="picta-ad-close flex! justify-center!" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+
+      <header class="picta-ad-header">
+        <p class="picta-ad-kicker">Picta</p>
+        <h2 class="picta-ad-title">Eliminar publicidad</h2>
+        <p class="picta-ad-subtitle">
+          Para disfrutar de una experiencia sin interrupciones, adquiere una suscripción.
+        </p>
+      </header>
+
+      <section class="picta-ad-note">
+        <p>
+          Con un plan activo obtienes reproducción sin anuncios y acceso a más beneficios premium.
+        </p>
+      </section>
+
+      <div class="picta-ad-actions">
+        <button (click)="closeAdRemovalModal()" mat-stroked-button class="picta-ad-secondary-btn">
+          Cancelar
+        </button>
+        <button (click)="navigateToSubscriptions()" mat-raised-button class="picta-ad-primary-btn">
+          Ver planes
+        </button>
+      </div>
+    </section>
+  </div>
+}
+@if (denuncia) {
+  <div class="picta-modal-overlay">
+    <div class="picta-report-modal">
+      <button (click)="toggleDenuncia()" aria-label="Cerrar denuncia" class="picta-report-close flex! justify-center!" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+      <div class="picta-report-header">
+        <p class="picta-report-kicker">Picta</p>
+        <span class="picta-report-title">Denunciar publicación</span>
+        <p class="picta-report-subtitle">Cuéntanos qué ocurre para que podamos revisar esta publicación.</p>
+      </div>
+      <div class="picta-report-content">
+        <app-denuncia-form (denuncia)="toggleDenuncia()" [video]="video"></app-denuncia-form>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Cine Mode Upgrade Modal -->
+@if (showCineUpgradeModal()) {
+  <div class="picta-modal-overlay">
+    <section class="picta-ad-modal">
+      <button (click)="closeCineUpgradeModal()" aria-label="Cerrar diálogo" class="picta-ad-close flex! justify-center!" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+
+      <header class="picta-ad-header">
+        <p class="picta-ad-kicker">Picta</p>
+        <h2 class="picta-ad-title">Modo Cine</h2>
+        <p class="picta-ad-subtitle">
+          Para activar el modo cine y disfrutar de tus contenidos en pantalla completa, necesitas una suscripción activa.
+        </p>
+      </header>
+
+      <section class="picta-ad-note">
+        <p>
+          Con un plan activo obtienes el modo cine, reproducción sin anuncios y acceso a más beneficios premium.
+        </p>
+      </section>
+
+      <div class="picta-ad-actions">
+        <button (click)="closeCineUpgradeModal()" mat-stroked-button class="picta-ad-secondary-btn">
+          Cancelar
+        </button>
+        <button (click)="navigateToSubscriptionsFromCine()" mat-raised-button class="picta-ad-primary-btn">
+          Ver planes
+        </button>
+      </div>
+    </section>
+  </div>
+}
+} @placeholder {
+<div class="publication-skeleton flex flex-col lg:flex-row gap-4">
+  <div class="w-full lg:w-4/5">
+    <div class="skeleton-card skeleton-player"></div>
+
+    <div class="skeleton-heading-group mt-4">
+      <div class="skeleton-line skeleton-line-title"></div>
+    </div>
+
+    <div class="publication-skeleton__meta mt-4">
+      <div class="publication-skeleton__channel flex items-center gap-3">
+        <div class="skeleton-avatar"></div>
+        <div class="flex-1">
+          <div class="skeleton-line skeleton-line-channel"></div>
+          <div class="skeleton-line skeleton-line-caption mt-2"></div>
+        </div>
+        <div class="skeleton-pill"></div>
+      </div>
+
+      <div class="publication-skeleton__actions mt-4">
+        <div class="skeleton-pill skeleton-pill-wide"></div>
+        <div class="skeleton-pill skeleton-pill-icon"></div>
+        <div class="skeleton-pill skeleton-pill-medium"></div>
+        <div class="skeleton-pill skeleton-pill-medium"></div>
+      </div>
+    </div>
+
+    <div class="skeleton-card skeleton-description mt-4 p-4">
+      <div class="skeleton-line skeleton-line-meta"></div>
+      <div class="skeleton-line mt-3"></div>
+      <div class="skeleton-line mt-2"></div>
+      <div class="skeleton-line skeleton-line-short mt-2"></div>
+      <div class="skeleton-pill skeleton-pill-small mt-4"></div>
+    </div>
+
+    <div class="skeleton-comments mt-4">
+      <div class="skeleton-line skeleton-line-section"></div>
+      <div class="skeleton-comment-card mt-4">
+        <div class="skeleton-avatar skeleton-avatar-small"></div>
+        <div class="flex-1">
+          <div class="skeleton-line skeleton-line-comment-author"></div>
+          <div class="skeleton-line mt-2"></div>
+          <div class="skeleton-line skeleton-line-short mt-2"></div>
+        </div>
+      </div>
+      <div class="skeleton-comment-card mt-3">
+        <div class="skeleton-avatar skeleton-avatar-small"></div>
+        <div class="flex-1">
+          <div class="skeleton-line skeleton-line-comment-author"></div>
+          <div class="skeleton-line mt-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hidden lg:block w-full lg:w-1/3">
+    <div class="skeleton-card skeleton-side-card"></div>
+    <div class="skeleton-card skeleton-side-panel mt-4"></div>
+    <div class="skeleton-card skeleton-side-list mt-4">
+      <div class="skeleton-side-item">
+        <div class="skeleton-thumb"></div>
+        <div class="flex-1">
+          <div class="skeleton-line skeleton-line-side-title"></div>
+          <div class="skeleton-line skeleton-line-caption mt-2"></div>
+        </div>
+      </div>
+      <div class="skeleton-side-item">
+        <div class="skeleton-thumb"></div>
+        <div class="flex-1">
+          <div class="skeleton-line skeleton-line-side-title"></div>
+          <div class="skeleton-line skeleton-line-caption mt-2"></div>
+        </div>
+      </div>
+      <div class="skeleton-side-item">
+        <div class="skeleton-thumb"></div>
+        <div class="flex-1">
+          <div class="skeleton-line skeleton-line-side-title"></div>
+          <div class="skeleton-line skeleton-line-caption mt-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

@@ -1,0 +1,33 @@
+@if (loading) {
+  <div class="flex w-100 justify-content-center align-items-center categoria-carousel">
+    <mat-spinner aria-label="cargando" diameter="50"></mat-spinner>
+  </div>
+}
+<div class="section">
+  <section>
+    <div class="categoria-carousel">
+      <h2 class="nm-collections-row-name">
+        <span class="nm-collections-row-name">Próximas Series</span>
+      </h2>
+      @if (series?.length) {
+        <app-serie-list [series]="series"></app-serie-list>
+      } @else {
+        <div class="flex justify-content-center align-items-center mt-5 px-4 mat-typography">
+          <mat-icon class="mr-3">error</mat-icon><h1 class="mb-0">No se encontraron próximos estrenos.</h1>
+        </div>
+      }
+    </div>
+  </section>
+</div>
+
+<!-- <div class="section">
+<section class="nm-collections-row">
+  <div class="categoria-carousel">
+    <h2 class="nm-collections-row-name">
+      <span class="nm-collections-row-name">Películas</span>
+    </h2>
+    <app-serie-list *ngIf="series?.length; else notFound" [mode]="viewModeControl.value" [series]="series"></app-serie-list>
+  </div>
+</section>
+</div> -->
+

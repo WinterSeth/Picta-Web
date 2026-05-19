@@ -1,0 +1,19 @@
+<mat-list>
+  @for (publicacion of playlist()?.publicacion; track publicacion) {
+    <mat-list-item class="py-3">
+      <img [src]="publicacion.url_imagen+'_130x90'" matListItemIcon>
+      <div matListItemTitle>{{publicacion.nombre}}</div>
+      <div matListItemLine>{{publicacion.duracion}}</div>
+      <div class="flex items-center gap-2" matListItemMeta>
+        <a (click)="goTo(publicacion)" color="accent" mat-icon-button>
+          <mat-icon>play_circle_outline</mat-icon>
+        </a>
+        <button (click)="removeFromList(publicacion.id)" color="accent" mat-icon-button title="Quitar de la lista">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </mat-list-item>
+  }
+
+</mat-list>
+

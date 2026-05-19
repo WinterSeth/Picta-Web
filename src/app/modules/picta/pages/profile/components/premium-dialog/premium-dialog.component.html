@@ -1,0 +1,138 @@
+<mat-dialog-content>
+
+  <mat-horizontal-stepper #stepper labelPosition="bottom">
+    <mat-step label="Beneficios">
+      <div class="flex flex-column">
+        <mat-list class="beneficios-list">
+
+          <mat-list-item>
+            <mat-icon matListIcon>get_app</mat-icon>
+            <h3 matLine> Descarga sin límites </h3>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListIcon>signal_cellular_4_bar</mat-icon>
+            <h3 matLine> 10Gb de datos LTE! Sólo para Picta! </h3>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListIcon>monetization_on</mat-icon>
+            <h3 matLine> Por sólo 1 CUC!!! Whaaaaaatt!!</h3>
+          </mat-list-item>
+        </mat-list>
+        <button cdkStepperNext class="align-self-end" color="primary" mat-stroked-button>
+          Siguiente
+          <mat-icon>
+            navigate_next
+          </mat-icon>
+        </button>
+
+      </div>
+    </mat-step>
+    <mat-step label="Método de Pago">
+      <mat-horizontal-stepper #paymentStepper class="paymentStepper">
+        <mat-step>
+          <div class="flex flex-column">
+            <mat-selection-list #methods [multiple]="false"
+              class="beneficios-list">
+              <div mat-subheader>Selecciona un Método de pago</div>
+              <mat-list-option (click)="paymentStepper.next()" value="transfermovil">
+                <img alt="Transfermóvil logo" matListAvatar src="icons/cu.etecsa.cubacel.tr.tm.png"/>
+                <h3 matLine> Transfermóvil </h3>
+              </mat-list-option>
+              <mat-list-option (click)="paymentStepper.next()" value="enzona">
+                <img alt="Enzona logo" matListAvatar src="icons/cu.xetid.apk.enzona.png"/>
+                <h3 matLine> Enzona </h3>
+              </mat-list-option>
+            </mat-selection-list>
+            <button (click)="stepper.previous()"
+              class="align-self-start mt-4" mat-stroked-button>
+              <mat-icon>
+                navigate_before
+              </mat-icon>
+              Atrás
+            </button>
+
+          </div>
+        </mat-step>
+        <mat-step>
+          <div class="flex flex-column">
+            <mat-selection-list #options [multiple]="false" class="beneficios-list">
+
+              @if (methods?.selectedOptions?.selected[0]?.value==='enzona') {
+                <mat-list-option value="enzonaQR">
+                  <mat-icon matListIcon svgIcon="qrself"></mat-icon>
+                  <h3 matLine>Generar código QR</h3>
+                </mat-list-option>
+              }
+              @if (methods?.selectedOptions?.selected[0]?.value==='enzona') {
+                <mat-list-option value="enzonaDirect">
+                  <mat-icon matListIcon>public</mat-icon>
+                  <h3 matLine>Pago directo en EnZona </h3>
+                </mat-list-option>
+              }
+            </mat-selection-list>
+            <div class="flex align-items-center justify-content-between mt-4">
+              <button cdkStepperPrevious
+                class="" mat-stroked-button>
+                <mat-icon>
+                  navigate_before
+                </mat-icon>
+                Atrás
+              </button>
+              <button (click)="goPremium(options.selectedOptions.selected)"
+                [disabled]="!options.selectedOptions.selected.length? true: null"
+                class="" color="primary" mat-raised-button>
+                {{options?.selectedOptions?.selected[0]?.value === 'enzonaQR' ? 'Siguiente' : 'Completar'}}
+                <mat-icon>
+                  {{options?.selectedOptions?.selected[0]?.value === 'enzonaQR' ? 'navigate_next' : 'done'}}
+                </mat-icon>
+              </button>
+
+            </div>
+
+          </div>
+        </mat-step>
+        <mat-step label="Código QR">
+          <div class="flex flex-column mat-typography">
+            <img [src]="this.generatedQRData" alt="QR" class="align-self-center">
+            <h2 class="w-50 mt-2 align-self-center" style="width: 60%;text-align: center">Escanea el código QR con la aplicación de
+              <strong>EnZona</strong>
+            para completar el pago.</h2>
+
+            <div class="flex align-items-center justify-content-between mt-4">
+              <button cdkStepperPrevious
+                class="" mat-stroked-button>
+                <mat-icon>
+                  navigate_before
+                </mat-icon>
+                Atrás
+              </button>
+              <button class="" mat-stroked-button (click)="showPaymentList()">
+                Pagos efectuados
+              </button>
+              @if (ticket) {
+                <button (click)="checkTicket()"
+                  class="" color="primary" mat-raised-button>
+                  Comprobar pago
+                  <mat-icon>
+                    done
+                  </mat-icon>
+                </button>
+              }
+
+            </div>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+
+    </mat-step>
+
+
+  </mat-horizontal-stepper>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button color="warn" mat-button mat-dialog-close>Cancelar</button>
+  <!--<button (click)="goPremium()" color="primary" mat-raised-button>
+  <mat-icon>payment</mat-icon>
+  Shut up and take my money!!
+</button>-->
+</mat-dialog-actions>

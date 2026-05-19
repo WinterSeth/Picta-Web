@@ -1,0 +1,148 @@
+.comment-form-container {
+  padding: 12px 0;
+}
+
+.comment-form-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+// Avatar del usuario
+.user-avatar {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  &.initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(244, 247, 251, 0.95);
+    background: rgba(16, 25, 53, 0.8);
+  }
+}
+
+// Input
+.comment-input {
+  flex: 1;
+  
+  input.input-field {
+    font-size: 0.95rem;
+    color: rgba(244, 247, 251, 0.95);
+    background: rgba(16, 25, 53, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 12px 14px;
+    transition: all 0.2s ease;
+    
+    &::placeholder {
+      color: rgba(244, 247, 251, 0.45);
+    }
+    
+    &:focus {
+      border-color: rgba(243, 230, 40, 0.5);
+      background: rgba(16, 25, 53, 0.85);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(243, 230, 40, 0.1);
+    }
+  }
+}
+
+// Actions
+.comment-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+  margin-left: auto;
+}
+
+.cancel-btn {
+  padding: 8px 16px !important;
+  height: 36px !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  color: rgba(244, 247, 251, 0.75) !important;
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 8px !important;
+  
+  &:hover {
+    color: rgba(244, 247, 251, 0.95) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.submit-btn {
+  padding: 8px 20px !important;
+  height: 36px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  color: rgba(10, 17, 38, 0.95) !important;
+  background: var(--picta-yellow, #f3e628) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  min-width: 100px;
+  transition: all 0.2s cubic-bezier(0.35, 0, 0.25, 1);
+  
+  &:hover:not(:disabled) {
+    background: rgba(255, 245, 157, 1) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(243, 230, 40, 0.25);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+  }
+  
+  .spinner {
+    display: inline-flex;
+    margin-right: 6px;
+    
+    ::ng-deep circle {
+      stroke: rgba(10, 17, 38, 0.95);
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+@media (max-width: 768px) {
+  .comment-form-layout {
+    gap: 10px;
+  }
+  
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 0.85rem;
+  }
+  
+  .comment-input input.input-field {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+  
+  .comment-form-actions {
+    gap: 8px;
+  }
+  
+  .cancel-btn,
+  .submit-btn {
+    height: 34px !important;
+    font-size: 0.75rem !important;
+  }
+}

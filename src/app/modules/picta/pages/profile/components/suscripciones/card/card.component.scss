@@ -1,0 +1,148 @@
+:root {
+  --picta-font-primary: 'Bebas Neue', sans-serif;
+  --picta-font-secondary: 'Abel', sans-serif;
+  --picta-font-body: 'Roboto', sans-serif;
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+}
+
+.button-container {
+  margin-top: auto;
+}
+
+// Picta-brand gradient instead of generic blue/green
+.gradient-background {
+  background: linear-gradient(135deg, var(--picta-accent) 0%, rgba(255, 178, 108, 0.95) 100%);
+  background-size: 300% 300%;
+  animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.shadow-custom {
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+$anim-duration: 3s;
+$anim-speed: 1.5s;
+
+.btn-alt {
+  border: var(--btn-border);
+  color: var(--btn-text-color);
+  position: relative;
+  overflow: hidden;
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 100%;
+    top: 0;
+  }
+
+  &::before {
+    background: rgba(255, 255, 255, 0.774);
+    width: 100px;
+    left: 0;
+    filter: blur(30px);
+    animation: shine-alt1 #{$anim-duration}s ease-in-out infinite;
+  }
+  &::after {
+    background: rgba(255, 255, 255, 0.527);
+    width: 60px;
+    left: 60px;
+    filter: blur(5px);
+    animation: shine-alt2 #{$anim-duration}s ease-in-out infinite;
+  }
+}
+
+@keyframes shine-alt1 {
+  0%, 100% { left: -100px; }
+  50% { left: 100%; }
+}
+
+@keyframes shine-alt2 {
+  0%, 100% { left: -60px; }
+  50% { left: 100%; }
+}
+
+.membership-card {
+  border-color: var(--picta-yellow-border) !important;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.membership-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+}
+
+.benefit-list {
+  margin-bottom: 0;
+}
+
+.plan-loading-state {
+  background: rgba(5, 8, 20, 0.64);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px;
+  min-height: 220px;
+}
+
+.membership-card button:focus-visible {
+  outline: 2px solid rgba(232, 70, 46, 0.62);
+  outline-offset: 2px;
+}
+
+.membership-card .mat-icon {
+  flex-shrink: 0;
+}
+
+.membership-card h5 {
+  font-family: var(--picta-font-primary);
+  letter-spacing: 0.02em;
+}
+
+.membership-card .text-3xl {
+  font-family: var(--picta-font-primary);
+}
+
+.membership-card .text-base {
+  font-family: var(--picta-font-body);
+}
+
+@media (max-width: 767px) {
+  .membership-card {
+    padding: 12px !important;
+  }
+}

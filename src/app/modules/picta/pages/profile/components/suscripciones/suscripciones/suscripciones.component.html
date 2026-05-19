@@ -1,0 +1,137 @@
+<main class="subscription-history flex flex-col items-center justify-start px-6 md:px-12 pb-10 py-10">
+  <div class="w-full max-w-5xl">
+    <header class="profile-header mb-5">
+      <h1 class="profile-header-title">Mis pagos</h1>
+      <p class="profile-header-subtitle">Consulta tu plan actual y el historial de pagos de tu cuenta.</p>
+    </header>
+    
+    @if (loading) {
+      <div class="profile-card p-6 md:p-10 mb-8">
+        <div class="h-6 bg-white/10 rounded-md w-1/4 mb-6"></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          @for (item of [1, 2, 3]; track $index) {
+            <div>
+              <div class="h-4 bg-white/10 rounded-md w-1/2 mb-2"></div>
+              <div class="h-5 bg-white/10 rounded-md w-3/4"></div>
+            </div>
+          }
+        </div>
+        <div class="flex gap-4">
+          <div class="h-10 bg-white/10 rounded-md w-32"></div>
+          <div class="h-10 bg-white/10 rounded-md w-32"></div>
+        </div>
+      </div>
+
+      <div class="profile-card p-6 md:p-10">
+        <div class="h-6 bg-white/10 rounded-md w-1/4 mb-6"></div>
+        <div class="space-y-4">
+          @for (item of [1, 2, 3]; track $index) {
+            <div class="h-12 bg-white/10 rounded-md w-full"></div>
+          }
+        </div>
+      </div>
+    } @else if (error) {
+      <div class="w-full bg-red-900/20 border border-red-500 text-red-200 rounded-xl p-4 mb-8 text-center">
+        <p>{{ error }}</p>
+      </div>
+    } @else {
+      @if (currentPlan) {
+        <div class="profile-card p-6 md:p-10 mb-8">
+          <h2 class="font-secondary text-lg mb-6">Detalles del plan</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div>
+              <p class="text-sm" style="color: var(--picta-text-muted)">Plan actual</p>
+              <p class="font-semibold text-white">{{ currentPlan.plan?.nombre || 'Suscripción' }}</p>
+            </div>
+            <div>
+              <p class="text-sm" style="color: var(--picta-text-muted)">Monto</p>
+              <p class="font-semibold text-white">
+                @if (activePrice() !== null) {
+                  ${{ activePrice() | number:'1.0-0' }}
+                } @else {
+                  N/D
+                }
+              </p>
+            </div>
+            <div>
+              <p class="text-sm" style="color: var(--picta-text-muted)">Días restantes</p>
+              <p class="font-semibold text-white">
+                @if (daysRemaining() !== null) {
+                  {{ daysRemaining() }} días
+                } @else {
+                  N/D
+                }
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <button (click)="cancelSubscription()" [disabled]="cancelling" class="picta-btn-danger">
+              @if (cancelling) {
+                Cancelando...
+              } @else {
+                Cancelar suscripción
+              }
+            </button>
+            <button [routerLink]="['/suscripciones']" class="picta-btn-outlined">
+              Cambiar plan
+            </button>
+          </div>
+        </div>
+      } @else {
+        <div class="profile-card p-6 md:p-10 mb-8 text-center">
+          <h2 class="font-secondary text-lg mb-4">No tienes una suscripción activa</h2>
+          <p class="mb-6" style="color: var(--picta-text-muted)">Suscríbete para disfrutar de todo el contenido premium.</p>
+          <button [routerLink]="['/suscripciones']" class="picta-btn-primary">
+            Ver planes
+          </button>
+        </div>
+      }
+
+      <div class="profile-card p-6 md:p-10">
+        <h2 class="font-secondary text-lg mb-6">Historial de suscripciones</h2>
+        <div class="history-table-wrap overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="uppercase" style="background: rgba(10, 21, 51, 0.9); color: #d1d5db;">
+              <tr>
+                <th class="px-4 py-3 font-medium">No.</th>
+                <th class="px-4 py-3 font-medium">Plan</th>
+                <th class="px-4 py-3 font-medium">Fecha</th>
+                <th class="px-4 py-3 font-medium">Monto</th>
+                <th class="px-4 py-3 font-medium">Método de pago</th>
+                <th class="px-4 py-3 font-medium">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of history; track item.id; let i = $index) {
+                <tr class="border-t border-white/10">
+                  <td class="px-4 py-2 text-gray-300">{{ i + 1 }}.</td>
+                  <td class="px-4 py-2 text-white">
+                    <div class="flex flex-col">
+                      <span class="leading-tight">{{ item.plan?.nombre || 'Suscripción' }}</span>
+                      <span class="text-xs text-gray-400 leading-tight">{{ item.plan?.descripcion }}</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-2 text-gray-300">{{ item.fecha_inicio | date:'dd/MM/yyyy' }}</td>
+                  <td class="px-4 py-2 text-white">
+                    ${{ (item.precio ?? item.plan?.precio) | number:'1.0-0' }}
+                  </td>
+                  <td class="px-4 py-2 text-gray-300">{{ item.gateway || 'N/A' }}</td>
+                  <td class="px-4 py-2">
+                    <span class="text-white text-xs font-semibold px-3 py-1 rounded-full cursor-default" [class]="getStatusClass(item.estado)" [title]="getStatusLabel(item.estado)">
+                      {{ getStatusLabel(item.estado) }}
+                    </span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="px-4 py-8 text-center text-gray-400">No hay historial de suscripciones.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  </div>
+</main>

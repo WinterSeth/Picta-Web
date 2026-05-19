@@ -1,0 +1,21 @@
+<div class="flex align-items-center justify-content-between">
+  <h2 mat-dialog-title class="mb-0">Historial de cambios</h2>
+  <button class="close-btn" mat-icon-button mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+
+</div>
+<mat-dialog-content>
+  <mat-list>
+    @for (change of changes; track change) {
+      <mat-list-item>
+        <mat-icon matListIcon>{{change.icon}}</mat-icon>
+        <h3 matLine> {{change.text}} </h3>
+        <!--<p matLine>
+        <span> {{message.subject}} </span>
+        <span class="demo-2"> &#45;&#45; {{message.content}} </span>
+      </p>-->
+    </mat-list-item>
+  }
+</mat-list>
+</mat-dialog-content>

@@ -1,0 +1,32 @@
+<section class="popular-month-expanded" aria-live="polite">
+  <header class="popular-month-expanded-header">
+    <div>
+      <h1 class="popular-month-expanded-title">Películas populares del mes</h1>
+      <p class="popular-month-expanded-subtitle">Listado de las 20 películas más populares del mes.</p>
+    </div>
+
+    <a mat-stroked-button [routerLink]="['/categoria', 'Película']" class="popular-month-expanded-back" aria-label="Volver a Películas">
+      <mat-icon>arrow_back</mat-icon>
+      Volver a Películas
+    </a>
+  </header>
+
+  @if (loading()) {
+    <div class="popular-month-expanded-skeleton" aria-hidden="true">
+      @for (item of [1,2,3,4,5,6,7,8]; track item) {
+        <div class="popular-month-expanded-skeleton-card"></div>
+      }
+    </div>
+  } @else if (!movies().length) {
+    <div class="popular-month-expanded-empty">
+      <mat-icon>search_off</mat-icon>
+      <p>No hay películas populares del mes para mostrar.</p>
+    </div>
+  } @else {
+    <div class="popular-month-expanded-grid">
+      @for (movie of movies(); track trackMovie($index, movie)) {
+        <app-movie-card [movie]="movie"></app-movie-card>
+      }
+    </div>
+  }
+</section>

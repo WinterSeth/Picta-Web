@@ -1,0 +1,146 @@
+:host {
+  --reparto-accent: #f3e628;
+  display: block;
+  color: rgba(248, 250, 252, 0.96);
+}
+
+.reparto-explorer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reparto-explorer-title {
+  margin: 0;
+  font-family: var(--picta-font-primary, 'Bebas Neue', sans-serif);
+  letter-spacing: 0.03em;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.reparto-explorer-close {
+  color: rgba(248, 250, 252, 0.9) !important;
+  background: transparent !important;
+  width: 40px !important;
+  height: 40px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+}
+
+.reparto-explorer-close:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.reparto-explorer-close mat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reparto-explorer-content {
+  display: grid;
+  gap: 20px;
+  min-width: min(92vw, 900px);
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.reparto-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  align-content: start;
+}
+
+.reparto-actor-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 12px;
+  border-radius: 16px;
+  transition:
+    background-color 300ms ease,
+    transform 300ms ease;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+a.reparto-actor-card:hover {
+  background: rgba(41, 44, 72, 0.4);
+  transform: translateY(-3px);
+}
+
+.reparto-actor-card__avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(243, 230, 40, 0.2);
+  background: linear-gradient(180deg, rgba(31, 41, 55, 0.98) 0%, rgba(17, 24, 39, 0.98) 100%);
+  box-shadow: 0 12px 32px -16px rgba(0, 0, 0, 0.5);
+  transition:
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 300ms ease;
+}
+
+.reparto-actor-card:hover .reparto-actor-card__avatar {
+  border-color: rgba(243, 230, 40, 0.5);
+  box-shadow: 0 16px 40px -20px rgba(243, 230, 40, 0.25);
+  transform: scale(1.06);
+}
+
+.reparto-actor-card__avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  background: #1f2937;
+}
+
+.reparto-actor-card__name {
+  margin: 0;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(243, 244, 246, 0.95);
+  text-align: center;
+  line-height: 1.3;
+  max-width: 140px;
+}
+
+@media only screen and (max-width: 768px) {
+  .reparto-explorer-content {
+    min-width: 90vw;
+  }
+
+  .reparto-dialog__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .reparto-actor-card__avatar {
+    width: 90px;
+    height: 90px;
+  }
+
+  .reparto-actor-card__name {
+    font-size: 0.8rem;
+    max-width: 100px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .reparto-dialog__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .reparto-actor-card__avatar {
+    width: 80px;
+    height: 80px;
+  }
+}

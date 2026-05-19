@@ -1,0 +1,74 @@
+.price-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .2rem .55rem;
+  border-radius: 9999px;
+  font-size: .7rem;
+  line-height: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, .95);
+  background: rgba(20, 20, 20, .72);
+  border: 1px solid rgba(255, 255, 255, .2);
+  backdrop-filter: blur(2px);
+}
+
+.price-chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  height: 14px;
+  width: 14px;
+  line-height: 14px;
+}
+
+.live-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .2rem .55rem;
+  border-radius: 9999px;
+  font-size: .68rem;
+  line-height: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(239, 68, 68, .9);
+  border: 1px solid rgba(255, 255, 255, .25);
+}
+
+.live-chip-icon {
+  font-size: 13px;
+  height: 13px;
+  width: 13px;
+  line-height: 13px;
+}
+
+.cards-grid-container {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+  padding-bottom: 8px;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .cards-grid-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .cards-grid-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .cards-grid-container {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

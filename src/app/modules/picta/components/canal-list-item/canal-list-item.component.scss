@@ -1,0 +1,262 @@
+.canal-card-grid {
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+}
+
+.canal-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 104px;
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: background 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(232, 70, 46, 0.4);
+    transform: translateY(-2px);
+  }
+
+  &__avatar-wrap {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &__avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  &__name {
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    font-size: 0.74rem;
+    color: rgba(255, 255, 255, 0.56);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.canal-list-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.canal-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 0.6rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  &__thumb {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  &__content {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.38rem;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.56);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__description {
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.64);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// Mobile responsive
+@media (max-width: 640px) {
+  .canal-list-item {
+    gap: 0.625rem;
+    padding: 0.5rem;
+    
+    &__thumb {
+      width: 72px;
+      height: 72px;
+    }
+
+    &__title {
+      font-size: 0.875rem;
+    }
+
+    &__description {
+      font-size: 0.75rem;
+      -webkit-line-clamp: 2;
+    }
+  }
+}
+
+@media (max-width: 840px) {
+}.subs {
+  color: #aaa;
+  font-size: 12px;
+}
+
+mat-card {
+  width: 150px;
+  height: 150px;
+  background-color: transparent;
+  box-shadow: none;
+  padding-bottom: 0;
+  border-radius: 0 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & img {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+  }
+
+  & mat-card-header {
+    transition: all .4s ease-in;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
+
+  & mat-card-title {
+    //width: 350px;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+}
+
+.img-holder {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  margin-bottom: 20%;
+}
+
+.canal-card {
+  position: relative;
+  border-radius: 4px;
+
+  & .title {
+    width: 300px;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+
+  }
+
+  & img.avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    border: 2px solid white;
+    padding: 4px;
+  }
+
+  & .status {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 38px;
+    animation: zoom .3s ease forwards;
+    transform-origin: center center;
+
+    & .mat-icon {
+      font-size: 34px !important;
+
+    }
+  }
+
+}
+
+@keyframes zoom {
+  0% {
+    transform: scale(0);
+  }
+  90% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

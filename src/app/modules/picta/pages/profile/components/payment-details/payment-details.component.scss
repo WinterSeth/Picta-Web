@@ -1,0 +1,11 @@
+mat-card{
+  background: transparent !important;
+}
+.payment-details{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  & .details-item{
+    margin-right: 1rem;
+  }
+}

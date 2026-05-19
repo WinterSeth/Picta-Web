@@ -1,0 +1,38 @@
+<owl-carousel-o [options]="customOptions" #owlCat>
+  @for (slide of portadaList(); track slide) {
+    <ng-template carouselSlide let-owlItem>
+      <div class="slide-item">
+        <!-- Gradient overlays for text readability -->
+        <div class="slide-gradient-side"></div>
+        <div class="slide-gradient-bottom"></div>
+
+        <!-- Banner image -->
+        <div class="slide-image">
+          <img [ngSrc]="slide.url_imagen+'_1000x600'" priority width="1000" height="600" alt="Banner {{ slide.nombre }}" class="w-full h-full object-cover absolute inset-0">
+        </div>
+
+        <!-- Large screen text block (left side) -->
+        <div class="slide-content-large">
+          <h3 class="titulo">{{ slide.nombre }}</h3>
+          <p class="description">{{ slide.descripcion }}</p>
+          <p class="slide-duration">Duración: {{ slide.duracion }}</p>
+          <a [routerLink]="['/medias', slide.slug_url]" class="carousel-play-btn">
+            <mat-icon>play_arrow</mat-icon>
+            Reproducir
+          </a>
+        </div>
+
+        <!-- Mobile text block (bottom overlay) -->
+        <div class="slide-content-mobile">
+          <h3 class="titulo">{{ slide.nombre }}</h3>
+          <p class="description">{{ slide.descripcion }}</p>
+          <p class="slide-meta">Duración: {{ slide.duracion }}</p>
+          <a [routerLink]="['/medias', slide.slug_url]" class="carousel-play-btn">
+            <mat-icon>play_arrow</mat-icon>
+            Reproducir
+          </a>
+        </div>
+      </div>
+    </ng-template>
+  }
+</owl-carousel-o>

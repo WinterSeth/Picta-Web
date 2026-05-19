@@ -1,0 +1,83 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/public/**",
+          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2|ico)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-cache",
+      "urls": [
+        "https://api.picta.cu/v2/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 500,
+        "maxAge": "10m",
+        "strategy": "freshness",
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "manifest-cache",
+      "urls": [
+        "https://www.picta.cu/videos/**/*.m3u8",
+        "https://www.picta.cu/videos/**/*.mpd"
+      ],
+      "cacheConfig": {
+        "maxSize": 100,               
+        "maxAge": "1h",              
+        "strategy": "performance"    
+      }
+    },
+    {
+      "name": "hls-no-cache",
+      "urls": [
+        "https://live.picta.cu/**",  
+        "/*.m3u8",
+        "/*.ts"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",  
+        "maxSize": 0,             
+        "maxAge": "0d",           
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "video-no-cache",
+      "urls": [
+        "https://www.picta.cu/videos/**",  
+        "/*.mp4"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",  
+        "maxSize": 0,             
+        "maxAge": "0d",           
+        "timeout": "10s"
+      }
+    }
+  ]
+}

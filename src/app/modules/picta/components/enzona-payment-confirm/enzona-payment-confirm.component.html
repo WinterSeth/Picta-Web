@@ -1,0 +1,27 @@
+<div class="enzona-payment-page">
+  <mat-card>
+    <mat-card-content>
+      <div class="content">
+        @if (isVerifying) {
+          <mat-spinner class="loading-spinner" [diameter]="64" color="accent"></mat-spinner>
+          <h1>Confirmando pago en Enzona...</h1>
+          <p class="status-message">Espere mientras verificamos la transacción con el servidor.</p>
+        } @else {
+          <mat-icon class="icon" [class.success]="isConfirmed" [class.error]="!isConfirmed">
+            {{ isConfirmed ? 'check_circle' : 'error' }}
+          </mat-icon>
+          <h1>{{ isConfirmed ? 'Pago confirmado en Enzona' : 'No se pudo confirmar el pago' }}</h1>
+          <p class="status-message">{{ verificationMessage }}</p>
+        }
+
+        @if (isConfirmed && confirmedTransactionUuid) {
+          <h2>Transacción: <span>{{ confirmedTransactionUuid }}</span></h2>
+        }
+        @if (isConfirmed && confirmedBuyer) {
+          <h2>Usuario: <span>{{ confirmedBuyer }}</span></h2>
+        }
+        <a mat-flat-button color="primary" routerLink="/suscripciones">Volver a suscripciones</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

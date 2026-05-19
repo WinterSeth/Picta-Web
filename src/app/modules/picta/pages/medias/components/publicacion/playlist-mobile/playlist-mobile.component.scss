@@ -1,0 +1,125 @@
+.mat-list-base .mat-list-item {
+  height: auto;
+  padding: 1rem !important;
+  position: relative;
+  transition: all .3s ease-in;
+  &::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0px;
+    background-color: #1565C0;
+    height: 100%;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+  &.active, &:hover {
+    background-color: rgba(white, .1);
+    &::before{
+      width: 5px;
+    }
+  }
+
+  & .mat-line {
+    white-space: normal !important;
+  }
+}
+
+/* Modal styles for download upgrade */
+.picta-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(6, 10, 26, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.picta-ad-modal {
+  position: relative;
+  width: min(400px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  background: #10173a;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.picta-ad-close {
+  position: absolute !important;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+}
+
+.picta-ad-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.picta-ad-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #f34636;
+  margin: 0 0 8px;
+}
+
+.picta-ad-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 8px;
+  line-height: 1.2;
+}
+
+.picta-ad-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.picta-ad-note {
+  text-align: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+
+  p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+  }
+}
+
+.picta-ad-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+
+  button {
+    flex: 1;
+    height: 44px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+}
+
+.picta-ad-secondary-btn {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #fff !important;
+}
+
+.picta-ad-primary-btn {
+  background: #f34636 !important;
+  color: #fff !important;
+}

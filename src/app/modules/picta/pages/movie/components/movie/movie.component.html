@@ -1,0 +1,609 @@
+<ng-container>
+  @if (loading) {
+    <div
+      class="movie-skeleton nmtitle-wrapper with-fixed-header flex flex-col">
+      <section class="movie-skeleton__hero">
+        <div class="movie-skeleton__hero-main">
+          <div class="movie-skeleton__content">
+            <div class="movie-skeleton__line movie-skeleton__title"></div>
+            <div class="movie-skeleton__meta-row">
+              <div class="movie-skeleton__line movie-skeleton__meta-item"></div>
+              <div
+                class="movie-skeleton__line movie-skeleton__meta-item short"></div>
+              <div class="movie-skeleton__line movie-skeleton__meta-item"></div>
+              <div
+                class="movie-skeleton__line movie-skeleton__meta-item short"></div>
+            </div>
+            <div class="movie-skeleton__chip-row">
+              <div class="movie-skeleton__chip"></div>
+              <div class="movie-skeleton__chip"></div>
+              <div class="movie-skeleton__chip short"></div>
+            </div>
+            <div class="movie-skeleton__line movie-skeleton__description"></div>
+            <div
+              class="movie-skeleton__line movie-skeleton__description short"></div>
+            <div class="movie-skeleton__line movie-skeleton__credits"></div>
+            <div
+              class="movie-skeleton__line movie-skeleton__credits short"></div>
+            <div class="movie-skeleton__actions">
+              <div class="movie-skeleton__button primary"></div>
+              <div class="movie-skeleton__button secondary"></div>
+            </div>
+          </div>
+          <div class="movie-skeleton__poster"></div>
+        </div>
+        <div class="movie-skeleton__banner"></div>
+      </section>
+
+      <section class="movie-skeleton__details">
+        <div class="movie-skeleton__section-title"></div>
+        <div class="movie-skeleton__line movie-skeleton__body"></div>
+        <div class="movie-skeleton__line movie-skeleton__body short"></div>
+
+        <div class="movie-skeleton__detail-grid">
+          <div class="movie-skeleton__detail-card"></div>
+          <div class="movie-skeleton__detail-card"></div>
+          <div class="movie-skeleton__detail-card"></div>
+          <div class="movie-skeleton__detail-card"></div>
+          <div class="movie-skeleton__detail-card"></div>
+          <div class="movie-skeleton__detail-card"></div>
+        </div>
+      </section>
+
+      <section class="movie-skeleton__related">
+        <div class="movie-skeleton__section-title short"></div>
+        <div class="movie-skeleton__related-grid">
+          <div class="movie-skeleton__related-card"></div>
+          <div class="movie-skeleton__related-card"></div>
+          <div class="movie-skeleton__related-card"></div>
+          <div class="movie-skeleton__related-card"></div>
+          <div class="movie-skeleton__related-card"></div>
+        </div>
+      </section>
+    </div>
+  } @else {
+    @if (film) {
+      <!-- Contenido principal -->
+      <div
+        class="nmtitle-wrapper with-fixed-header flex flex-col movie-detail-page">
+        <section id="section-hero" class="nmtitle-section section-hero">
+          <div class="hero-container overflow-hidden movie-hero-shell">
+            <div class="info-container">
+              <div class="details-container">
+                <div class="title-info movie-title-block sm:ml-4">
+                  <h1
+                    class="movie-main-title font-extrabold mb-4 text-2xl line-clamp-1">
+                    {{ film.nombre }}
+                  </h1>
+                  <div class="title-info-metadata-wrapper movie-meta-wrapper">
+                    <div class="movie-meta-inline">
+                      <a
+                        class="text-sm text-gray-400 movie-meta-link"
+                        [routerLink]="['/categoria/Película']"
+                        [queryParams]="{ year: film.categoria.pelicula.ano }"
+                        aria-label="Ver películas por año">
+                        {{ film.categoria.pelicula.ano }}
+                      </a>
+                      <span class="info-spacer">|</span>
+                      <span class="movie-meta-text">
+                        {{ duracionFormateada }}
+                      </span>
+                      <span class="info-spacer">|</span>
+                      <a
+                        class="text-sm text-gray-400 movie-meta-link"
+                        [routerLink]="['/categoria/Película']"
+                        [queryParams]="{ pais: film.categoria.pelicula.pais }"
+                        aria-label="Ver películas por país">
+                        {{ film.categoria.pelicula.pais }}
+                      </a>
+                      @if (resolucion) {
+                        <span class="info-spacer">|</span>
+                        <span class="movie-badge resolution" [ngClass]="resolucion">
+                          {{ resolucion }}
+                        </span>
+                      }
+                      @if (subtitle) {
+                        <span class="info-spacer">|</span>
+                        <span class="movie-badge subtitles" title="Subtítulos disponibles">
+                          CC
+                        </span>
+                      }
+                      @if (film.clasificacion) {
+                        <span class="info-spacer">|</span>
+                        <span class="movie-clasificacion" [ngClass]="getClasificacionClase(film.clasificacion)">
+                          {{ getClasificacionDisplay(film.clasificacion) }}
+                        </span>
+                      }
+                    </div>
+
+                    @if (film?.categoria.pelicula.genero) {
+                      <mat-chip-set
+                        aria-label="Generos"
+                        class="genre-chip-set movie-genre-list">
+                        @for (
+                          genre of film?.categoria.pelicula.genero;
+                          track genre
+                        ) {
+                          <mat-chip
+                            class="genre-chip"
+                            [queryParams]="{ genre: genre.nombre }"
+                            [routerLink]="['/categoria/Película']"
+                            >{{ genre.nombre }}</mat-chip
+                          >
+                        }
+                      </mat-chip-set>
+                    }
+
+                    <p
+                      class="movie-description mb-4 max-w-lg line-clamp-2 text-sm text-left cursor-pointer"
+                      (click)="openDescripcionDialog()">
+                      {{ film.descripcion }}
+                    </p>
+
+                    <div class="flex items-center movie-credit-line flex-wrap gap-1">
+                      <span class="text-sm text-gray-400 mr-2">Dirigido por:</span>
+                      @for (
+                        item of film.categoria.pelicula.director;
+                        track item.id;
+                        let last = $last
+                      ) {
+                        <a
+                          [routerLink]="getDirectorSlug(item)"
+                          class="movie-meta-link">
+                          {{ item.nombre }}
+                        </a>
+                        @if (!last) {
+                          <span class="text-sm text-gray-400">&comma;&nbsp;</span>
+                        }
+                      }
+                    </div>
+<div class="flex items-center mb-4 movie-credit-line flex-wrap gap-1">
+                      <span class="text-sm text-gray-400 mr-2">Actúan:</span>
+                      @for (
+                        item of actoresPrincipales;
+                        track $index;
+                        let last = $last
+                      ) {
+                        <a
+                          [routerLink]="getActorSlug(item)"
+                          class="movie-meta-link actores-nombres">
+                          {{ item.nombre }}
+                        </a>
+                        @if (!last) {
+                          <span class="text-sm text-gray-400 actores-nombres">,&nbsp;</span>
+                        }
+                      }
+                      @if (mostrarMasActores) {
+                        <button
+                          (click)="openRepartoExplorer()"
+                          class="reparto-show-more-btn"
+                          aria-label="Ver todo el reparto">
+                          <span class="reparto-show-more-text">más</span>
+                        </button>
+                      }
+                    </div>
+                  </div>
+                  <div class="title-info-synopsis-talent">
+                    <div class="play-download flex mt-3 movie-cta-row w-full">
+                      @if (film.url_manifiesto) {
+                        <a
+                          [routerLink]="['/medias', film?.slug_url]"
+                          class="!rounded-full movie-cta-btn movie-cta-btn--primary"
+                          color="accent"
+                          mat-raised-button
+                          aria-label="Reproducir pelicula">
+                          <mat-icon> play_arrow </mat-icon>
+                          Reproducir
+                        </a>
+                      } @else {
+                        @if (film.precios && film.precios.length) {
+                          @for (precio of film.precios; track precio.tipo) {
+                            @if (precio.tipo == 'reproduccion') {
+                              <button
+                                #tooltipPlay="matTooltip"
+                                (click)="
+                                  loggedIn
+                                    ? openPayment('reproduccion')
+                                    : tooltipPlay.toggle()
+                                "
+                                [matTooltip]="
+                                  loggedIn
+                                    ? 'Pagar'
+                                    : 'Debes estar autenticado para pagar'
+                                "
+                                class="!rounded-full movie-cta-btn movie-cta-btn--primary"
+                                color="accent"
+                                mat-raised-button
+                                [attr.aria-label]="
+                                  'Comprar reproduccion por ' +
+                                  precio.valor +
+                                  ' CUP'
+                                ">
+                                <mat-icon> play_arrow </mat-icon>
+                                Comprar - {{ precio.valor }} CUP
+                              </button>
+                            } @else if (precio.tipo == 'renta') {
+                              <button
+                                #tooltipRent="matTooltip"
+                                (click)="
+                                  loggedIn
+                                    ? openPayment('renta')
+                                    : tooltipRent.toggle()
+                                "
+                                [matTooltip]="
+                                  loggedIn
+                                    ? 'Pagar'
+                                    : 'Debes estar autenticado para pagar'
+                                "
+                                class="ml-3 !rounded-full movie-cta-btn movie-cta-btn--secondary"
+                                mat-stroked-button
+                                [attr.aria-label]="
+                                  'Rentar por ' + precio.valor + ' CUP'
+                                ">
+                                <mat-icon> schedule </mat-icon>
+                                Rentar - {{ precio.valor }} CUP
+                              </button>
+                            }
+                          }
+                        } @else {
+                          <a
+                            [routerLink]="['/medias', film?.slug_url]"
+                            class="!rounded-full movie-cta-btn movie-cta-btn--primary"
+                            color="accent"
+                            mat-raised-button
+                            aria-label="Reproducir pelicula">
+                            <mat-icon> play_arrow </mat-icon>
+                            Reproducir
+                          </a>
+                        }
+                      }
+
+                      @if (trailerURL) {
+                        <a
+                          (click)="openTrailer()"
+                          class="ml-3 !rounded-full movie-cta-btn movie-cta-btn--secondary"
+                          mat-stroked-button
+                          aria-label="Ver trailer"
+                          ><mat-icon>play_arrow</mat-icon>Ver Trailer</a
+                        >
+                      }
+
+                      <button
+                        mat-icon-button
+                        type="button"
+                        class="movie-favorite-icon-btn movie-favorite-icon-btn--desktop"
+                        [attr.aria-pressed]="
+                          isFavoriteMovie(film?.id) ? 'true' : 'false'
+                        "
+                        [attr.aria-label]="
+                          isFavoriteMovie(film?.id)
+                            ? 'Quitar de favoritos'
+                            : 'Agregar a favoritos'
+                        "
+                        [matTooltip]="
+                          isFavoriteMovie(film?.id)
+                            ? 'Eliminar de favoritos'
+                            : 'Añadir a favoritos'
+                        "
+                        matTooltipPosition="above"
+                        (click)="toggleFavoriteMovie(film, $event)">
+                        <mat-icon
+                          [@favoriteHeart]="
+                            isFavoriteMovie(film?.id) ? 'active' : 'inactive'
+                          "
+                          >{{
+                            isFavoriteMovie(film?.id)
+                              ? 'favorite'
+                              : 'favorite_border'
+                          }}</mat-icon
+                        >
+                      </button>
+
+                      <button
+                        mat-stroked-button
+                        type="button"
+                        class="movie-cta-btn movie-cta-btn--secondary movie-favorite-mobile-btn"
+                        [attr.aria-pressed]="
+                          isFavoriteMovie(film?.id) ? 'true' : 'false'
+                        "
+                        [attr.aria-label]="
+                          isFavoriteMovie(film?.id)
+                            ? 'Quitar de favoritos'
+                            : 'Agregar a favoritos'
+                        "
+                        [matTooltip]="
+                          isFavoriteMovie(film?.id)
+                            ? 'Eliminar de favoritos'
+                            : 'Añadir a favoritos'
+                        "
+                        matTooltipPosition="above"
+                        (click)="toggleFavoriteMovie(film, $event)">
+                        <mat-icon
+                          [@favoriteHeart]="
+                            isFavoriteMovie(film?.id) ? 'active' : 'inactive'
+                          "
+                          >{{
+                            isFavoriteMovie(film?.id)
+                              ? 'favorite'
+                              : 'favorite_border'
+                          }}</mat-icon
+                        >
+                        {{
+                          isFavoriteMovie(film?.id)
+                            ? 'En favoritos'
+                            : 'Agregar a favoritos'
+                        }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-image-container movie-hero-media">
+              <img
+                priority
+                [ngSrc]="film?.url_imagen + '_1280x720'"
+                fill
+                alt="Imagen de la película"
+                class="absolute right-0 object-cover !rounded-lg movie-hero-image" />
+              <div class="movie-hero-overlay" aria-hidden="true"></div>
+            </div>
+          </div>
+          <div
+            class="value-prop-with-cta mt-4 movie-value-banner"
+            data-uia="value-prop-with-cta">
+            <a
+              class="movie-value-banner-link"
+              [routerLink]="['/suscripciones']"
+              aria-label="Ir a suscripciones">
+              <span class="movie-value-banner-icon" aria-hidden="true">
+                <mat-icon>workspace_premium</mat-icon>
+              </span>
+              <span class="movie-value-banner-copy">
+                <span class="movie-value-banner-title" data-uia="value-prop"
+                  >Ve todo lo que quieras.</span>
+                <span class="movie-value-banner-subtitle"
+                  >Descubre los planes de suscripción de Picta</span
+                >
+              </span>
+              <mat-icon class="movie-value-banner-arrow" aria-hidden="true"
+                >arrow_forward</mat-icon
+              >
+            </a>
+          </div>
+        </section>
+
+        <section class="movie-details-section">
+          <div class="text-white">
+            <div class="py-4 sm:pb-6 lg:pb-8">
+              <div class="max-w-2xl">
+                <h2 class="text-xl font-bold">Más Detalles</h2>
+
+                <p class="mt-4 text-gray-300">
+                  {{ film.descripcion }}
+                </p>
+              </div>
+
+              <div
+                class="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3 movie-detail-grid">
+                <div class="flex items-start gap-4 movie-detail-card">
+                  <span class="movie-detail-icon shrink-0 !rounded-full p-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24px"
+                      viewBox="0 -960 960 960"
+                      width="24px"
+                      fill="currentColor">
+                      <path
+                        d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+                    </svg>
+                  </span>
+
+                  <div>
+                    <span class="text-lg font-bold">Ver Offline</span>
+
+                    <p class="mt-1 text-sm text-gray-300">
+                      @if (film.descargable) {
+                        Disponible para descarga.<br />
+                        Lleva y ve Picta donde vayas.
+                      } @else {
+                        No está disponible para descargar
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-4 movie-detail-card">
+                  <span class="movie-detail-icon shrink-0 !rounded-full p-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24px"
+                      viewBox="0 -960 960 960"
+                      width="24px"
+                      fill="currentColor">
+                      <path
+                        d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z" />
+                    </svg>
+                  </span>
+
+                  <div>
+                    <span class="text-lg font-bold">Género</span>
+
+                    <p class="mt-1 text-sm text-gray-300">
+                      @for (
+                        item of film.categoria.pelicula.genero;
+                        track item
+                      ) {
+                        @if (
+                          film.categoria.pelicula.genero.length - 1 == $index
+                        ) {
+                          {{ item.nombre }}
+                        } @else {
+                          {{ item.nombre + ', ' }}
+                        }
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-4 movie-detail-card">
+                  <span class="movie-detail-icon shrink-0 !rounded-full p-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24px"
+                      viewBox="0 -960 960 960"
+                      width="24px"
+                      fill="currentColor">
+                      <path
+                        d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" />
+                    </svg>
+                  </span>
+
+                  <div>
+                    <span class="text-lg font-bold">Este título es...</span>
+
+                    <p class="mt-1 text-sm text-gray-300">
+                      @for (item of film.palabraClave; track item) {
+                        @if (film.palabraClave.length - 1 == $index) {
+                          {{ item }}
+                        } @else {
+                          {{ item + ', ' }}
+                        }
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reparto Carousel - Nueva sección debajo de los detalles -->
+        @if (film.categoria.pelicula.reparto && film.categoria.pelicula.reparto.length > 0) {
+          <section class="reparto-section">
+            <div class="sm:pb-6 lg:pb-8">
+              <div class="categoria-tags-carousel">
+                <div class="carousel-header">
+                  <h3 class="carousel-title">Reparto</h3>
+                  <div class="carousel-controls">
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      class="categoria-show-all-btn"
+                      (click)="openRepartoExplorer()">
+                      <mat-icon>grid_view</mat-icon>
+                      <span>Ver más</span>
+                    </button>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      aria-label="anterior"
+                      class="categoria-tags-nav"
+                      [disabled]="prevRepartoDisabled()"
+                      (click)="navigatePrevReparto()">
+                      <mat-icon>chevron_left</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      aria-label="siguiente"
+                      class="categoria-tags-nav"
+                      [disabled]="nextRepartoDisabled()"
+                      (click)="navigateNextReparto()">
+                      <mat-icon>chevron_right</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                
+                <owl-carousel-o
+                  #repartoCar
+                  [options]="repartoOption"
+                  (initialized)="onRepartoInitialized($event)"
+                  (translated)="onRepartoTranslated($event)">
+                  @for (actor of film.categoria.pelicula.reparto; track actor.id) {
+                    <ng-template carouselSlide [width]="160">
+                      @if (hasActorSlug(actor)) {
+                        <a [routerLink]="getActorSlug(actor)" class="reparto-item text-center block">
+                          <div class="reparto-avatar-container">
+<img
+                                [ngSrc]="actor.url_avatar ? actor.url_avatar + '_150x150' : (actor.imagen ? 'https://www.picta.cu/' + actor.imagen + '_150x150' : 'https://ui-avatars.com/api/?name=' + (actor.nombre || 'A') + '&background=1f2937&color=9ca3af&size=150&font-size=0.4&bold=true')"
+                              width="110"
+                              height="110"
+                              class="reparto-avatar-img"
+                              [alt]="actor.nombre || 'Actor'" />
+                          </div>
+                          <p class="reparto-actor-name">{{ actor.nombre }}</p>
+                        </a>
+                      } @else {
+                        <div class="reparto-item text-center">
+                          <div class="reparto-avatar-container">
+<img
+                                [ngSrc]="actor.url_avatar ? actor.url_avatar + '_150x150' : (actor.imagen ? 'https://www.picta.cu/' + actor.imagen + '_150x150' : 'https://ui-avatars.com/api/?name=' + (actor.nombre || 'A') + '&background=1f2937&color=9ca3af&size=150&font-size=0.4&bold=true')"
+                              width="110"
+                              height="110"
+                              class="reparto-avatar-img"
+                              [alt]="actor.nombre || 'Actor'" />
+                          </div>
+                          <p class="reparto-actor-name">{{ actor.nombre }}</p>
+                        </div>
+                      }
+                    </ng-template>
+                  }
+                </owl-carousel-o>
+              </div>
+            </div>
+          </section>
+        }
+
+        <section id="section-more-titles" class="nmtitle-section relative pb-8">
+          @if (recomendadosLoading) {
+            <div class="w-screen-xl">
+              <div class="grid grid-cols-2 gap-4 lg:grid-cols-5">
+                @for (card of numbers; track card) {
+                  <div
+                    class="animate-pulse overflow-hidden rounded-xl border border-white/10 bg-white/5 p-2 shadow-[0_14px_26px_-22px_rgba(5,7,31,0.8)]">
+                    <div class="overflow-hidden rounded-lg bg-white/10">
+                      <div class="relative aspect-[2/3] w-full bg-white/10">
+                        <div
+                          class="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-black/10"></div>
+                        <div
+                          class="absolute left-2 bottom-2 h-5 w-11 rounded bg-black/70"></div>
+                      </div>
+                    </div>
+                    <div class="mt-3 flex items-start gap-3 px-1 pb-1">
+                      <div
+                        class="h-8 w-8 shrink-0 rounded-full bg-white/10"></div>
+                      <div class="min-w-0 flex-1 space-y-2 pt-1">
+                        <div class="h-4 w-11/12 rounded bg-white/10"></div>
+                        <div class="h-3 w-2/3 rounded bg-white/10"></div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          } @else {
+            <div class="w-screen-xl">
+              <app-my-carousel-o
+                [arrows]="false"
+                [controls]="false"
+                [horizontal]="true"
+                [populares]="true"
+                [showSideOverlays]="false"
+                [title]="'Títulos similares'"
+                [videos]="(recomendados$ | async) ?? []"
+                [hasMore]="true"
+                [showMoreRoute]="['/categoria', 'Película']"
+                [arrows]="true"
+                [controls]="true"></app-my-carousel-o>
+            </div>
+          }
+        </section>
+      </div>
+    } @else {
+      <!-- Estado de "Not Found" -->
+      <app-not-found />
+    }
+  }
+</ng-container>

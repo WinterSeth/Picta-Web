@@ -1,0 +1,136 @@
+:host {
+  display: block;
+  max-width: 100%;
+}
+
+// ============================================
+// PLAYLIST CONTAINER - PREMIUM PICTA
+// ============================================
+.playlist {
+  border-radius: 14px;
+  border: 1px solid rgba(243, 230, 40, 0.1);
+  background:
+    radial-gradient(
+      128% 128% at 100% 0%,
+      rgba(243, 230, 40, 0.04) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(16, 25, 53, 0.92) 0%,
+      rgba(10, 17, 38, 0.95) 100%
+    );
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(243, 230, 40, 0.04) inset;
+  overflow: hidden;
+}
+
+mat-expansion-panel {
+  background: transparent !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+  
+  &::before, &::after {
+    display: none !important;
+  }
+}
+
+// Header del panel
+mat-expansion-panel-header {
+  padding: 4px 12px !important;
+  height: auto !important;
+  min-height: 36px !important;
+  
+  &:hover {
+    background: rgba(243, 230, 40, 0.03) !important;
+  }
+  
+  &[ng-reflect-panel-expanded="true"] {
+    background: rgba(243, 230, 40, 0.04) !important;
+  }
+}
+
+.mat-expansion-panel-header-title {
+  color: rgba(244, 247, 251, 0.95) !important;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.playlist-icon {
+  color: rgba(243, 230, 40, 0.9);
+  font-size: 1.2rem;
+}
+
+.mat-expansion-indicator::after {
+  color: rgba(243, 230, 40, 0.7) !important;
+}
+
+// ============================================
+// HEADER INFO
+// ============================================
+.playlist-icon {
+  color: rgba(243, 230, 40, 0.9);
+  font-size: 1.3rem;
+}
+
+.channel-link {
+  font-size: 0.7rem;
+  color: rgba(243, 230, 40, 0.8) !important;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: rgba(243, 230, 40, 1) !important;
+  }
+}
+
+.playlist-count {
+  font-size: 0.7rem;
+  color: rgba(244, 247, 251, 0.45);
+}
+
+// ============================================
+// ITEM LIST - SCROLLABLE AREA
+// ============================================
+.item-list {
+  max-height: 40vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(243, 230, 40, 0.25) transparent;
+  border-top: 1px solid rgba(243, 230, 40, 0.06);
+  
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(243, 230, 40, 0.2);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba(243, 230, 40, 0.35);
+    }
+  }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+@media (max-width: 768px) {
+  .item-list {
+    max-height: 30vh;
+  }
+  
+  mat-expansion-panel-header {
+    padding: 8px 12px !important;
+  }
+  
+  .mat-expansion-panel-header-title {
+    font-size: 0.8rem;
+  }
+}

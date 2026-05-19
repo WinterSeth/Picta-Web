@@ -1,0 +1,56 @@
+<!-- <div  class="canal-card m-3 p-3 mat-elevation-z6">
+
+<div *ngFor="let canal of canales" class="d-flex align-items-center justify-content-center flex-wrap">
+  <img [alt]="canal.nombre" [src]="canal.url_avatar + '_70x70'" class="avatar" loading="lazy">
+
+  <h2 class="mt-2 mb-0 title" style="text-align: center">{{canal.nombre}}</h2>
+
+  <h3 class="text-muted">{{canal.cantidad_suscripciones + ' suscriptores'}}</h3>
+
+  <div class="d-flex w-100">
+    <button (click)="logged?handleSubscribe():null" *ngIf="!subscribed" [disabled]="subscribing?true:null" [matTooltip]="!logged? 'Debe estar autenticado para seguir':''" class="mr-2" color="primary" mat-stroked-button style="color: #37d17c">Seguir</button>
+    <button (click)="logged?handleSubscribe():null" *ngIf="subscribed" [disabled]="subscribing?true:null" class="mr-2" color="warn" mat-raised-button matTooltip="Cancelar suscripción">Suscrito</button>
+    <a [routerLink]="['/canal', canal.alias]" mat-stroked-button>Ver canal</a>
+  </div>
+
+</div>
+
+<div *ngIf="subscribed" class="status">
+  <mat-icon style="color: #37d17c">done</mat-icon>
+</div>
+
+</div>
+-->
+
+@if (mode() === 'card') {
+  <div class="canal-card-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    @for (canal of canales(); track canal) {
+      <a id="{{ 'card' + canal?.id }}" class="canal-card" [routerLink]="['/canal', canal.alias]">
+        <div class="canal-card__avatar-wrap">
+          <img [alt]="canal.nombre" [ngSrc]="canal.url_avatar + '_160x160'" width="104" height="104" class="canal-card__avatar" />
+        </div>
+        <div class="canal-card__info">
+          <span class="canal-card__name">{{ canal.nombre }}</span>
+          <span class="canal-card__meta">{{ '@' + canal.alias }} · {{ canal.cantidad_suscripciones !== 0 ? (canal.cantidad_suscripciones | shorter) : 0 }} seguidores</span>
+        </div>
+      </a>
+    }
+  </div>
+}
+
+@if (mode() === 'list') {
+  <div class="flex flex-col gap-3">
+    @for (canal of canales(); track canal) {
+      <a class="canal-list-item w-full" [routerLink]="['/canal', canal.alias]">
+        <div class="canal-list-item__thumb shrink-0">
+          <img [ngSrc]="canal.url_avatar + '_220x220'" [alt]="canal.nombre" width="146" height="146" loading="lazy" />
+        </div>
+        <div class="canal-list-item__content min-w-0 flex-1">
+          <span class="canal-list-item__title">{{ canal.nombre }}</span>
+          <span class="canal-list-item__meta">{{ '@' + canal.alias }} · {{ canal.cantidad_suscripciones !== 0 ? (canal.cantidad_suscripciones | shorter) : 0 }} seguidores</span>
+          <p class="canal-list-item__description">{{ canal.descripcion }}</p>
+        </div>
+      </a>
+    }
+  </div>
+}

@@ -1,0 +1,20 @@
+<div
+  class="categoria-loading-state"
+  [class.categoria-loading-state--movie]="tone() === 'movie'"
+  [class.categoria-loading-state--serie]="tone() === 'serie'"
+  [class.categoria-loading-state--documental]="tone() === 'documental'"
+  [class.categoria-loading-state--musical]="tone() === 'musical'"
+  [class.categoria-loading-state--live]="tone() === 'live'"
+  role="status"
+  aria-live="polite"
+  aria-busy="true"
+  [attr.aria-label]="ariaLabel() || label()"
+>
+  <div class="categoria-loading-state__glow" aria-hidden="true"></div>
+  <div class="categoria-loading-state__icon-wrap" aria-hidden="true">
+    <mat-icon class="categoria-loading-state__icon">autorenew</mat-icon>
+  </div>
+  <div class="categoria-loading-state__copy">
+    <p class="categoria-loading-state__title">{{ label() }}</p>
+  </div>
+</div>

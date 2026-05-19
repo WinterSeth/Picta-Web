@@ -1,0 +1,52 @@
+<div class="subscription-container my-3 mt-2 lg:mt-2">
+  <div class="subscription-header p-3 flex items-center justify-between">
+    <!--<h1 class="font-bolder text-3xl uppercase">Mis suscripciones</h1>-->
+    <div class="uppercase text-2xl font-bold py-6">
+      Siguiendo
+    </div>
+
+    <!--<button mat-button matTooltip="Ordenar">
+    <mat-icon class="mr-2">sort</mat-icon>
+    <span>Ordenar</span>
+  </button>-->
+</div>
+<mat-divider></mat-divider>
+<mat-nav-list class="mat-color-accent">
+  @for (sub of subscriptions; track sub.id) {
+    <mat-list-item mat-list-item role="listitem">
+      <img [alt]="sub.canal.nombre" [ngSrc]="sub.canal.url_avatar + '_48x48'" width="48" height="48" matListItemAvatar  />
+      <h6 matListItemTitle>
+        <a [routerLink]="['/canal', sub.canal.alias]" routerLinkActive="active">{{ sub.canal.nombre }}</a>
+      </h6>
+      <h6 matListItemLine>{{ sub.canal.cantidad_suscripciones }} suscriptores</h6>
+      <button (click)="handleSubscribe($event, sub)" color="warn" class="flex" matListItemMeta title="Cancelar" [disabled]="loading">
+        <div class="flex items-center">
+          <mat-icon matListItemIcon>cancel</mat-icon>
+          <span>Cancelar</span>
+        </div>
+      </button>
+    </mat-list-item>
+  }
+  @if (!loading && subscriptions?.length === 0) {
+    <div class="subscription-empty">
+      Aun no sigues ningún canal.
+    </div>
+  }
+  @if (!loading && filters.page) {
+    <button matListItemMeta (click)="loadSubscriptions()" class="text-center flex justify-center w-full" [disabled]="loading">
+      Cargar más
+    </button>
+  }
+</mat-nav-list>
+@if (loading) {
+  <div class="w-full flex justify-center">
+    <mat-spinner aria-label="cargando" [diameter]="30"></mat-spinner>
+  </div>
+}
+<!--<ng-template #noPlaylist>
+<div class="d-flex w-full justify-center">
+  <mat-spinner [diameter]="30"></mat-spinner>
+  <span class="ml-3">Cargando</span>
+</div>
+</ng-template>-->
+</div>

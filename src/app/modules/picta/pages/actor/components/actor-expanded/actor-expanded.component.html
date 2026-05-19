@@ -1,0 +1,44 @@
+<section class="actor-expanded" aria-live="polite">
+  <header class="actor-expanded-header">
+    <div>
+      <h1 class="actor-expanded-title">
+        {{ media() === 'peliculas' ? 'Todas las películas de ' + actorName : 'Todas las series de ' + actorName }}
+      </h1>
+      <p class="actor-expanded-subtitle">Listado de {{ total }} resultados.</p>
+    </div>
+
+    <a
+      mat-stroked-button
+      [routerLink]="['/actor', slug()]"
+      class="actor-expanded-back">
+      <mat-icon>arrow_back</mat-icon>
+      Volver al actor
+    </a>
+  </header>
+
+  @if (loading) {
+    <div class="actor-expanded-skeleton">
+      @for (i of [1,2,3,4,5,6,7,8]; track i) {
+        <div class="actor-expanded-skeleton-card"></div>
+      }
+    </div>
+  } @else if (!items.length) {
+    <div class="actor-expanded-empty">
+      <mat-icon>movie_filter</mat-icon>
+      <p>No se encontraron {{ media() === 'peliculas' ? 'películas' : 'series' }}</p>
+    </div>
+  } @else {
+    <div class="actor-expanded-grid">
+      @for (item of items; track trackMovie($index, item)) {
+        <app-movie-card [movie]="item" />
+      }
+    </div>
+
+    @if (loadingMore) {
+      <app-categoria-loading-state
+        [tone]="media() === 'peliculas' ? 'movie' : 'serie'"
+        [label]="media() === 'peliculas' ? 'Cargando más películas...' : 'Cargando más series...'"
+        [ariaLabel]="media() === 'peliculas' ? 'Cargando más películas' : 'Cargando más series'" />
+    }
+  }
+</section>

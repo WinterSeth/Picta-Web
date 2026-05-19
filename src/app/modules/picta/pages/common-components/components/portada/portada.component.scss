@@ -1,0 +1,40 @@
+.mat-stepper-horizontal-line {
+  display: none !important;
+}
+
+@media (min-width: 767.98px) {
+  .portada {
+    //height: 45vh;
+    padding-top: 0;
+  }
+  .portada-actions {
+    flex-direction: row;
+  }
+  .portada-caption {
+    width: 50%;
+    margin: 0 60px 0 60px;
+  }
+  .portada-title {
+    font-size: 1.9vw;
+  }
+
+  .portada-duration {
+    font-size: 1.3vw;
+  }
+
+  .portada-descripcion {
+    font-size: 1.3vw;
+  }
+
+  .mat-flat-button {
+    font-size: 1.5vw;
+  }
+}
+
+@media (min-width: 1280px) {
+  .mat-flat-button {
+    & img {
+      transform: scale(.7);
+    }
+  }
+}

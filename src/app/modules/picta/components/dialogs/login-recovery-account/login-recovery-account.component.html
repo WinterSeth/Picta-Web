@@ -1,0 +1,50 @@
+<div class="recovery-dialog">
+  <h2 class="recovery-title">Recuperación de cuenta</h2>
+
+  <p class="recovery-desc">Se le enviará un código de confirmación a su {{channelLabel}}.</p>
+
+  @if (errorMsg) {
+    <div class="recovery-error">
+      <span>{{ errorMsg }}</span>
+      <button type="button" class="recovery-error-close" (click)="errorMsg = ''" aria-label="Cerrar">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+
+  <div class="channel-toggle-wrap">
+    <mat-button-toggle-group [formControl]="channelCtrl" class="channel-toggle">
+      <mat-button-toggle [value]="'phone'" title="Teléfono">
+        <mat-icon>phone</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle [value]="'email'" title="Correo">
+        <mat-icon>mail</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  @if (channelCtrl.value === 'phone') {
+    <mat-form-field appearance="fill" class="recovery-field">
+      <mat-label>Teléfono</mat-label>
+      <input [formControl]="phoneCtrl" [showMaskTyped]="true" mask="0 0000000" matInput prefix="+53 " type="text">
+    </mat-form-field>
+  } @else {
+    <mat-form-field appearance="fill" class="recovery-field">
+      <mat-label>Correo</mat-label>
+      <input [formControl]="emailCtrl" matInput type="email">
+    </mat-form-field>
+  }
+
+  <div class="recovery-actions">
+    <button type="button" (click)="dialogRef.close()" class="recovery-btn">Cancelar</button>
+    <button type="button" (click)="sendCode()" [disabled]="isSending || resendSecondsRemaining > 0 || (channelCtrl.value === 'phone' ? phoneCtrl.invalid : emailCtrl.invalid)" class="recovery-btn recovery-btn--primary">
+      @if (isSending) {
+        Enviando...
+      } @else if (resendSecondsRemaining > 0) {
+        Reenviar en {{ formatResendTime() }}
+      } @else {
+        Enviar código
+      }
+    </button>
+  </div>
+</div>

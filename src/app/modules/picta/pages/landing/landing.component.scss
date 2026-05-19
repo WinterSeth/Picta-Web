@@ -1,0 +1,30 @@
+:host {
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+  --picta-font-primary: 'Bebas Neue', sans-serif;
+  display: block;
+}
+
+.landing-page {
+  main {
+    width: 100%;
+  }
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────
+@media (max-width: 600px) {
+  // nothing specific needed — sections handle their own
+}
+
+.faq-loading-placeholder {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--picta-text-muted);
+  font-family: 'Abel', sans-serif;
+}

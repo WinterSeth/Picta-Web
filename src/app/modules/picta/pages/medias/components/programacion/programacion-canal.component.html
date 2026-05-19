@@ -1,0 +1,76 @@
+<mat-card class="programacion-card mat-elevation-z2" [class.expanded]="!collapsed">
+  <mat-card-header class="programacion-header">
+    <div class="header-left">
+      <mat-card-subtitle class="channel-title">{{ canalTitle }}</mat-card-subtitle>
+    </div>
+    <div class="header-actions">
+      <button mat-icon-button aria-label="Alternar programación" [attr.aria-expanded]="!collapsed" (click)="toggleCollapsed()" [attr.aria-controls]="!collapsed ? 'prog-list' : null">
+        <mat-icon class="chev-icon">expand_more</mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (loading) {
+      <div class="text-center py-4">Cargando programación...</div>
+    }
+    @if (error) {
+      <div class="text-sm text-red-600">{{ error }}</div>
+    }
+
+    @if (!loading && !error) {
+      <div>
+        @if (schedule && schedule.length) {
+          <div>
+            <!-- Collapsed view: badge + time on left, title/description on right -->
+            <div class="collapsed-summary" [class.hidden]="!collapsed" (click)="toggleCollapsed()" role="button" tabindex="0" aria-label="Ver cartelera completa">
+              <div class="w-1/3 flex flex-col items-center justify-center gap-2">
+                @if (currentProgramIndex !== -1) {
+                  <div class="live-badge">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="live-dot" aria-hidden="true">
+                      <circle cx="12" cy="12" r="8" fill="#e8462e" />
+                    </svg>
+                    <span class="live-text">En vivo ahora</span>
+                  </div>
+                }
+                <div class="font-bold text-lg">{{ schedule[currentProgramIndex]?.horaInicio || (schedule[currentProgramIndex]?.start ? (schedule[currentProgramIndex].start | date:'HH:mm') : '') }}</div>
+              </div>
+              <div class="w-2/3 meta">
+                <div class="title">{{ schedule[currentProgramIndex]?.title || 'Sin programa actual' }}</div>
+                <div class="description">{{ schedule[currentProgramIndex]?.description }}</div>
+              </div>
+            </div>
+            <!-- Expanded view: full scrollable list -->
+            <div #container id="prog-list" class="programacion-scroll-container" role="region" [attr.aria-labelledby]="'prog-heading'"
+              [@expandCollapse]="collapsed ? 'collapsed' : 'expanded'" (@expandCollapse.done)="onExpandCollapseDone($event)">
+              <mat-list class="programacion-list">
+                @for (item of schedule; track item; let i = $index) {
+                  <div mat-list-item #progItem class="programacion-item" [attr.data-index]="i" [class.current]="currentProgramIndex === i" aria-label="Programa {{ item.title }}" [attr.aria-current]="currentProgramIndex === i ? 'true' : null">
+                    <div class="time">{{ item.horaInicio || (item.start ? (item.start | date:'HH:mm') : '') }}</div>
+                    <div class="meta">
+                      <div class="title">
+                        @if (currentProgramIndex === i) {
+                          <svg width="10" height="10" viewBox="0 0 24 24" class="live-dot-inline" aria-hidden="true"><circle cx="12" cy="12" r="6" fill="#e8462e" /></svg>
+                          <span class="live-text-inline">En emisión</span>
+                        }
+                        {{ item.title }}
+                      </div>
+                      <div class="description">{{ item.description }}</div>
+                    </div>
+                  </div>
+                  @if (i < schedule.length - 1) {
+                    <mat-divider></mat-divider>
+                  }
+                }
+              </mat-list>
+            </div>
+          </div>
+        } @else {
+          <div class="text-sm text-gray-500">No hay programación disponible para hoy.</div>
+        }
+        <div class="sr-only" aria-live="polite">Programa actual: {{ schedule[currentProgramIndex]?.title }}</div>
+        <div class="sr-only" aria-live="polite">{{ announceText }}</div>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

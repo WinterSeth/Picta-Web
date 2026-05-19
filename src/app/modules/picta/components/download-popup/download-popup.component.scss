@@ -1,0 +1,306 @@
+:host {
+  display: block;
+  color: var(--picta-text, #f4f7fb);
+}
+
+.download-sheet {
+  --download-primary: #e8462e;
+  --download-primary-hover: #d03c25;
+
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(243, 230, 40, 0.15);
+  background:
+    radial-gradient(
+      128% 128% at 100% 0%,
+      rgba(243, 230, 40, 0.06) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(16, 25, 53, 0.98) 0%,
+      rgba(10, 17, 38, 1) 100%
+    );
+  padding: 20px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(243, 230, 40, 0.05) inset;
+}
+
+.download-header {
+  position: relative;
+  padding: 0 36px 0 0;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.download-close {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--picta-text-muted, rgba(244,247,251,0.6)) !important;
+  
+  &:hover {
+    color: var(--picta-yellow, #f3e628) !important;
+  }
+}
+
+.download-kicker {
+  margin: 0 0 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--picta-yellow, #f3e628);
+}
+
+.download-title {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--picta-text, #f4f7fb);
+}
+
+.download-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--picta-text-muted, rgba(244,247,251,0.7));
+}
+
+.download-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(243, 230, 40, 0.04);
+  border: 1px solid rgba(243, 230, 40, 0.1);
+}
+
+.download-stats .mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--picta-yellow, #f3e628);
+}
+
+.download-stats-title {
+  display: none;
+}
+
+.download-stats-value {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--picta-text, #f4f7fb);
+}
+
+.download-stats-value span {
+  margin-left: 6px;
+  color: var(--picta-text-muted, rgba(244,247,251,0.6));
+  font-weight: 500;
+}
+
+.download-note {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(243, 230, 40, 0.08);
+  background: rgba(243, 230, 40, 0.03);
+  text-align: center;
+}
+
+.download-note-warning {
+  border-color: rgba(232, 70, 46, 0.2);
+  background: rgba(232, 70, 46, 0.06);
+}
+
+.download-note p {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--picta-text-muted, rgba(244,247,251,0.7));
+}
+
+.download-note a[mat-button] {
+  color: var(--picta-yellow, #f3e628) !important;
+  font-weight: 600;
+}
+
+.download-list {
+  display: grid;
+  gap: 8px;
+  max-height: 48vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* Button content alignment for spinner + text */
+.download-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 16px;
+  border-radius: 20px !important;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: none;
+}
+
+/* Ensure spinner and text align inside the button */
+.btn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-content mat-spinner,
+.btn-content .mat-spinner,
+.btn-content mat-progress-spinner,
+.btn-content .mat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.timer-outer {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+}
+
+/* Premium, minimal timer */
+.timer-wrapper {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--picta-bg-surface, rgba(13,20,46));
+  border: 1px solid rgba(243,230,40,0.12);
+}
+
+.timer-wrapper mat-progress-spinner {
+  width: 36px;
+  height: 36px;
+}
+
+.timer-wrapper ::ng-deep circle {
+  stroke: var(--picta-yellow, #f3e628);
+}
+
+.timer-center {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--picta-text, #f4f7fb);
+  pointer-events: none;
+}
+
+/* Subtle label next to timer on small screens */
+.timer-outer .timer-label {
+  margin-left: 8px;
+  color: var(--picta-text-muted, rgba(244,247,251,0.6));
+  font-size: 12px;
+}
+
+
+.download-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid rgba(243, 230, 40, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 10px 12px;
+}
+
+.download-label {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--picta-text, #f4f7fb);
+}
+
+.download-detail,
+.download-validity {
+  margin: 1px 0 0;
+  font-size: 0.75rem;
+  color: var(--picta-text-muted, rgba(244,247,251,0.6));
+}
+
+.download-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+button[mat-raised-button][color='primary'] {
+  background: var(--download-primary) !important;
+  color: #fff !important;
+}
+
+button[mat-raised-button][color='primary']:hover {
+  background: var(--download-primary-hover) !important;
+}
+
+button[mat-raised-button][color='accent'] {
+  background: rgba(243, 230, 40, 0.12) !important;
+  border: 1px solid rgba(243, 230, 40, 0.2) !important;
+  color: var(--picta-yellow, #f3e628) !important;
+}
+
+button[mat-raised-button]:disabled {
+  opacity: 0.5;
+}
+
+.progress-container {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(243, 230, 40, 0.1);
+  overflow: hidden;
+}
+
+.progress-bar {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #e8462e, var(--picta-yellow, #f3e628));
+  transition: width 0.6s ease;
+}
+
+@media (max-width: 768px) {
+  .download-sheet {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .download-list {
+    max-height: 44vh;
+  }
+
+  .download-row {
+    grid-template-columns: 1fr;
+  }
+
+  .download-actions {
+    justify-content: stretch;
+  }
+
+  .download-actions button[mat-raised-button] {
+    width: 100%;
+  }
+}

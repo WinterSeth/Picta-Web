@@ -1,0 +1,156 @@
+// Premium section header — theme-aware and responsive
+.categoria-header {
+  --surface: var(--picta-surface, #0f1720);
+  --on-surface: var(--picta-on-surface, #ffffff);
+  --accent: var(--picta-accent, #7c3aed);
+  --overlay-strength: 0.36;
+
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: clamp(16px, 3.5vw, 32px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 1rem; /* rounded-xl fallback */
+  /* Ensure a black, semi-opaque surface for maximum legibility */
+  background-color: rgba(0,0,0,0.72);
+  background-image: var(--header-bg-image, none);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 6px 30px rgba(2,6,23,0.45);
+
+  &.has-bg {
+    /* let the background image sit behind a subtle darkening overlay */
+    background-color: transparent;
+  }
+
+  /* soft vignette for depth */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Strong dark overlay to guarantee contrast over bright images */
+    background: linear-gradient(180deg, rgba(0,0,0,0.64), rgba(0,0,0,0.5));
+    pointer-events: none;
+    mix-blend-mode: normal;
+  }
+}
+
+.categoria-header__overlay { display:block; position:absolute; inset:0; z-index:0; pointer-events:none; background: rgba(0,0,0,0.45); border-radius: inherit; }
+
+/* overlay variants kept but default is dark to ensure readability */
+.categoria-header__overlay.overlay-dark {
+  background: rgba(0,0,0,0.6);
+}
+.categoria-header__overlay:not(.overlay-dark) {
+  background: rgba(0,0,0,0.28);
+}
+
+.categoria-header__content {
+  position: relative;
+  z-index: 1;
+  width: min(1100px, 96%);
+  margin: 0 auto;
+  text-align: left;
+}
+
+.categoria-header__title {
+  font-family: var(--picta-font-primary, Inter);
+  font-weight: 700;
+  color: #ffffff; /* force white for legibility */
+  margin: 0 0 8px 0;
+  line-height: 1.05;
+  font-size: clamp(1.5rem, 3.6vw, 2.5rem);
+  letter-spacing: -0.01em;
+  text-shadow: 0 6px 26px rgba(0,0,0,0.65);
+}
+
+.categoria-header__description {
+  font-family: var(--picta-font-secondary, system-ui);
+  color: #ffffff; /* force white for legibility */
+  margin: 0;
+  max-width: 70ch;
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  line-height: 1.45;
+  opacity: 0.95;
+}
+
+/* If overlay is light (bright overlay), prefer dark text for contrast */
+.needs-dark-overlay .categoria-header__title,
+.needs-dark-overlay .categoria-header__description {
+  color: var(--on-surface);
+}
+
+.categoria-header:not(.needs-dark-overlay) .categoria-header__title,
+.categoria-header:not(.needs-dark-overlay) .categoria-header__description {
+  /* Keep title and description white in all cases for maximum legibility */
+  color: #ffffff !important;
+  text-shadow: 0 3px 12px rgba(0,0,0,0.35);
+}
+
+/* Entrance animation (subtle luxury fade/slide) */
+.categoria-header__content {
+  transform: translateY(6px);
+  opacity: 0;
+  animation: contentIn 720ms cubic-bezier(.16,.84,.24,1) both;
+}
+
+.categoria-header__title {
+  animation: titleIn 820ms cubic-bezier(.16,.84,.24,1) both;
+  will-change: transform, opacity;
+}
+
+.categoria-header__description {
+  animation: descIn 920ms cubic-bezier(.16,.84,.24,1) both;
+}
+
+@keyframes contentIn {
+  from { transform: translateY(6px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes titleIn {
+  from { transform: translateY(8px) scale(0.996); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes descIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 0.95; }
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .categoria-header__content,
+  .categoria-header__title,
+  .categoria-header__description {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .categoria-header {
+    padding: 20px 14px;
+    min-height: 96px;
+  }
+
+  .categoria-header__title {
+    font-size: clamp(1.3rem, 6.2vw, 1.9rem);
+    text-shadow: 0 4px 18px rgba(4,8,20,0.5);
+  }
+
+  .categoria-header__description { font-size: 0.95rem; }
+}
+
+/* Fine tuning for very large displays */
+@media (min-width: 1400px) {
+  .categoria-header__content { padding-left: 8px; padding-right: 8px; }
+  .categoria-header__title { font-size: clamp(2.1rem, 2.6vw, 3rem); }
+}

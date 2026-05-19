@@ -1,0 +1,13 @@
+.list {
+  min-height: 300px;
+  max-height: 80vh;
+  padding: 1rem 0;
+  & .item {
+    // height: 50px;
+    padding: .5rem;
+    cursor: pointer;
+    &:hover{
+      background-color: rgba(white, .1);
+    }
+  }
+}

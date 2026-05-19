@@ -1,0 +1,25 @@
+<div class="flex justify-content-end">
+
+  <button [matMenuTriggerFor]="menu" mat-button title="Ordenar">
+    <mat-icon>sort</mat-icon>
+    <span class="ml-auto">{{'Ordenar por'|uppercase}}</span>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button (click)="setOrder('-id')" mat-menu-item>
+      @if (ordering==='-id') {
+        <mat-icon>done</mat-icon>
+        }Más recientes
+      </button>
+
+      <button (click)="setOrder('nombre')" mat-menu-item>
+        @if (ordering==='nombre') {
+          <mat-icon>done</mat-icon>
+          }Alfabéticamente
+        </button>
+      </mat-menu>
+    </div>
+    <app-my-carousel (load)="load()" [arrows]="true" [controls]="false"
+      [hasNext]="temporada.next!==null" [noPadding]="true" [showSideOverlays]="false"
+      [subtitle]="showTitle? temporada.subtitle : ''" [title]="showTitle ? temporada.title : ''"
+    [temporada]="temporada" [videos]="temporada.videos"></app-my-carousel>

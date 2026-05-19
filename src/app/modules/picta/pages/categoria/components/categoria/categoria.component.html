@@ -1,0 +1,1422 @@
+<!-- Header always visible -->
+@if (categoria === 'Película') {
+  <div class="container-wide">
+    <app-section-header
+      title="Películas"
+      description="Descubre las mejores películas cubanas y más"
+      [image]="'/img/peliculas_header.webp'">
+    </app-section-header>
+  </div>
+}
+
+@if (categoria === 'Serie') {
+  <div class="container-wide">
+    <app-section-header
+      title="Series"
+      description="Explora series cubanas y más de todos los géneros"
+      [image]="'/img/series_header.webp'">
+    </app-section-header>
+  </div>
+}
+
+@if (categoria === 'Video Musical' || categoria === 'Videojuegos' || categoria === 'Infantil') {
+  <div class="container-wide">
+    @if (categoria === 'Video Musical') {
+      <app-section-header
+        title="Musicales"
+        description="Videos musicales, conciertos y vídeos clips"
+        [image]="'/img/musical_header.webp'">
+      </app-section-header>
+    }
+    @if (categoria === 'Videojuegos') {
+      <app-section-header
+        title="Videojuegos"
+        description="Videos de juegos y gaming"
+        [image]="'/img/videojuego_header.webp'">
+      </app-section-header>
+    }
+    @if (categoria === 'Infantil') {
+      <app-section-header
+        title="Infantil"
+        description="Contenido para niños y pequeñas estrellas"
+        [image]="'/img/infantil_header.png'">
+      </app-section-header>
+    }
+  </div>
+}
+
+@if (categoria === 'Documental') {
+  <div class="container-wide">
+    <app-section-header
+      title="Documentales"
+      description="Historias reales que inspiran y transforman"
+      [image]="'/img/documental_header.webp'">
+    </app-section-header>
+  </div>
+}
+
+@if (categoria === 'Live') {
+  <div class="container-wide">
+    <app-section-header
+      title="En directo"
+      description="Emisiones en vivo de tus canales favoritos"
+      [image]="'/img/live_header.webp'">
+    </app-section-header>
+  </div>
+}
+
+<!-- Loading skeleton or content -->
+@if (loading) {
+  <div class="container-wide">
+    <app-carousel-skeleton></app-carousel-skeleton>
+    <app-carousel-skeleton></app-carousel-skeleton>
+    <app-carousel-skeleton></app-carousel-skeleton>
+  </div>
+} @else {
+  <div>
+    @if (categoria === 'Película') {
+      @if (!isMovieFilterActive() && favoriteMovieGenres.length) {
+        <div
+          class="container-wide categoria-tags-shell categoria-tags-shell-favorites"
+          aria-label="Géneros favoritos">
+          <app-genre-tags-carousel
+            [tags]="favoriteMovieGenreCarouselTags()"
+            [options]="favoriteMovieGenreCarouselOptions"
+            [selectedValue]="generoControl.value"
+            [favoriteTrack]="true"
+            [showExplorerHeader]="true"
+            [explorerTitle]="'Tus géneros favoritos'"
+            [explorerButtonLabel]="'Mostrar todos'"
+            [explorerSubtitle]="'Elige un género desde el carrusel o marca tus favoritos desde la vista completa.'"
+            [explorerKind]="'ci'"
+            [favoriteIds]="movieFavoriteGenreIds()"
+            [prevDisabled]="!canPrevFavoriteMovieGenrePage()"
+            [nextDisabled]="!canNextFavoriteMovieGenrePage()"
+            [groupAriaLabel]="'Carrusel de géneros favoritos'"
+            [trackAriaLabel]="'Géneros favoritos'"
+            [prevAriaLabel]="'Favoritos anteriores'"
+            [nextAriaLabel]="'Siguientes favoritos'"
+            [favoriteAriaRemove]="'Quitar de favoritos'"
+            (navigatePrev)="prevFavoriteMovieGenrePage($event)"
+            (navigateNext)="nextFavoriteMovieGenrePage($event)"
+            (translated)="onFavoriteMovieGenreTranslated($event)"
+            (tagSelected)="setMovieGenreTag($event)"
+            (favoriteToggled)="onMovieGenreFavoriteToggled($event)" />
+        </div>
+      }
+
+      <div class="section-divider"></div>
+
+      @if (!isMovieFilterActive() && !favoriteMovieGenres.length) {
+        <div
+          class="container-wide categoria-carousel-section categoria-tags-shell-favorites"
+          aria-live="polite">
+          <app-genre-tags-carousel
+            [tags]="favoriteMovieGenreCarouselTags()"
+            [options]="favoriteMovieGenreCarouselOptions"
+            [selectedValue]="generoControl.value"
+            [favoriteTrack]="true"
+            [showExplorerHeader]="true"
+            [explorerTitle]="'Tus géneros favoritos'"
+            [explorerButtonLabel]="'Mostrar todos'"
+            [explorerSubtitle]="'Elige un género desde el carrusel o marca tus favoritos desde la vista completa.'"
+            [explorerKind]="'ci'"
+            [favoriteIds]="movieFavoriteGenreIds()"
+            [prevDisabled]="!canPrevFavoriteMovieGenrePage()"
+            [nextDisabled]="!canNextFavoriteMovieGenrePage()"
+            [groupAriaLabel]="'Carrusel de géneros favoritos'"
+            [trackAriaLabel]="'Géneros favoritos'"
+            [prevAriaLabel]="'Favoritos anteriores'"
+            [nextAriaLabel]="'Siguientes favoritos'"
+            [favoriteAriaRemove]="'Quitar de favoritos'"
+            (navigatePrev)="prevFavoriteMovieGenrePage($event)"
+            (navigateNext)="nextFavoriteMovieGenrePage($event)"
+            (translated)="onFavoriteMovieGenreTranslated($event)"
+            (tagSelected)="setMovieGenreTag($event)"
+            (favoriteToggled)="onMovieGenreFavoriteToggled($event)" />
+          <div class="categoria-favorites-empty">
+            <mat-icon class="categoria-favorites-empty-icon" aria-hidden="true"
+              >favorite_border</mat-icon
+            >
+            <p class="categoria-favorites-empty-title">
+              Aun no tienes géneros favoritos
+            </p>
+            <p class="categoria-favorites-empty-text">
+              Marca el corazón en un género para verlo aquí.
+            </p>
+          </div>
+        </div>
+      }
+
+      @if (showAllGenresCarousels && !isMovieFilterActive()) {
+        <div
+          class="container-wide categoria-tags-shell"
+          aria-label="Filtrar por género">
+          <app-genre-tags-carousel
+            [tags]="movieGenreCarouselTags()"
+            [options]="movieGenreCarouselOptions"
+            [selectedValue]="generoControl.value"
+            [showExplorerHeader]="true"
+            [explorerTitle]="'Explorar géneros'"
+            [explorerButtonLabel]="'Mostrar todos'"
+            [explorerSubtitle]="'Elige un género desde el carrusel o marca tus favoritos desde la vista completa.'"
+            [explorerKind]="'ci'"
+            [favoriteIds]="movieFavoriteGenreIds()"
+            [prevDisabled]="!canPrevMovieGenrePage()"
+            [nextDisabled]="!canNextMovieGenrePage() || isMovieGenreLoading()"
+            [loading]="isMovieGenreLoading()"
+            [groupAriaLabel]="'Carrusel de géneros de películas'"
+            [trackAriaLabel]="'Géneros de películas'"
+            [prevAriaLabel]="'Géneros anteriores'"
+            [nextAriaLabel]="'Siguientes géneros'"
+            (navigatePrev)="prevMovieGenrePage($event)"
+            (navigateNext)="nextMovieGenrePage($event)"
+            (translated)="onMovieGenreTranslated($event)"
+            (tagSelected)="setMovieGenreTag($event)"
+            (favoriteToggled)="onMovieGenreFavoriteToggled($event)" />
+        </div>
+        <div class="section-divider"></div>
+      }
+
+      @if (!isMovieFilterActive()) {
+        @if (isLoadingFavoriteMovies()) {
+          <div class="container-wide categoria-carousel-section">
+            <div class="">
+              <div class="carousel-header">
+                <h3
+                  class="carousel-title"
+                  >Tus películas favoritas</h3
+                >
+              </div>
+            </div>
+            <div
+              class="categoria-results-skeleton"
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+              aria-label="Cargando películas favoritas">
+              @for (item of [1, 2, 3, 4]; track item) {
+                <article class="categoria-skeleton-card" aria-hidden="true">
+                  <div class="categoria-skeleton-thumb"></div>
+                  <div class="categoria-skeleton-body">
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-title"></div>
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-meta"></div>
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-meta short"></div>
+                  </div>
+                </article>
+              }
+            </div>
+          </div>
+        } @else if (favoriteMovies().length) {
+          <div class="container-wide categoria-carousel-section">
+            <app-my-carousel-o
+              [populares]="true"
+              [carouselOptions]="favoriteMoviesCarouselOptions"
+              title="Tus películas favoritas"
+              [videos]="favoriteMovies()"
+              [favoriteType]="'movie'"
+              [hasMore]="true"
+              [showMoreRoute]="['/favoritos', 'peliculas']"
+              (favoriteChanged)="
+                onFavoriteMediaChanged($event)
+              "></app-my-carousel-o>
+          </div>
+        } @else {
+          <div
+            class="container-wide categoria-carousel-section"
+            aria-live="polite">
+            <div class="rich-shelf-header">
+              <div class="style-scope ytd-rich-shelf-renderer">
+                <span
+                  class="style-scope ytd-rich-shelf-renderer rich-shelf-title"
+                  >Tus películas favoritas</span
+                >
+              </div>
+            </div>
+            <div class="categoria-favorites-empty">
+              <mat-icon
+                class="categoria-favorites-empty-icon"
+                aria-hidden="true"
+                >favorite_border</mat-icon
+              >
+              <p class="categoria-favorites-empty-title">
+                Aun no tienes películas favoritas
+              </p>
+              <p class="categoria-favorites-empty-text">
+                Marca el corazón en una película para verla aquí.
+              </p>
+            </div>
+          </div>
+        }
+
+        @if (paidMovie().length) {
+          <div class="container-wide categoria-carousel-section">
+            <app-my-carousel-o
+              [topRanked]="true"
+              title="Top 10 Premium"
+              [videos]="paidMovie()"
+              [hasMore]="true"
+              [showMoreRoute]="['/contenido-premium']"></app-my-carousel-o>
+          </div>
+
+          <div class="container-wide categoria-carousel-section">
+            <app-my-carousel-o
+              [populares]="true"
+              title="Títulos recientes"
+              [videos]="newestMoviePreview()"
+              [hasMore]="true"
+              [showMoreRoute]="['/recientes', 'peliculas']"></app-my-carousel-o>
+          </div>
+        }
+
+        @if (isLoadingLatestPaidMovie()) {
+          <div class="container-wide categoria-carousel-section">
+            <app-carousel-skeleton></app-carousel-skeleton>
+          </div>
+        } @else if (latestPaidMovies().length) {
+          <div class="container-wide categoria-carousel-section">
+            <app-my-carousel-o
+              [populares]="true"
+              title="Últimas Premium"
+              [videos]="latestPaidMovies()"
+              [hasMore]="true"
+              [showMoreRoute]="['/contenido-premium']"></app-my-carousel-o>
+          </div>
+        }
+
+        <div class="container-wide categoria-carousel-section">
+          <app-my-carousel-o
+            [populares]="true"
+            title="Películas populares del mes"
+            [videos]="popularMovie()"
+            [hasMore]="true"
+            [showMoreRoute]="[
+              '/populares-mes',
+              'peliculas',
+            ]"></app-my-carousel-o>
+        </div>
+      }
+
+      @if (isMovieFilterActive()) {
+        <div
+          class="container-wide categoria-genre-heading-shell"
+          aria-live="polite">
+          <div class="categoria-genre-back-wrap">
+            <button
+              mat-stroked-button
+              type="button"
+              class="categoria-genre-back-btn"
+              aria-label="Regresar a Películas"
+              (click)="clearMovieFilters()">
+              <mat-icon>arrow_back</mat-icon>
+              Regresar a Películas
+            </button>
+          </div>
+          <div class="categoria-genre-filter-row">
+            <mat-form-field
+              appearance="fill"
+              class="categoria-genre-filter-search"
+              floatLabel="auto">
+              <mat-label>Buscar en {{ categoria }}</mat-label>
+              <input
+                [formControl]="searchControl"
+                matInput
+                type="text"
+                maxlength="120"
+                autocomplete="off"
+                [attr.aria-label]="'Buscar ' + categoria" />
+            </mat-form-field>
+
+            <div class="categoria-genre-heading">
+              @if (generoControl.value) {
+                <span class="categoria-genre-heading-main">Películas</span>
+                <span class="categoria-genre-heading-separator">·</span>
+                <span class="categoria-genre-heading-genre">{{
+                  generoControl.value
+                }}</span>
+              } @else if (paisControl.value) {
+                <span class="categoria-genre-heading-main"
+                  >Películas de {{ paisControl.value }}</span
+                >
+              } @else {
+                <span class="categoria-genre-heading-main"
+                  >Películas del año {{ anoControl.value }}</span
+                >
+              }
+            </div>
+
+            <div class="categoria-genre-filter-side">
+              <mat-form-field
+                appearance="fill"
+                class="categoria-genre-filter-country"
+                floatLabel="auto">
+                <mat-label>País</mat-label>
+                <mat-select
+                  [formControl]="paisControl"
+                  aria-label="Filtrar películas por país">
+                  <mat-option [value]="''">Todos</mat-option>
+                  @for (pais of paises; track pais) {
+                    <mat-option [value]="pais">{{ pais }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field
+                appearance="fill"
+                class="categoria-genre-filter-year"
+                floatLabel="auto">
+                <mat-label>Año</mat-label>
+                <mat-select
+                  [formControl]="anoControl"
+                  aria-label="Filtrar películas por año">
+                  <mat-option [value]="''">Todos</mat-option>
+                  @for (year of years; track year) {
+                    <mat-option [value]="year">{{ year }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      }
+
+      <div class="search-results">
+        <div
+          id="categoria-movie-results"
+          class="peliculas-list container-wide">
+          @if (!isMovieFilterActive()) {
+            <div
+              class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 categoria-toolbar">
+              <div
+                class="flex flex-col md:flex-row w-full md:w-auto gap-4 categoria-filters">
+                <mat-form-field
+                  appearance="fill"
+                  class="mr-md-3"
+                  floatLabel="auto">
+                  <mat-label>Buscar en {{ categoria }}</mat-label>
+                  <input
+                    [formControl]="searchControl"
+                    matInput
+                    type="text"
+                    maxlength="120"
+                    autocomplete="off"
+                    [attr.aria-label]="'Buscar ' + categoria" />
+                </mat-form-field>
+                <mat-form-field
+                  appearance="fill"
+                  class="mr-md-3"
+                  floatLabel="auto">
+                  <mat-label>País</mat-label>
+                  <mat-select [formControl]="paisControl">
+                    <mat-option [value]="''">Todos</mat-option>
+                    @for (pais of paises; track pais) {
+                      <mat-option [value]="pais">
+                        {{ pais }}
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field
+                  appearance="fill"
+                  class="mr-md-3"
+                  floatLabel="auto">
+                  <mat-label>Año</mat-label>
+                  <mat-select [formControl]="anoControl">
+                    <mat-option [value]="''">Todos</mat-option>
+                    @for (year of years; track year) {
+                      <mat-option [value]="year">{{ year }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="flex justify-center align-center categoria-actions">
+                <button
+                  [matMenuTriggerFor]="menu"
+                  class=""
+                  mat-button
+                  title="Ordenar"
+                  aria-label="Ordenar resultados">
+                  <mat-icon>sort</mat-icon>
+                  <span class="categoria-action-label">{{
+                    'Ordenar por' | uppercase
+                  }}</span>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button
+                    (click)="setOrderCategoria('-fecha_creacion')"
+                    mat-menu-item>
+                    <mat-icon
+                      *ngIf="filterCategories.ordering === '-fecha_creacion'"
+                      >done</mat-icon
+                    >
+                    Más recientes
+                  </button>
+                  <button (click)="setOrderCategoria('nombre')" mat-menu-item>
+                    <mat-icon *ngIf="filterCategories.ordering === 'nombre'"
+                      >done</mat-icon
+                    >
+                    Alfabéticamente
+                  </button>
+                  <button
+                    (click)="setOrderCategoria('-cantidad_reproducciones')"
+                    mat-menu-item>
+                    <mat-icon
+                      *ngIf="
+                        filterCategories.ordering === '-cantidad_reproducciones'
+                      "
+                      >done</mat-icon
+                    >
+                    Más vistos
+                  </button>
+                  <button
+                    (click)="setOrderCategoria('-cantidad_me_gusta')"
+                    mat-menu-item>
+                    <mat-icon
+                      *ngIf="filterCategories.ordering === '-cantidad_me_gusta'"
+                      >done</mat-icon
+                    >
+                    Mejores valorados
+                  </button>
+                  <button
+                    (click)="setOrderCategoria('-cantidad_comentarios')"
+                    mat-menu-item>
+                    <mat-icon
+                      *ngIf="
+                        filterCategories.ordering === '-cantidad_comentarios'
+                      "
+                      >done</mat-icon
+                    >
+                    Más comentados
+                  </button>
+                  <button
+                    (click)="setOrderCategoria('-cantidad_descargas')"
+                    mat-menu-item>
+                    <mat-icon
+                      *ngIf="
+                        filterCategories.ordering === '-cantidad_descargas'
+                      "
+                      >done</mat-icon
+                    >
+                    Más descargados
+                  </button>
+                </mat-menu>
+                <mat-button-toggle-group
+                  [formControl]="viewModeControl"
+                  aria-label="Modo de visualización">
+                  <mat-button-toggle title="Tarjetas" value="card">
+                    <mat-icon>view_module</mat-icon>
+                  </mat-button-toggle>
+                  <mat-button-toggle title="Lista" value="list">
+                    <mat-icon>list</mat-icon>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+            </div>
+          }
+          @if (resultsLoading) {
+            <div
+              class="categoria-results-skeleton"
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+              aria-label="Cargando resultados">
+              @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) {
+                <article class="categoria-skeleton-card" aria-hidden="true">
+                  <div class="categoria-skeleton-thumb"></div>
+                  <div class="categoria-skeleton-body">
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-title"></div>
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-meta"></div>
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-meta short"></div>
+                  </div>
+                </article>
+              }
+            </div>
+          } @else if (filteredVideos?.length) {
+            <app-movie-list
+              class="categoria-animated-list"
+              [mode]="viewModeControl.value"
+              [movies]="filteredVideos"></app-movie-list>
+
+            @if (loadMore) {
+              <app-categoria-loading-state
+                tone="movie"
+                label="Cargando más películas..."
+                ariaLabel="Cargando más películas" />
+            }
+          } @else {
+            <div
+              class="flex mx-auto justify-center items-top h-screen mt-5 px-4 categoria-empty-state">
+              <mat-icon class="mr-3 categoria-empty-icon">search_off</mat-icon>
+              <h1 class="mb-0 categoria-empty-title">
+                Sin resultados. Intenta ajustar los filtros.
+              </h1>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @if (categoria === 'Serie') {
+      @if (!isSerieFilterActive() && favoriteSeriesGenres.length) {
+        <div
+          class="container-wide categoria-tags-shell categoria-tags-shell-favorites"
+          aria-label="Géneros favoritos de series">
+          <app-genre-tags-carousel
+            [tags]="favoriteSeriesGenreCarouselTags()"
+            [options]="favoriteSeriesGenreCarouselOptions"
+            [selectedValue]="generoControl.value"
+            [favoriteTrack]="true"
+            [showExplorerHeader]="true"
+            [explorerTitle]="'Tus géneros favoritos'"
+            [explorerButtonLabel]="'Mostrar todos'"
+            [explorerSubtitle]="'Elige un género desde el carrusel o marca tus favoritos desde la vista completa.'"
+            [explorerKind]="'ci'"
+            [excludeShowNovela]="true"
+            [favoriteIds]="seriesFavoriteGenreIds()"
+            [prevDisabled]="!canPrevFavoriteSeriesGenrePage()"
+            [nextDisabled]="!canNextFavoriteSeriesGenrePage()"
+            [groupAriaLabel]="'Carrusel de géneros favoritos de series'"
+            [trackAriaLabel]="'Géneros favoritos de series'"
+            [prevAriaLabel]="'Favoritos anteriores'"
+            [nextAriaLabel]="'Siguientes favoritos'"
+            [favoriteAriaRemove]="'Quitar de favoritos'"
+            (navigatePrev)="prevFavoriteSeriesGenrePage($event)"
+            (navigateNext)="nextFavoriteSeriesGenrePage($event)"
+            (translated)="onFavoriteSeriesGenreTranslated($event)"
+            (tagSelected)="setSeriesGenreTag($event)"
+            (favoriteToggled)="onSeriesGenreFavoriteToggled($event)" />
+        </div>
+      }
+
+      @if (!isSerieFilterActive() && !favoriteSeriesGenres.length) {
+        <div
+          class="container-wide categoria-carousel-section categoria-tags-shell-favorites"
+          aria-live="polite">
+          <app-genre-tags-carousel
+            [tags]="favoriteSeriesGenreCarouselTags()"
+            [options]="favoriteSeriesGenreCarouselOptions"
+            [selectedValue]="generoControl.value"
+            [favoriteTrack]="true"
+            [showExplorerHeader]="true"
+            [explorerTitle]="'Tus géneros favoritos'"
+            [explorerButtonLabel]="'Mostrar todos'"
+            [explorerSubtitle]="'Elige un género desde el carrusel o marca tus favoritos desde la vista completa.'"
+            [explorerKind]="'ci'"
+            [excludeShowNovela]="true"
+            [favoriteIds]="seriesFavoriteGenreIds()"
+            [prevDisabled]="!canPrevFavoriteSeriesGenrePage()"
+            [nextDisabled]="!canNextFavoriteSeriesGenrePage()"
+            [groupAriaLabel]="'Carrusel de géneros favoritos de series'"
+            [trackAriaLabel]="'Géneros favoritos de series'"
+            [prevAriaLabel]="'Favoritos anteriores'"
+            [nextAriaLabel]="'Siguientes favoritos'"
+            [favoriteAriaRemove]="'Quitar de favoritos'"
+            (navigatePrev)="prevFavoriteSeriesGenrePage($event)"
+            (navigateNext)="nextFavoriteSeriesGenrePage($event)"
+            (translated)="onFavoriteSeriesGenreTranslated($event)"
+            (tagSelected)="setSeriesGenreTag($event)"
+            (favoriteToggled)="onSeriesGenreFavoriteToggled($event)" />
+          <div class="categoria-favorites-empty">
+            <mat-icon class="categoria-favorites-empty-icon" aria-hidden="true"
+              >favorite_border</mat-icon
+            >
+            <p class="categoria-favorites-empty-title">
+              Aun no tienes géneros favoritos
+            </p>
+            <p class="categoria-favorites-empty-text">
+              Marca el corazón en un género para verlo aquí.
+            </p>
+          </div>
+        </div>
+      }
+
+      <div class="section-divider"></div>
+
+      @if (showAllGenresCarousels && !isSerieFilterActive()) {
+        <div
+          class="container-wide categoria-tags-shell"
+          aria-label="Filtrar series por género">
+          <app-genre-tags-carousel
+            [tags]="seriesGenreCarouselTags()"
+            [options]="seriesGenreCarouselOptions"
+            [selectedValue]="generoControl.value"
+            [showExplorerHeader]="true"
+            [explorerTitle]="'Explorar géneros'"
+            [explorerButtonLabel]="'Mostrar todos'"
+            [explorerSubtitle]="'Elige un género desde el carrusel o marca tus favoritos desde la vista completa.'"
+            [explorerKind]="'ci'"
+            [excludeShowNovela]="true"
+            [favoriteIds]="seriesFavoriteGenreIds()"
+            [prevDisabled]="!canPrevSeriesGenrePage()"
+            [nextDisabled]="!canNextSeriesGenrePage() || isSeriesGenreLoading()"
+            [loading]="isSeriesGenreLoading()"
+            [groupAriaLabel]="'Carrusel de géneros de series'"
+            [trackAriaLabel]="'Géneros de series'"
+            [prevAriaLabel]="'Géneros anteriores'"
+            [nextAriaLabel]="'Siguientes géneros'"
+            (navigatePrev)="prevSeriesGenrePage($event)"
+            (navigateNext)="nextSeriesGenrePage($event)"
+            (translated)="onSeriesGenreTranslated($event)"
+            (tagSelected)="setSeriesGenreTag($event)"
+            (favoriteToggled)="onSeriesGenreFavoriteToggled($event)" />
+        </div>
+        <div class="section-divider"></div>
+      }
+
+      @if (isSerieFilterActive()) {
+        <div
+          class="container-wide categoria-genre-heading-shell"
+          aria-live="polite">
+          <div class="categoria-genre-back-wrap">
+            <button
+              mat-stroked-button
+              type="button"
+              class="categoria-genre-back-btn"
+              aria-label="Regresar a Series"
+              (click)="clearSerieFilters()">
+              <mat-icon>arrow_back</mat-icon>
+              Regresar a Series
+            </button>
+          </div>
+          <div class="categoria-genre-filter-row">
+            <mat-form-field
+              appearance="fill"
+              class="categoria-genre-filter-search"
+              floatLabel="auto">
+              <mat-label>Buscar en {{ categoria }}</mat-label>
+              <input
+                [formControl]="searchControl"
+                matInput
+                type="text"
+                maxlength="120"
+                autocomplete="off"
+                [attr.aria-label]="'Buscar ' + categoria" />
+            </mat-form-field>
+
+            <div class="categoria-genre-heading">
+              @if (generoControl.value) {
+                <span class="categoria-genre-heading-main">Series</span>
+                <span class="categoria-genre-heading-separator">·</span>
+                <span class="categoria-genre-heading-genre">{{
+                  generoControl.value
+                }}</span>
+              } @else if (paisControl.value) {
+                <span class="categoria-genre-heading-main"
+                  >Series de {{ paisControl.value }}</span
+                >
+              } @else {
+                <span class="categoria-genre-heading-main"
+                  >Series del año {{ anoControl.value }}</span
+                >
+              }
+            </div>
+
+            <div class="categoria-genre-filter-side">
+              <mat-form-field
+                appearance="fill"
+                class="categoria-genre-filter-country"
+                floatLabel="auto">
+                <mat-label>País</mat-label>
+                <mat-select
+                  [formControl]="paisControl"
+                  aria-label="Filtrar series por país">
+                  <mat-option [value]="''">Todos</mat-option>
+                  @for (pais of paises; track pais) {
+                    <mat-option [value]="pais">{{ pais }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field
+                appearance="fill"
+                class="categoria-genre-filter-year"
+                floatLabel="auto">
+                <mat-label>Año</mat-label>
+                <mat-select
+                  [formControl]="anoControl"
+                  aria-label="Filtrar series por año">
+                  <mat-option [value]="''">Todos</mat-option>
+                  @for (year of years; track year) {
+                    <mat-option [value]="year">{{ year }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (!isSerieFilterActive()) {
+        @if (isLoadingFavoriteSeries()) {
+          <div class="container-wide categoria-carousel-section">
+            <div class="rich-shelf-header">
+              <div class="style-scope ytd-rich-shelf-renderer">
+                <span
+                  class="style-scope ytd-rich-shelf-renderer rich-shelf-title"
+                  >Tus series favoritas</span
+                >
+              </div>
+            </div>
+            <div
+              class="categoria-results-skeleton"
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+              aria-label="Cargando series favoritas">
+              @for (item of [1, 2, 3, 4]; track item) {
+                <article class="categoria-skeleton-card" aria-hidden="true">
+                  <div class="categoria-skeleton-thumb"></div>
+                  <div class="categoria-skeleton-body">
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-title"></div>
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-meta"></div>
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-meta short"></div>
+                  </div>
+                </article>
+              }
+            </div>
+          </div>
+        } @else if (favoriteSeries().length) {
+          <div class="container-wide categoria-carousel-section">
+            <app-my-carousel-o
+              [series]="true"
+              [carouselOptions]="favoriteSeriesCarouselOptions"
+              title="Tus series favoritas"
+              [videos]="favoriteSeries()"
+              [favoriteType]="'series'"
+              [hasMore]="true"
+              [showMoreRoute]="['/favoritos', 'series']"
+              (favoriteChanged)="
+                onFavoriteMediaChanged($event)
+              "></app-my-carousel-o>
+          </div>
+        } @else {
+          <div
+            class="container-wide categoria-carousel-section"
+            aria-live="polite">
+            <div class="rich-shelf-header">
+              <div class="style-scope ytd-rich-shelf-renderer">
+                <span
+                  class="style-scope ytd-rich-shelf-renderer rich-shelf-title"
+                  >Tus series favoritas</span
+                >
+              </div>
+            </div>
+            <div class="categoria-favorites-empty">
+              <mat-icon
+                class="categoria-favorites-empty-icon"
+                aria-hidden="true"
+                >favorite_border</mat-icon
+              >
+              <p class="categoria-favorites-empty-title">
+                Aun no tienes series favoritas
+              </p>
+              <p class="categoria-favorites-empty-text">
+                Marca el corazón en una serie para verla aquí.
+              </p>
+            </div>
+          </div>
+        }
+
+        <div class="container-wide categoria-carousel-section">
+          <app-my-carousel-o
+            [series]="true"
+            title="Series recientes de Cuba"
+            [videos]="latestCubanSerie()"
+            [hasMore]="true"
+            [showMoreRoute]="['/recientes-cuba', 'series']"></app-my-carousel-o>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="container-wide categoria-carousel-section">
+          <app-my-carousel-o
+            [series]="true"
+            title="Series actualizadas"
+            [videos]="latestUpdatedSerie()"
+            [hasMore]="true"
+            [showMoreRoute]="['/series-actualizadas']"></app-my-carousel-o>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="container-wide categoria-carousel-section">
+          <app-my-carousel-o
+            [series]="true"
+            title="Últimas series"
+            [videos]="latestSeriePreview()"
+            [hasMore]="true"
+            [showMoreRoute]="['/recientes', 'series']"></app-my-carousel-o>
+        </div>
+      }
+
+      <div class="search-results">
+        <div
+          id="categoria-series-results"
+          class="series-list container-wide">
+          @if (!isSerieFilterActive()) {
+            <div
+              class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 categoria-toolbar">
+              <div
+                class="flex flex-col md:flex-row w-full md:w-auto gap-4 categoria-filters">
+                <mat-form-field
+                  appearance="fill"
+                  class="mr-md-3"
+                  floatLabel="auto">
+                  <mat-label>Buscar series</mat-label>
+                  <input
+                    [formControl]="searchControl"
+                    matInput
+                    type="text"
+                    maxlength="120"
+                    autocomplete="off"
+                    [attr.aria-label]="'Buscar ' + categoria" />
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="fill"
+                  class="mr-md-3"
+                  floatLabel="auto">
+                  <mat-label>Género</mat-label>
+                  <mat-select [formControl]="generoControl">
+                    <mat-option [value]="''">Todos</mat-option>
+                    @for (genero of seriesGenres; track genero.id) {
+                      <mat-option [value]="genero.nombre">{{
+                        genero.nombre
+                      }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field
+                  appearance="fill"
+                  class="mr-md-3"
+                  floatLabel="auto">
+                  <mat-label>País</mat-label>
+                  <mat-select [formControl]="paisControl">
+                    <mat-option [value]="''">Todos</mat-option>
+                    @for (pais of paises; track pais) {
+                      <mat-option [value]="pais">{{ pais }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field
+                  appearance="fill"
+                  class="mr-md-3"
+                  floatLabel="auto">
+                  <mat-label>Año</mat-label>
+                  <mat-select [formControl]="anoControl">
+                    <mat-option [value]="''">Todos</mat-option>
+                    @for (year of years; track year) {
+                      <mat-option [value]="year">{{ year }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="flex justify-center align-center categoria-actions">
+                <button
+                  [matMenuTriggerFor]="menu"
+                  mat-button
+                  title="Ordenar"
+                  aria-label="Ordenar resultados">
+                  <mat-icon>sort</mat-icon>
+                  <span class="ml-auto categoria-action-label">{{
+                    'Ordenar por' | uppercase
+                  }}</span>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button (click)="setOrder('-last_update')" mat-menu-item>
+                    <mat-icon *ngIf="filtersSeries.ordering === '-last_update'"
+                      >done</mat-icon
+                    >
+                    Más recientes
+                  </button>
+                  <button (click)="setOrder('nombre')" mat-menu-item>
+                    <mat-icon *ngIf="filtersSeries.ordering === 'nombre'"
+                      >done</mat-icon
+                    >
+                    Alfabéticamente
+                  </button>
+                </mat-menu>
+                <mat-button-toggle-group
+                  [formControl]="viewModeControl"
+                  aria-label="Modo de visualización">
+                  <mat-button-toggle title="Tarjetas" value="card">
+                    <mat-icon>view_module</mat-icon>
+                  </mat-button-toggle>
+                  <mat-button-toggle title="Lista" value="list">
+                    <mat-icon>list</mat-icon>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+            </div>
+          }
+
+          @if (resultsLoading) {
+            <div
+              class="categoria-results-skeleton"
+              role="status"
+              aria-live="polite"
+              aria-busy="true"
+              aria-label="Cargando resultados">
+              @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) {
+                <article class="categoria-skeleton-card" aria-hidden="true">
+                  <div class="categoria-skeleton-thumb"></div>
+                  <div class="categoria-skeleton-body">
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-title"></div>
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-meta"></div>
+                    <div
+                      class="categoria-skeleton-line categoria-skeleton-line-meta short"></div>
+                  </div>
+                </article>
+              }
+            </div>
+          } @else if (filteredSeries?.length) {
+            <app-serie-list
+              class="categoria-animated-list"
+              [mode]="viewModeControl.value"
+              [series]="filteredSeries"></app-serie-list>
+
+            @if (loadMore) {
+              <app-categoria-loading-state
+                tone="serie"
+                label="Cargando más series..."
+                ariaLabel="Cargando más series" />
+            }
+          } @else {
+            <div
+              class="flex mx-auto justify-center items-top h-screen mt-5 px-4 categoria-empty-state">
+              <mat-icon class="mr-3 categoria-empty-icon">search_off</mat-icon>
+              <h1 class="mb-0 categoria-empty-title">
+                Sin resultados. Intenta ajustar los filtros.
+              </h1>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @if (categoria === 'Documental') {
+      <div class="search-results">
+        <div class="container-wide">
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 categoria-toolbar">
+            <div
+              class="flex flex-col md:flex-row w-full md:w-auto gap-4 categoria-filters">
+              <mat-form-field
+                appearance="fill"
+                class="mr-md-3"
+                floatLabel="auto">
+                <mat-label>Buscar en {{ categoria }}</mat-label>
+                <input
+                  [formControl]="searchControl"
+                  matInput
+                  type="text"
+                  maxlength="120"
+                  autocomplete="off"
+                  [attr.aria-label]="'Buscar ' + categoria" />
+              </mat-form-field>
+            </div>
+
+            <div class="flex justify-center align-center categoria-actions">
+              <button
+                [matMenuTriggerFor]="menu"
+                class=""
+                mat-button
+                title="Ordenar"
+                aria-label="Ordenar resultados">
+                <mat-icon>sort</mat-icon>
+                <span class="categoria-action-label">{{
+                  'Ordenar por' | uppercase
+                }}</span>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button
+                  (click)="setOrderCategoria('-fecha_creacion')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="filterCategories.ordering === '-fecha_creacion'"
+                    >done</mat-icon
+                  >
+                  Más recientes
+                </button>
+                <button (click)="setOrderCategoria('nombre')" mat-menu-item>
+                  <mat-icon *ngIf="filterCategories.ordering === 'nombre'"
+                    >done</mat-icon
+                  >
+                  Alfabéticamente
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_reproducciones')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="
+                      filterCategories.ordering === '-cantidad_reproducciones'
+                    "
+                    >done</mat-icon
+                  >
+                  Más vistos
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_me_gusta')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="filterCategories.ordering === '-cantidad_me_gusta'"
+                    >done</mat-icon
+                  >
+                  Mejores valorados
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_comentarios')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="
+                      filterCategories.ordering === '-cantidad_comentarios'
+                    "
+                    >done</mat-icon
+                  >
+                  Más comentados
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_descargas')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="filterCategories.ordering === '-cantidad_descargas'"
+                    >done</mat-icon
+                  >
+                  Más descargados
+                </button>
+              </mat-menu>
+              <mat-button-toggle-group
+                [formControl]="viewModeControl"
+                aria-label="Modo de visualización">
+                <mat-button-toggle title="Tarjetas" value="card">
+                  <mat-icon>view_module</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle title="Lista" value="list">
+                  <mat-icon>list</mat-icon>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+          </div>
+
+          <app-documental-list
+            class="categoria-animated-list"
+            [mode]="viewModeControl.value"
+            [documentales]="filteredVideos"
+            *ngIf="filteredVideos?.length; else notFound"></app-documental-list>
+
+          @if (loadMore && filteredVideos?.length) {
+            <app-categoria-loading-state
+              tone="documental"
+              label="Cargando más documentales..."
+              ariaLabel="Cargando más documentales" />
+          }
+
+          <ng-template #notFound>
+            <div
+              class="flex mx-auto justify-center items-top h-screen mt-5 px-4 categoria-empty-state">
+              <mat-icon class="mr-3 categoria-empty-icon">search_off</mat-icon>
+              <h1 class="mb-0 categoria-empty-title">
+                Sin resultados. Intenta ajustar los filtros.
+              </h1>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    }
+    @if (categoria === 'Video Musical' || categoria === 'Videojuegos' || categoria === 'Infantil') {
+      <div class="search-results">
+        <div class="container-wide">
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 categoria-toolbar">
+            <div
+              class="flex flex-col md:flex-row w-full md:w-auto gap-4 categoria-filters">
+              <mat-form-field
+                appearance="fill"
+                class="mr-md-3"
+                floatLabel="auto">
+                <mat-label>Buscar en {{ categoria }}</mat-label>
+                <input
+                  [formControl]="searchControl"
+                  matInput
+                  type="text"
+                  maxlength="120"
+                  autocomplete="off"
+                  [attr.aria-label]="'Buscar ' + categoria" />
+              </mat-form-field>
+              <mat-form-field
+                *ngIf="categoria === 'Video Musical'"
+                appearance="fill"
+                class="mr-md-3"
+                floatLabel="auto">
+                <mat-label>Género</mat-label>
+                <mat-select [formControl]="generoCategorieControl">
+                  <mat-option [value]="''">Todos</mat-option>
+                  @for (genero of generosCategories; track genero.id) {
+                    <mat-option [value]="genero.nombre">{{
+                      genero.nombre
+                    }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div
+              class="flex justify-content-center align-items-center categoria-actions">
+              <button
+                [matMenuTriggerFor]="menu"
+                class=""
+                mat-button
+                title="Ordenar"
+                aria-label="Ordenar resultados">
+                <mat-icon>sort</mat-icon>
+                <span class="categoria-action-label">{{
+                  'Ordenar por' | uppercase
+                }}</span>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button
+                  (click)="setOrderCategoria('-fecha_creacion')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="filterCategories.ordering === '-fecha_creacion'"
+                    >done</mat-icon
+                  >
+                  Más recientes
+                </button>
+                <button (click)="setOrderCategoria('nombre')" mat-menu-item>
+                  <mat-icon *ngIf="filterCategories.ordering === 'nombre'"
+                    >done</mat-icon
+                  >
+                  Alfabéticamente
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_reproducciones')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="
+                      filterCategories.ordering === '-cantidad_reproducciones'
+                    "
+                    >done</mat-icon
+                  >
+                  Más vistos
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_me_gusta')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="filterCategories.ordering === '-cantidad_me_gusta'"
+                    >done</mat-icon
+                  >
+                  Mejores valorados
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_comentarios')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="
+                      filterCategories.ordering === '-cantidad_comentarios'
+                    "
+                    >done</mat-icon
+                  >
+                  Más comentados
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_descargas')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="filterCategories.ordering === '-cantidad_descargas'"
+                    >done</mat-icon
+                  >
+                  Más descargados
+                </button>
+              </mat-menu>
+              <mat-button-toggle-group
+                [formControl]="viewModeControl"
+                aria-label="Modo de visualización">
+                <mat-button-toggle title="Tarjetas" value="card">
+                  <mat-icon>view_module</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle title="Lista" value="list">
+                  <mat-icon>list</mat-icon>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+          </div>
+
+          <app-musical-list
+            class="categoria-animated-list"
+            [mode]="viewModeControl.value"
+            [videoclips]="filteredVideos"
+            *ngIf="filteredVideos?.length; else notFound"></app-musical-list>
+
+          @if (loadMore && filteredVideos?.length) {
+            <app-categoria-loading-state
+              tone="musical"
+              label="Cargando más videoclips..."
+              ariaLabel="Cargando más videoclips" />
+          }
+
+          <ng-template #notFound>
+            <div
+              class="flex mx-auto justify-center items-top h-screen mt-5 px-4 categoria-empty-state">
+              <mat-icon class="mr-3 categoria-empty-icon">search_off</mat-icon>
+              <h1 class="mb-0 categoria-empty-title">
+                Sin resultados. Intenta ajustar los filtros.
+              </h1>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    }
+    @if (categoria === 'Live') {
+      <div class="search-results">
+        <div class="lives container-wide">
+          <app-my-carousel-o
+            class="envivo categoria-carousel-section"
+            (load)="loadDataLives()"
+            [canal]="true"
+            [title]="'Emisiones en directo destacadas'"
+            [videos]="canalesTv"
+            [carouselOptions]="liveCarouselOptions"></app-my-carousel-o>
+
+          <div class="section-divider"></div>
+
+          <div
+            class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 categoria-toolbar">
+            <div
+              class="flex flex-col md:flex-row w-full md:w-auto gap-4 categoria-filters">
+              <mat-form-field
+                appearance="fill"
+                class="mr-md-3"
+                floatLabel="auto">
+                <mat-label>Buscar en {{ categoria }}</mat-label>
+                <input
+                  [formControl]="searchControl"
+                  matInput
+                  type="text"
+                  maxlength="120"
+                  autocomplete="off"
+                  [attr.aria-label]="'Buscar ' + categoria" />
+              </mat-form-field>
+            </div>
+
+            <div class="flex justify-center items-center categoria-actions">
+              <button
+                [matMenuTriggerFor]="menu"
+                class=""
+                mat-button
+                title="Ordenar"
+                aria-label="Ordenar resultados">
+                <mat-icon>sort</mat-icon>
+                <span class="categoria-action-label">{{
+                  'Ordenar por' | uppercase
+                }}</span>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button
+                  (click)="setOrderCategoria('-fecha_creacion')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="filterCategories.ordering === '-fecha_creacion'"
+                    >done</mat-icon
+                  >
+                  Más recientes
+                </button>
+                <button (click)="setOrderCategoria('nombre')" mat-menu-item>
+                  <mat-icon *ngIf="filterCategories.ordering === 'nombre'"
+                    >done</mat-icon
+                  >
+                  Alfabéticamente
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_reproducciones')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="
+                      filterCategories.ordering === '-cantidad_reproducciones'
+                    "
+                    >done</mat-icon
+                  >
+                  Más vistos
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_me_gusta')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="filterCategories.ordering === '-cantidad_me_gusta'"
+                    >done</mat-icon
+                  >
+                  Mejores valorados
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_comentarios')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="
+                      filterCategories.ordering === '-cantidad_comentarios'
+                    "
+                    >done</mat-icon
+                  >
+                  Más comentados
+                </button>
+                <button
+                  (click)="setOrderCategoria('-cantidad_descargas')"
+                  mat-menu-item>
+                  <mat-icon
+                    *ngIf="filterCategories.ordering === '-cantidad_descargas'"
+                    >done</mat-icon
+                  >
+                  Más descargados
+                </button>
+              </mat-menu>
+              <mat-button-toggle-group
+                [formControl]="viewModeControl"
+                aria-label="Modo de visualización">
+                <mat-button-toggle title="Tarjetas" value="card">
+                  <mat-icon>view_module</mat-icon>
+                </mat-button-toggle>
+                <mat-button-toggle title="Lista" value="list">
+                  <mat-icon>list</mat-icon>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+          </div>
+
+          <!-- Emisiones en directo recientes - usa app-envivo-list -->
+          <app-envivo-list
+            class="categoria-animated-list"
+            [mode]="viewModeControl.value"
+            [movies]="filteredVideos"
+            *ngIf="filteredVideos?.length; else notFound"></app-envivo-list>
+
+          @if (loadMore && filteredVideos?.length) {
+            <app-categoria-loading-state
+              tone="live"
+              label="Cargando más emisiones en directo..."
+              ariaLabel="Cargando más emisiones en directo" />
+          }
+
+          <ng-template #notFound>
+            <div
+              class="flex mx-auto justify-center items-top h-screen mt-5 px-4 categoria-empty-state">
+              <mat-icon class="mr-3 categoria-empty-icon">search_off</mat-icon>
+              <h1 class="mb-0 categoria-empty-title">
+                Sin resultados. Intenta ajustar los filtros.
+              </h1>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    }
+  </div>
+}

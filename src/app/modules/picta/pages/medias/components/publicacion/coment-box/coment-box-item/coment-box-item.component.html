@@ -1,0 +1,80 @@
+<div [class.respuesta]="isRespuesta()" [id]="'comment-' + comentario().id" class="comment-item">
+  <div class="comment-content">
+    @if (!editMode) {
+      <div class="comment-layout">
+        <!-- Avatar -->
+        @if (!displayAvatar()) {
+          <span [class.avatar-owner]="isOwner()" class="avatar">
+            {{displayName() | capitalLead}}
+          </span>
+        }
+        @if (displayAvatar()) {
+          <span [class.avatar-owner]="isOwner()" class="avatar">
+            <img [ngSrc]="displayAvatar() + '_80x80'" width="80" height="80" alt="" loading="lazy">
+          </span>
+        }
+
+        <!-- Contenido del comentario -->
+        <div class="comment-body">
+          <div class="comment-meta">
+            <span [class.username-owner]="isOwner()" class="username">{{displayName()}}</span>
+            <span class="comment-date">{{fecha}}</span>
+          </div>
+
+          <p
+            (click)="toggleTruncate()"
+            [class.truncated]="isTruncated"
+            class="comment-text"
+          >
+            {{comentario().texto}}
+          </p>
+
+          <!-- Acciones del comentario -->
+          <div class="comment-actions">
+            @if (!showComent && !isRespuesta() && authService.isLoggedIn()) {
+              <button (click)="authService.isLoggedIn() ? answer() : null"
+                [title]="authService.isLoggedIn() ? 'Responder' : 'Debe estar autenticado'"
+                class="action-btn"
+              >Responder</button>
+            }
+            @if (user()) {
+              @if (user()?.id === comentario().usuario.id) {
+                <button (click)="edit(false)" title="Editar" class="action-icon">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+              @if ((user()?.id === comentario().usuario.id)) {
+                <button (click)="delete(); stoppropagation($event)" title="Eliminar" class="action-icon">
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+              }
+            }
+          </div>
+
+          <!-- Respuestas -->
+          @if (comentario().cantidad_respuestas > 0) {
+            <button (click)="obtenerRespuestas(comentario().id)" class="answers-btn">
+              {{showAnswers ? 'Ocultar' : 'Ver'}} {{comentario().cantidad_respuestas}} {{comentario().cantidad_respuestas === 1 ? 'respuesta' : 'respuestas'}}
+              <mat-icon>{{showAnswers ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>
+            </button>
+          }
+
+          @if (showAnswers) {
+            <div class="answers-list">
+              @for (respuesta of respuestas; track respuesta) {
+                <app-coment-box-item (updated)="actualizar(respuesta.id)" [comentario]="respuesta" [isRespuesta]="true" [user]="user()" [canal]="canal()" [video]="video()"></app-coment-box-item>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+    @if (editMode) {
+      <app-coment-form (dismiss)="edit($event)" [comentario]="comentario()" [user]="user()" [video]="video()" class="comment-form"></app-coment-form>
+    }
+  </div>
+</div>
+
+@if (showComent) {
+  <app-coment-form (dismiss)="dismiss($event)" [comentarioId]="comentario().id" [user]="user()" [video]="video()" />
+}

@@ -1,0 +1,442 @@
+// ========================================
+// CINE PLAYLIST - Premium Design System
+// ========================================
+
+$picta-yellow: #f3e628;
+$picta-bg-deep: rgba(10, 17, 38, 0.98);
+$picta-bg-surface: rgba(16, 25, 53, 0.98);
+$picta-bg-elevated: rgba(22, 33, 68, 0.95);
+
+$picta-text: #f4f7fb;
+$picta-text-muted: rgba(244, 247, 251, 0.6);
+$picta-text-dim: rgba(244, 247, 251, 0.4);
+
+$picta-accent: #e8462e;
+
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 12px;
+$space-lg: 16px;
+$space-xl: 20px;
+$space-2xl: 24px;
+
+$ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+$duration-fast: 150ms;
+$duration-normal: 250ms;
+$duration-slow: 400ms;
+
+// ========================================
+// Main Container
+// ========================================
+.cine-playlist-overlay {
+  position: absolute;
+  top: 50px;
+  right: 12px;
+  width: 380px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 140px);
+  
+  background: linear-gradient(180deg, $picta-bg-deep 0%, $picta-bg-surface 60%, $picta-bg-elevated 100%);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(243, 230, 40, 0.12);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03) inset, 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: overlayEnter 0.35s $ease-out-quart;
+}
+
+@keyframes overlayEnter {
+  from { opacity: 0; transform: translateX(20px) scale(0.96); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+// ========================================
+// Header
+// ========================================
+.cine-playlist-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: $space-xl;
+  background: linear-gradient(180deg, rgba(243, 230, 40, 0.06) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(243, 230, 40, 0.08);
+  flex-shrink: 0;
+}
+
+.cine-playlist-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-xs;
+}
+
+.cine-playlist-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: $picta-text;
+  margin: 0;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.cine-playlist-meta-row {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  font-family: 'Abel', sans-serif;
+}
+
+.cine-playlist-count {
+  font-size: 13px;
+  color: $picta-text-muted;
+}
+
+.cine-playlist-divider {
+  color: $picta-text-dim;
+  font-size: 10px;
+}
+
+.cine-playlist-current {
+  font-size: 13px;
+  color: $picta-yellow;
+  font-weight: 500;
+}
+
+.cine-playlist-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  color: $picta-text-muted;
+  transition: all $duration-fast $ease-out-quart;
+  
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: $picta-text;
+  }
+}
+
+// ========================================
+// Content
+// ========================================
+.cine-playlist-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: $space-md;
+  display: flex;
+  flex-direction: column;
+  gap: $space-sm;
+  
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(243, 230, 40, 0.2);
+    border-radius: 3px;
+    transition: background $duration-fast;
+    &:hover { background: rgba(243, 230, 40, 0.35); }
+  }
+}
+
+// ========================================
+// Playlist Item
+// ========================================
+.cine-playlist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-md;
+  padding: $space-sm;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  transition: all $duration-normal $ease-out-quart;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    
+    .cine-playlist-play-overlay { opacity: 1; }
+    .cine-playlist-play-btn { transform: scale(1); }
+    .cine-playlist-thumb { transform: scale(1.05); }
+  }
+  
+  &.active {
+    background: linear-gradient(135deg, rgba(243, 230, 40, 0.1) 0%, rgba(243, 230, 40, 0.04) 100%);
+    box-shadow: 0 0 0 1px rgba(243, 230, 40, 0.15);
+    
+    .cine-playlist-name { color: $picta-yellow; }
+    .cine-playlist-index { color: $picta-yellow; }
+  }
+  
+  &.viewed { opacity: 0.6; }
+}
+
+// ========================================
+// Index
+// ========================================
+.cine-playlist-index {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Abel', sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  color: $picta-text-dim;
+  flex-shrink: 0;
+  transition: all $duration-fast $ease-out-quart;
+  box-sizing: border-box;
+  
+  &.playing { 
+    color: $picta-yellow;
+    align-self: center;
+  }
+}
+
+.playing-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  
+  .bar {
+    width: 3px;
+    background: $picta-yellow;
+    border-radius: 1.5px;
+    animation: equalizer 0.8s ease-in-out infinite;
+    
+    &:nth-child(1) { height: 5px; animation-delay: 0s; }
+    &:nth-child(2) { height: 10px; animation-delay: 0.2s; }
+    &:nth-child(3) { height: 6px; animation-delay: 0.4s; }
+  }
+}
+
+@keyframes equalizer {
+  0%, 100% { transform: scaleY(0.5); opacity: 0.6; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+
+// ========================================
+// Card (thumbnail + info)
+// ========================================
+.cine-playlist-card {
+  flex: 1;
+  display: flex;
+  gap: $space-md;
+  cursor: pointer;
+  min-width: 0;
+}
+
+// ========================================
+// Thumbnail
+// ========================================
+.cine-playlist-thumb-container {
+  position: relative;
+  width: 100px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.cine-playlist-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform $duration-normal $ease-out-quart;
+}
+
+.cine-playlist-duration {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  font-family: 'Abel', sans-serif;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(0, 0, 0, 0.8);
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+// Play overlay
+.cine-playlist-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all $duration-fast $ease-out-quart;
+}
+
+.cine-playlist-play-btn {
+  width: 36px;
+  height: 36px;
+  background: rgba(243, 230, 40, 0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all $duration-fast $ease-out-quart;
+  box-shadow: 0 3px 16px rgba(243, 230, 40, 0.5);
+  
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: #0a1126;
+    margin-left: 1px;
+  }
+}
+
+// ========================================
+// Info Details
+// ========================================
+.cine-playlist-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cine-playlist-name {
+  font-family: 'Abel', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: $picta-text;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color $duration-fast;
+}
+
+.cine-playlist-meta-row {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.cine-playlist-type {
+  font-family: 'Abel', sans-serif;
+  font-size: 11px;
+  color: $picta-accent;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.cine-playlist-year {
+  font-family: 'Abel', sans-serif;
+  font-size: 11px;
+  color: $picta-text-dim;
+}
+
+// ========================================
+// Actions
+// ========================================
+.cine-playlist-action-btn {
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: $picta-text-muted;
+  transition: all $duration-fast $ease-out-quart;
+  flex-shrink: 0;
+  align-self: center;
+  
+  mat-icon { 
+    font-size: 18px; 
+    width: 18px; 
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  &:hover {
+    background: rgba(243, 230, 40, 0.15);
+    color: $picta-yellow;
+  }
+}
+
+// ========================================
+// Footer
+// ========================================
+.cine-playlist-footer {
+  padding: $space-lg $space-xl;
+  background: linear-gradient(180deg, transparent 0%, rgba(243, 230, 40, 0.02) 100%);
+  border-top: 1px solid rgba(243, 230, 40, 0.06);
+  flex-shrink: 0;
+}
+
+.cine-playlist-progress {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: $space-sm;
+}
+
+.cine-playlist-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, $picta-yellow 0%, lighten($picta-yellow, 8%) 100%);
+  border-radius: 2px;
+  transition: width $duration-slow $ease-out-quart;
+}
+
+.cine-playlist-progress-text {
+  font-family: 'Abel', sans-serif;
+  font-size: 10px;
+  color: $picta-text-dim;
+  text-align: right;
+  display: block;
+}
+
+// ========================================
+// Responsive
+// ========================================
+@media (max-width: 480px) {
+  .cine-playlist-overlay {
+    top: 40px;
+    right: 8px;
+    left: 8px;
+    width: auto;
+    max-height: calc(100vh - 100px);
+    border-radius: 12px;
+  }
+  
+  .cine-playlist-header { padding: $space-lg; }
+  .cine-playlist-title { font-size: 16px; }
+  .cine-playlist-content { padding: $space-sm; gap: $space-sm; }
+  
+  .cine-playlist-card { gap: $space-sm; }
+  .cine-playlist-thumb-container { width: 88px; height: 50px; }
+  .cine-playlist-name { font-size: 13px; }
+}

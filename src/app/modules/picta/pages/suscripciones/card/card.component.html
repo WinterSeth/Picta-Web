@@ -1,0 +1,73 @@
+@if (loading) {
+  <div class="inset-0 flex items-center justify-center h-screen bg-black z-50">
+    <div class="p-8 !rounded-lg shadow-lg flex flex-col items-center">
+      <mat-spinner aria-label="cargando" [diameter]="40" color="primary"></mat-spinner>
+      <p class="mt-4 text-gray-600">Cargando planes...</p>
+    </div>
+  </div>
+} @else {
+  <div class="plan-card w-full relative" [ngClass]="{ 'plan-card--popular': isPopular(), 'plan-card--active': isActivePlan() }">
+    @if (isActivePlan()) {
+      <div class="plan-card-active">Plan activo</div>
+    }
+
+    <div class="plan-card-body">
+      <div class="plan-card-hero" [ngClass]="heroClass()">
+        <div>
+          <h5 class="plan-card-title" [matTooltip]="plan().descripcion || plan().nombre">
+            {{ plan().nombre }}
+          </h5>
+          <p class="plan-card-description">
+            {{ plan().duracion }} días
+          </p>
+        </div>
+
+        @if (isActivePlan()) {
+          <div class="plan-card-check" aria-label="Plan activo">
+            <mat-icon>check</mat-icon>
+          </div>
+        }
+      </div>
+
+      <div class="plan-card-feature">
+        <p class="plan-card-feature-name">Precio mensual</p>
+        <p class="plan-card-feature-value">{{ plan().precio }} CUP</p>
+      </div>
+      <mat-divider class="plan-card-divider"></mat-divider>
+
+      @for (benefit of benefits; track $index) {
+        <div class="plan-card-feature">
+          <p class="plan-card-feature-name">{{ benefit.nombre }}</p>
+          <p class="plan-card-feature-value">{{ benefit.valor }}</p>
+        </div>
+        @if ($index < benefits.length - 1) {
+          <mat-divider class="plan-card-divider"></mat-divider>
+        }
+      }
+
+      <div [ngClass]="!plan().activo ? 'items-center justify-center' : ''" class="w-full flex gap-2.5 plan-card-actions">
+        @if (plan().activo) {
+          <div class="flex justify-between w-full gap-2">
+            <button [disabled]="plan().activo" class="!rounded-full" mat-flat-button color="primary">
+              <mat-icon>check_circle_outline</mat-icon>
+              <span class="ml-1">Plan {{ plan().precio == 0 ? 'gratis' : 'activo' }}</span>
+            </button>
+            @if (buyed()) {
+              <button matButton="filled" [disabled]="plan().pago" class="!rounded-full" color="accent" matTooltip="Renovar plan" (click)="(handleSubscribe(plan()))">
+                <mat-icon>update</mat-icon>
+                <span>Renovar</span>
+              </button>
+            }
+          </div>
+        } @else {
+          <button matButton="filled" [disabled]="plan().pago" [color]="plan().id == 40 ? 'accent' : 'primary'" class="!rounded-full" matTooltip="Comprar plan" (click)="buyed() ? handleSubscribe(plan()) : openPayment()">
+            <mat-icon>attach_money</mat-icon>
+            <span>{{ plan().id == 40 ? '¡Obtener Oferta!' : 'Comprar' }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+

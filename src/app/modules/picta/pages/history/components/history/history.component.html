@@ -1,0 +1,119 @@
+@if (isLoading) {
+  <!-- Estado de carga -->
+  <div class="inset-0 flex items-center justify-center h-screen z-50">
+    <div class="p-4 !rounded-md flex flex-col items-center">
+      <mat-spinner
+        aria-label="cargando"
+        [diameter]="50"
+        color="warn"></mat-spinner>
+      <p class="mt-4">Cargando...</p>
+    </div>
+  </div>
+} @else {
+  <section class="relative pb-8">
+    <div class="w-screen-xl sm:py-6 lg:py-8">
+      <h2 class="text-2xl font-bold mb-6">
+        Historial de reproducciones en este dispositivo
+      </h2>
+      <div class="grid grid-cols-2 gap-4 lg:grid-cols-5 lg:gap-8">
+        @if (recomendados$ | async; as recomendados) {
+          @for (recomendado of recomendados; track recomendado.id) {
+            <div title="{{ recomendado.nombre }}" class="flex flex-col">
+              <div class="flex-1 mb-2 relative">
+                <a
+                  color="accent"
+                  (click)="deleteVideo(recomendado.slug_url)"
+                  title="Eliminar del historial"
+                  mat-icon-button
+                  class="absolute right-0 z-50">
+                  <mat-icon>delete</mat-icon>
+                </a>
+                <div
+                  class="group relative h-40 !rounded-md overflow-hidden hover:transition-transform duration-200 ease-in-out hover:scale-105">
+                  <img
+                    [ngSrc]="recomendado.url_imagen + '_350x200'"
+                    width="350"
+                    height="200"
+                    alt="recomendado imagen"
+                    class="w-full h-full object-cover absolute inset-0 opacity-90"
+                    onerror="this.src = '/img/default.webp'" />
+
+                  @if (recomendado.precios != '') {
+                    <div class="absolute top-2 left-2 !rounded-md px-1 my-1">
+                      <img
+                        ngSrc="favicon.ico"
+                        alt="Icono"
+                        width="20"
+                        height="20"
+                        class="w-6 h-6" />
+                    </div>
+                  }
+
+                  <div
+                    class="absolute inset-0 flex items-center justify-center">
+                    <svg
+                      [routerLink]="['/medias', recomendado.slug_url]"
+                      class="focus:outline-none cursor-pointer group-hover:transition-transform duration-200 ease-in-out group-hover:scale-150 hover:fill-yellow-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="40px"
+                      viewBox="0 -960 960 960"
+                      width="40px"
+                      fill="#e8eaed">
+                      <path
+                        d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Línea de progreso agregada aquí -->
+                <div
+                  class="w-full h-1 bg-gray-200 dark:bg-gray-700 !rounded-full mt-1">
+                  <mat-progress-bar
+                    mode="determinate"
+                    color="accent"
+                    [value]="getProgres(recomendado)"></mat-progress-bar>
+                </div>
+              </div>
+
+              <div class="flex items-center">
+                <div class="flex mr-4">
+                  <a
+                    class="flex items-center h-8 w-8 overflow-hidden"
+                    [title]="recomendado.canal.nombre"
+                    [routerLink]="['/canal', recomendado.canal.alias]">
+                    <img
+                      class="!rounded-full h-8 w-8 object-cover"
+                      width="48"
+                      height="48"
+                      [ngSrc]="recomendado.canal.url_avatar + '_48x48'" />
+                  </a>
+                </div>
+                <div class="flex flex-col">
+                  <div>
+                    <a
+                      class="flex-1 mt-2 line-clamp-1"
+                      [title]="recomendado.nombre"
+                      [routerLink]="['/medias', recomendado.slug_url]">
+                      {{ recomendado.nombre }}
+                    </a>
+                  </div>
+                  <div class="meta-block flex align-center">
+                    <span class="text-xs text-gray-500"
+                      >{{ recomendado.cantidad_visitas | shortNumbers }}
+                      {{
+                        recomendado.cantidad_visitas > 0
+                          ? 'vistas'
+                          : '0 vistas'
+                      }}
+                      • hace {{ recomendado.tiempo_creacion }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </section>
+}

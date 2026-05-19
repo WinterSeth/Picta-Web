@@ -1,0 +1,64 @@
+
+<div>
+  <app-section-header
+    title="Videojuegos"
+    description="Videos de juegos y gaming"
+    [image]="'/img/videojuego_header.webp'">
+  </app-section-header>
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="flex flex-col md:flex-row w-full md:w-auto gap-4">
+      <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
+        <mat-label>Buscar Videojuegos...</mat-label>
+        <input [formControl]="searchControl" matInput type="text">
+      </mat-form-field>
+    </div>
+
+    <div class="flex justify-center items-center">
+      <button [matMenuTriggerFor]="menu" mat-button matTooltip="Ordenar">
+        <mat-icon>sort</mat-icon>
+        <span class="ml-auto">{{'Ordenar por'|uppercase}}</span>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button (click)="setOrder('-last_update')" mat-menu-item>
+          @if (filtersShows.ordering==='-last_update') {
+            <mat-icon>done</mat-icon>
+          }
+          Más recientes
+        </button>
+        <button (click)="setOrder('nombre')" mat-menu-item>
+          @if (filtersShows.ordering==='nombre') {
+            <mat-icon>done</mat-icon>
+          }
+          Alfabéticamente
+        </button>
+      </mat-menu>
+      <mat-button-toggle-group [formControl]="viewModeControl" aria-label="list view">
+        <mat-button-toggle matTooltip="Tarjetas" value="card">
+          <mat-icon>view_module</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle matTooltip="Lista" value="list">
+          <mat-icon>list</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+
+  @if (shows?.length) {
+    <app-serie-list [mode]="viewModeControl.value" [series]="shows"></app-serie-list>
+  }
+
+  <ng-template #notFound>
+    <div class="flex justify-center items-center mt-5 px-4">
+      <mat-icon class="mr-3">error</mat-icon><h1 class="mb-0">No se encontraron resultados.</h1>
+    </div>
+  </ng-template>
+</div>
+@if (loading) {
+  <!-- Estado de carga -->
+  <div class="inset-0 flex flex-col items-center justify-center h-screen z-50">
+    <div class="p-4 !rounded-lg flex flex-col items-center">
+      <mat-spinner aria-label="cargando" [diameter]="50" color="warn"></mat-spinner>
+      <p class="mt-4">Cargando...</p>
+    </div>
+  </div>
+}

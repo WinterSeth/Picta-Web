@@ -1,0 +1,114 @@
+<div class="help-support-page">
+  <header class="profile-header mb-5">
+    <h1 class="profile-header-title">Ayuda y soporte</h1>
+    <p class="profile-header-subtitle">Estamos aquí para ayudarte. Encuentra respuestas o contáctanos.</p>
+  </header>
+
+  <div class="actions">
+    <button mat-flat-button class="otto-primary" (click)="toggleView('create')" [disabled]="viewMode==='create'" [class.active]="viewMode==='create'">
+      Reportar Problema
+    </button>
+    <button mat-stroked-button class="otto-secondary" (click)="toggleView('list')" [disabled]="viewMode==='list'" [class.active]="viewMode==='list'">
+      Ver mis reportes
+    </button>
+  </div>
+
+  @if (viewMode==='create') {
+    <mat-card class="report-form-card">
+      <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+        <mat-card-content>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Tipo de Problema</mat-label>
+            <mat-select formControlName="issue_type">
+              <mat-option value="">Seleccione</mat-option>
+              <mat-option value="bug">Error</mat-option>
+              <mat-option value="performance">Rendimiento</mat-option>
+              <mat-option value="payment">Pago</mat-option>
+              <mat-option value="ui">Diseño</mat-option>
+              <mat-option value="other">Otro</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="title" placeholder="Resumen breve del problema" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="description" rows="6" placeholder="Describe lo sucedido"></textarea>
+          </mat-form-field>
+
+          <div class="file-upload">
+            <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+            @if (selectedFileDataUrl) {
+              <div class="file-preview">
+                <img [src]="selectedFileDataUrl" alt="preview" />
+              </div>
+            }
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions class="report-form-actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="isSubmitting || reportForm.invalid">
+            @if (isSubmitting) {
+              <mat-spinner [diameter]="20"></mat-spinner>
+            }
+            @if (!isSubmitting) {
+              <span>Enviar Reporte</span>
+            }
+          </button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
+  }
+
+  @if (viewMode==='list') {
+    @if (supportService.isLoading()) {
+      <div class="support-loading">
+        <mat-spinner [diameter]="40"></mat-spinner>
+      </div>
+    }
+    @if (!supportService.isLoading() && supportService.reports().length===0) {
+      <div class="support-empty">
+        No tienes reportes registrados.
+      </div>
+    }
+    @if (!supportService.isLoading() && supportService.reports().length>0) {
+      <div class="reports-grid">
+        @for (report of supportService.reports(); track report) {
+          <mat-card class="report-card">
+            <mat-card-header>
+              <div mat-card-avatar class="report-avatar">
+                <mat-icon>report_problem</mat-icon>
+              </div>
+              <mat-card-title>{{ report.title }}</mat-card-title>
+              <mat-card-subtitle>{{ report.created_at | date:'medium' }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="meta-row">
+                <span class="issue-type">{{ getIssueTypeLabel(report.issue_type) }}</span>
+                <mat-chip class="status-chip" [style.background-color]="getStatusColor(report.issue_state)" [style.color]="getStatusTextColor(report.issue_state)">{{ getStatusLabel(report.issue_state) }}</mat-chip>
+              </div>
+              <p class="desc">{{ report.description }}</p>
+              @if (report.image) {
+                <div class="image-wrap">
+                  <img [src]="buildSizedImageUrl(report.image, 300, 200)" alt="evidence" (click)="openImageModal(report.image, 'Imagen del reporte')" />
+                </div>
+              }
+              <div class="conversation-trigger">
+                <button mat-flat-button class="otto-primary" (click)="openConversation(report)">
+                  Ver conversación ({{ (report.interactions || []).length }})
+                </button>
+              </div>
+            </mat-card-content>
+            <mat-divider></mat-divider>
+            <mat-card-actions align="end">
+              <button mat-stroked-button class="otto-secondary" (click)="toggleView('create')">Reportar otro</button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,46 @@
+.movie-grid {
+
+	.movie-card {
+		cursor: pointer;
+		background: linear-gradient(180deg, rgba(16, 24, 45, 0.88) 0%, rgba(10, 15, 30, 0.92) 100%);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.95);
+		transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+	}
+
+	.movie-card:hover,
+	.movie-card:focus-within {
+		transform: translateY(-4px) scale(1.03);
+		border-color: rgba(232, 70, 46, 0.45);
+		box-shadow: 0 22px 40px -18px rgba(0, 0, 0, 0.95);
+	}
+}
+
+.cards-grid-container {
+	display: grid;
+	grid-template-columns: repeat(1, minmax(0, 1fr));
+	gap: 1rem;
+	align-items: stretch;
+	padding-bottom: 8px;
+	width: 100%;
+	max-width: 1800px;
+	margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+	.cards-grid-container {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 960px) {
+	.cards-grid-container {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1280px) {
+	.cards-grid-container {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}

@@ -1,0 +1,69 @@
+<main class="devices-page px-6 md:px-12 py-10 flex flex-col justify-center items-center">
+  <header class="profile-header w-full max-w-4xl mb-5">
+    <h1 class="profile-header-title">Mis dispositivos</h1>
+    <p class="profile-header-subtitle">Administra donde tienes sesiones activas y cierra acceso remoto cuando sea necesario.</p>
+  </header>
+
+  @if (loading) {
+    <div class="w-full max-w-4xl profile-card p-6">
+      @for (item of [1, 2, 3]; track $index) {
+        <div class="flex flex-col gap-4 md:flex-row md:justify-between md:items-center border-b border-white/10 py-6 last:border-0">
+          <div class="flex items-start space-x-3 w-full">
+            <div class="w-6 h-6 bg-white/20 rounded shrink-0 mt-1"></div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-4 h-4 bg-white/20 rounded-full"></div>
+                <div class="h-4 bg-white/20 rounded w-16"></div>
+                <div class="w-2 h-0.5 bg-white/20 rounded"></div>
+                <div class="w-4 h-4 bg-white/20 rounded-full"></div>
+                <div class="h-4 bg-white/20 rounded w-20"></div>
+              </div>
+              <div class="h-3 bg-white/20 rounded w-48"></div>
+            </div>
+          </div>
+          <div class="w-full md:w-28 h-9 bg-white/20 rounded-lg shrink-0 md:ml-4"></div>
+        </div>
+      }
+    </div>
+  } @else if (error) {
+    <div class="w-full max-w-4xl bg-red-900/20 border border-red-500 text-red-200 rounded-xl p-4 mb-6 text-center">
+      <p>{{ error }}</p>
+    </div>
+  } @else {
+    <div class="w-full max-w-4xl profile-card p-6">
+      @for (device of devices; track device.id) {
+        <div class="flex flex-col gap-4 md:flex-row md:justify-between md:items-center border-b border-white/10 py-6 last:border-0">
+          <div class="flex items-start space-x-3 min-w-0">
+            <mat-icon class="text-2xl text-gray-400 mt-1">{{ getDeviceIcon(device) }}</mat-icon>
+            <div class="min-w-0">
+              <p class="font-semibold flex items-center flex-wrap gap-2" [title]="device.ua_string">
+                {{ device.os || 'SO desconocido' }}
+                <span class="text-gray-500 mx-1">-</span>
+                {{ device.browser || 'Navegador desconocido' }}
+                @if (isCurrentDevice(device)) {
+                  <span class="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-white/15 text-white">Dispositivo actual</span>
+                }
+              </p>
+              <p class="text-sm text-gray-400">Última vista el {{ device.last_used | date: 'dd/MM/yyyy, HH:mm' }}</p>
+            </div>
+          </div>
+          <button
+            (click)="logoutDevice(device.id)"
+            [disabled]="deleting === device.id"
+            class="logout-device-btn picta-btn-outlined"
+            [class.opacity-50]="deleting === device.id">
+            @if (deleting === device.id) {
+              Cerrando...
+            } @else {
+              Cerrar sesión
+            }
+          </button>
+        </div>
+      } @empty {
+        <div class="text-center py-8 text-gray-400">
+          <p>No se encontraron dispositivos activos.</p>
+        </div>
+      }
+    </div>
+  }
+</main>

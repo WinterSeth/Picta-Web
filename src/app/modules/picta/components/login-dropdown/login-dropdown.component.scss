@@ -1,0 +1,15 @@
+mat-tab-group {
+  padding: 10px;
+  border: 1px gray solid;
+  //background-color: #05071F;
+
+  border-radius: 10px;
+  border: solid 0.1px #2196f3;
+}
+@supports ( backdrop-filter: blur(50px)) {
+  mat-tab-group {
+    background-color: rgba(#05071F, .9);
+    backdrop-filter: blur(100px);
+    --webkit-backdrop-filter: blur(100px);
+  }
+}

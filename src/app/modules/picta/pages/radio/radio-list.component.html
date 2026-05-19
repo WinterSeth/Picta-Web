@@ -1,0 +1,184 @@
+<div class="radio-list">
+  <app-section-header
+    title="Radio en Vivo"
+    description="Tus emisoras favoritas aparecen arriba para acceder más rápido."
+    [image]="'/img/radio_header.webp'">
+  </app-section-header>
+
+  @if (favoriteStations.length) {
+    <section class="radio-list__favorites" aria-label="Emisoras favoritas">
+      <div class="radio-list__section-head">
+        <h3 class="radio-list__section-title">Favoritas</h3>
+        <div class="radio-list__section-actions">
+          <span class="radio-list__section-count">{{
+            favoriteStations.length
+          }}</span>
+          <div
+            class="radio-list__favorites-nav"
+            aria-label="Navegacion de favoritas">
+            <button
+              type="button"
+              class="radio-favorites-nav-btn"
+              aria-label="Ver favoritas anteriores"
+              (click)="goToPreviousFavorite()">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button
+              type="button"
+              class="radio-favorites-nav-btn"
+              aria-label="Ver favoritas siguientes"
+              (click)="goToNextFavorite()">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <owl-carousel-o
+        #favoritesCarousel
+        [options]="favoriteCarouselOptions"
+        class="radio-favorites-carousel owl-theme">
+        @for (st of favoriteStations; track st.id) {
+          <ng-template carouselSlide>
+            <article
+              class="radio-favorite-slide"
+              tabindex="0"
+              (click)="onSelect(st)"
+              (keydown.enter)="onSelect(st)">
+              <button
+                mat-icon-button
+                type="button"
+                class="radio-favorite-slide__heart"
+                [attr.aria-pressed]="isFavorite(st) ? 'true' : 'false'"
+                [attr.aria-label]="
+                  isFavorite(st) ? 'Quitar de favoritos' : 'Agregar a favoritos'
+                "
+                (click)="onToggleFavorite(st); $event.stopPropagation()">
+                <mat-icon>{{
+                  isFavorite(st) ? 'favorite' : 'favorite_border'
+                }}</mat-icon>
+              </button>
+
+              <div class="radio-favorite-slide__media">
+                <img
+                  [src]="getFavoriteImage(st)"
+                  [alt]="getFavoriteTitle(st)" />
+              </div>
+
+              <div class="radio-favorite-slide__content">
+                <p
+                  class="radio-favorite-slide__title"
+                  [title]="getFavoriteTitle(st)">
+                  {{ getFavoriteTitle(st) }}
+                </p>
+                <p class="radio-favorite-slide__meta">
+                  {{ st['frequency'] || 'En vivo' }}
+                </p>
+              </div>
+            </article>
+          </ng-template>
+        }
+      </owl-carousel-o>
+    </section>
+  }
+
+  @if (!loading && !favoriteStations.length) {
+    <section class="radio-list__favorites" aria-label="Sin emisoras favoritas">
+      <mat-card class="radio-empty-card">
+        <div class="radio-empty-card__content">
+          <p class="radio-empty-card__title">Aun no tienes favoritas</p>
+          <p class="radio-empty-card__text">
+            Toca el corazon en cualquier emisora para agregarla a favoritos y
+            acceder mas rapido.
+          </p>
+        </div>
+      </mat-card>
+    </section>
+  }
+
+  @if (loading) {
+    <section
+      class="radio-list__favorites"
+      aria-busy="true"
+      aria-live="polite"
+      aria-label="Cargando emisoras favoritas">
+      <div class="radio-list__section-head">
+        <h3 class="radio-list__section-title">Favoritas</h3>
+        <div class="radio-list__section-actions">
+          <span class="radio-list__section-count">0</span>
+          <div
+            class="radio-list__favorites-nav"
+            aria-label="Navegacion de favoritas">
+            <button type="button" class="radio-favorites-nav-btn" disabled>
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button type="button" class="radio-favorites-nav-btn" disabled>
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="radio-skeleton-carousel">
+        @for (i of [1, 2, 3, 4]; track i) {
+          <article
+            class="radio-favorite-slide radio-favorite-slide--skeleton"
+            aria-hidden="true">
+            <div class="radio-skeleton-media"></div>
+            <div class="radio-skeleton-content">
+              <div class="radio-skeleton-line radio-skeleton-line--title"></div>
+              <div class="radio-skeleton-line radio-skeleton-line--meta"></div>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="radio-list__loading" aria-label="Cargando estaciones">
+      <div class="radio-list__grid radio-list__grid--skeleton">
+        @for (i of [1, 2, 3, 4, 5, 6, 7, 8]; track i) {
+          <article class="radio-skeleton-card" aria-hidden="true">
+            <div class="radio-skeleton-card__media"></div>
+            <div class="radio-skeleton-card__content">
+              <div class="radio-skeleton-line radio-skeleton-line--title"></div>
+              <div class="radio-skeleton-line radio-skeleton-line--meta"></div>
+              <div
+                class="radio-skeleton-line radio-skeleton-line--meta short"></div>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+  @if (!loading && stations?.length === 0) {
+    <section class="radio-list__empty">
+      <mat-card class="radio-empty-card">
+        <div class="radio-empty-card__content">
+          <p class="radio-empty-card__title">No hay estaciones disponibles</p>
+          <p class="radio-empty-card__text">
+            Intenta nuevamente en unos minutos.
+          </p>
+        </div>
+      </mat-card>
+    </section>
+  }
+
+  @if (!loading && mappedStations.length) {
+    <section class="radio-list__stations" aria-label="Todas las estaciones">
+      @if (favoriteStations.length) {
+        <div class="radio-list__divider" aria-hidden="true">
+          <span class="radio-list__divider-line"></span>
+          <span class="radio-list__divider-icon">
+            <mat-icon>radio</mat-icon>
+          </span>
+          <span class="radio-list__divider-line"></span>
+        </div>
+      }
+
+      <app-radio-cards
+        [stations]="mappedStations"
+        (select)="onSelect($event)"
+        (play)="onPlay($event)"></app-radio-cards>
+    </section>
+  }
+</div>

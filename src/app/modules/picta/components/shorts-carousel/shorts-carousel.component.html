@@ -1,0 +1,95 @@
+<div class="relative max-w-md mx-auto">
+  <div class="relative !rounded-xl p-2">
+    
+        <!-- Header con branding -->
+    <div class="flex items-center justify-start mb-2 gap-2">
+      <!-- Título "Picta Shorts" con enlace -->
+      <a 
+        [routerLink]="'/shorts'" 
+        class="text-white text-md font-medium bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent hover:from-red-600 hover:to-orange-600 transition-all duration-300 cursor-pointer flex items-start gap-2 group"
+        title="Ver todos los shorts">
+        Picta Shorts
+        <!-- Icono de flecha para indicar que es clickeable -->
+        <svg class="w-5 h-5 text-orange-400 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+      </a>
+    </div>
+    
+    <owl-carousel-o 
+      [options]="customOptions" 
+      (initialized)="onCarouselInitialized()"
+      #shortsCarousel>
+      
+      <!-- Usando @for en lugar de *ngFor -->
+      @for (short of shorts(); track short.id) {
+        <ng-template carouselSlide [width]="140" [id]="short.id.toString()">
+          <div [routerLink]="['/short/', short.slug_url]" class="short-item !rounded-lg overflow-hidden mx-1 cursor-pointer transition-transform duration-200 hover:scale-105">
+            <div class="short-thumb relative">
+              <img 
+                [src]="short.url_imagen+'_180x320'" 
+                [alt]="short.nombre"
+                class="short-thumb-image aspect-2/3">
+              
+              <span class="absolute bottom-2 right-2 bg-black/75 text-white text-xs px-2 py-1 !rounded-md">
+                {{ short.duracion }}
+              </span>
+            </div>
+            
+            <div class="short-content p-2">
+              <span class="short-title text-white font-semibold text-xs mb-1 line-clamp-2" title="{{ short.nombre }}">
+                {{ short.nombre }}
+              </span>
+
+              <div class="flex items-center justify-between text-gray-400 text-xs md:text-sm gap-1">
+                
+                  <img [src]="short.canal.url_avatar + '_40x40'" [alt]="short.canal.nombre" title="{{ short.canal.nombre }}" class="max-w-6 h-6 !rounded-full object-cover" />
+                  <span class="hidden sm:inline-block text-gray-300 text-xs w-22" title="{{ short.canal.nombre }}">{{ short.canal.nombre }}</span>
+                
+<!--                 <div class="text-gray-400 text-xs md:text-sm">{{ short.cantidad_visitas | shortNumbers }} vistas</div>
+ -->              </div>
+            </div>
+          </div>
+        </ng-template>
+      }
+      
+    </owl-carousel-o>
+
+    <!-- Flechas de navegación -->
+    <div class="absolute top-1/2 left-0 right-0 transform -translate-y-1/2 flex justify-between px-2 z-10">
+
+      <button 
+        (click)="navigatePrev(shortsCarousel)"
+        class="bg-white/20 hover:g-white/30 text-white p-2 !rounded-full transition-all duration-200 hover:scale-110"
+        aria-label="Anterior">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+
+      <button 
+        (click)="navigateNext(shortsCarousel)"
+        class="bg-white/20 hover:bg-white/30 text-white p-2 !rounded-full transition-all duration-200 hover:scale-110"
+        aria-label="Siguiente">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Usando @if en lugar de *ngIf -->
+    @if (!carouselReady() && shorts().length === 0) {
+      <div class="flex justify-center items-center h-64">
+        <div class="animate-spin !rounded-full h-12 w-12 border-b-2 border-white"></div>
+      </div>
+    }
+
+    <!-- Mensaje si no hay shorts -->
+    @if (shorts().length === 0 && carouselReady()) {
+      <div class="flex justify-center items-center h-64">
+        <p class="text-white text-lg">No hay shorts disponibles</p>
+      </div>
+    }
+    
+  </div>
+</div>

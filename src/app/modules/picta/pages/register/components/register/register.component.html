@@ -1,0 +1,26 @@
+<div class="register-page">
+  <img
+    ngSrc="img/login_bg.webp"
+    width="800"
+    height="600"
+    alt="Movie streaming background showing various entertainment content"
+    class="register-bg" />
+
+  @if (!registerSuccess) {
+    <div class="register-overlay">
+      <app-register-form (registerCompleted)="registerCompleted()"></app-register-form>
+    </div>
+  }
+
+  @if (registerSuccess) {
+    <div class="register-success">
+      <div class="success-card">
+        <div class="success-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <h2 class="success-title">Registro completado</h2>
+        <p class="success-text">Se ha validado su código. Ya puedes acceder a Picta.</p>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,9 @@
+<!-- network-status-button.component.html -->
+<button
+  mat-fab
+  [color]="isOnline ? 'primary' : 'warn'"
+  class="network-status-button"
+  [matTooltip]="isOnline ? 'Conectado' : 'Sin conexión'"
+>
+  <mat-icon>{{ isOnline ? 'wifi' : 'wifi_off' }}</mat-icon>
+</button>

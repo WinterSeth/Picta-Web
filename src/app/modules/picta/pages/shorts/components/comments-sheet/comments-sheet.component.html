@@ -1,0 +1,20 @@
+<div class="text-white !rounded-t-2xl">
+      <!-- Header -->
+      <div class="flex items-center justify-between p-4 border-b border-gray-700">
+        <h2 class="text-lg font-semibold">Comentarios</h2>
+        <button mat-icon-button (click)="dismiss()" class="text-gray-400 hover:text-white">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <!-- Contenido - Tu componente de comentarios -->
+      <div class="h-[70vh] overflow-auto">
+        <div class="comment" class="mt-2">
+
+            <app-coment-form (dismiss)="dismiss()" (addComment)="loadComentarios()" [user]="data.user" [video]="data.video"></app-coment-form>
+            <app-coment-box (onUpdated)="loadComentarios()" [user]="data.user" [video]="data.video"></app-coment-box>
+
+
+        </div>
+    </div>
+</div>

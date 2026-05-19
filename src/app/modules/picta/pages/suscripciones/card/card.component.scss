@@ -1,0 +1,154 @@
+.plan-card {
+  min-height: 100%;
+  transition: transform 240ms ease, filter 240ms ease;
+}
+
+.plan-card--active {
+  transform: translateY(-4px);
+  z-index: 1;
+}
+
+.plan-card:hover {
+  filter: brightness(1.03);
+}
+
+.plan-card-body {
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  box-shadow: 0 14px 30px -26px rgba(0, 0, 0, 0.9);
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-card-active {
+  position: absolute;
+  top: -12px;
+  right: 14px;
+  z-index: 2;
+  background: #43a047;
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 6px 18px rgba(67, 160, 71, 0.35);
+}
+
+.plan-card--active .plan-card-body {
+  border-color: rgba(76, 175, 80, 0.88);
+  background: linear-gradient(180deg, rgba(76, 175, 80, 0.18), rgba(76, 175, 80, 0.1));
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.5), 0 14px 30px rgba(0, 0, 0, 0.32);
+}
+
+
+.plan-card-hero {
+  border-radius: 10px;
+  color: #fff;
+  padding: 0.75rem 0.85rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.plan-hero-basic {
+  background: linear-gradient(90deg, #334ea1, #6b3fd6);
+}
+
+.plan-hero-standard {
+  background: linear-gradient(90deg, #2e59a7, #a13bb7);
+}
+
+.plan-hero-premium {
+  background: linear-gradient(90deg, #2b5aa8, #6d3fb6 52%, #d71e2b);
+}
+
+.plan-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.plan-card-description {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+.plan-card-check {
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  background: #fff;
+  color: #e53935;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    width: 1rem;
+    height: 1rem;
+    font-size: 1rem;
+  }
+}
+
+.plan-card-feature {
+  padding: 0.45rem 0;
+}
+
+.plan-card-feature-name {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.78rem;
+  line-height: 1.2;
+  text-transform: none;
+}
+
+.plan-card-feature-value {
+  margin: 0.12rem 0 0;
+  color: rgba(255, 255, 255, 0.98);
+  font-size: 0.9rem;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.plan-card-divider {
+  border-top-color: rgba(255, 255, 255, 0.14);
+}
+
+.plan-card-actions {
+  margin-top: auto;
+  padding-top: 0.7rem;
+}
+
+.plan-card-actions button {
+  min-height: 36px;
+}
+
+.plan-card-actions button:focus-visible {
+  outline: 2px solid rgba(232, 70, 46, 0.62);
+  outline-offset: 2px;
+}
+
+@media screen and (max-width: 768px) {
+  .plan-card-body {
+    padding: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-card {
+    transition: none;
+  }
+
+  .plan-card:hover {
+    filter: none;
+  }
+}
+

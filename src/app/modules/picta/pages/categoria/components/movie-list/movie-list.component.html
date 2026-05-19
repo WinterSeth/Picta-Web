@@ -1,0 +1,44 @@
+@if (mode() === 'card') {
+  <div class="cards-grid-container" [@modalScaleIn]>
+    @for (pelicula of movies() ?? []; track pelicula.id) {
+      <div class="modal-animated-item">
+        <app-movie-card [movie]="pelicula"></app-movie-card>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="container movie-list-wrapper">
+    <mat-nav-list class="movie-list">
+      @for (movie of movies(); track movie.id) {
+        <a mat-list-item [routerLink]="['/movie', movie.slug_url]" class="movie-list-item">
+          <img [ngSrc]="movie.url_imagen + '_80x80'" [alt]="'Poster de ' + movie.nombre" class="avatar-list movie-list-avatar" height="80" loading="lazy" matListItemAvatar width="80" />
+
+          <div class="movie-list-main">
+            <h5 matListItemTitle class="movie-list-title">{{ movie.nombre }}</h5>
+            <span matListItemLine class="movie-list-subline">{{ movie.categoria.pelicula.ano }} • {{ movie.categoria.pelicula.pais }} • {{ movie.duracion }}</span>
+          </div>
+
+          <div class="movie-list-pricing">
+          @if (movie.precios && movie.precios.length) {
+            @for (pp of movie.precios; track pp.tipo) {
+              @if (pp.tipo == 'reproduccion') {
+                <span class="price-chip" aria-label="Precio de reproducción">
+                  <mat-icon class="price-chip-icon">play_arrow</mat-icon>
+                  <span class="leading-none">Repro: {{pp.valor}} CUP</span>
+                </span>
+              } @else if (pp.tipo == 'renta') {
+                <span class="price-chip" aria-label="Precio de renta">
+                  <mat-icon class="price-chip-icon">schedule</mat-icon>
+                  <span class="leading-none">Renta: {{pp.valor}} CUP</span>
+                </span>
+              }
+            }
+          }
+          </div>
+
+          <mat-icon matListItemIcon color="primary"> play_circle_outline</mat-icon>
+        </a>
+      }
+    </mat-nav-list>
+  </div>
+}

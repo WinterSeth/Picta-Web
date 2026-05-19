@@ -1,0 +1,180 @@
+.details-container {
+  margin-top: -20px;
+  height: 100%;
+  position: relative;
+  display: grid;
+  grid-template: 'content';
+  z-index: 2;
+}
+
+mat-tab-group {
+  grid-area: content;
+
+  ::ng-deep & .mat-tab-body-wrapper {
+    height: 100% !important;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.presentacion-text {
+  grid-area: content;
+  align-self: center;
+  padding: 0 60px;
+  width: 100%;
+  z-index: 2;
+
+
+  & h2 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  & h4 {
+    font-size: 15px;
+    font-weight: normal;
+  }
+}
+
+
+.close-boton {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  z-index: 100;
+}
+
+.reproducir-button {
+  transition: all .2s ease;
+  transform: scale(1);
+
+
+  &:hover {
+    box-shadow: 0 5px 10px rgba(255, 87, 34, .4), 0 0 1px black;
+    transform: scale(1.05);
+
+  }
+
+
+}
+
+.cta {
+  margin-top: 30px;
+}
+
+.details-tabs {
+  display: flex;
+  width: 30%;
+  margin: auto;
+  justify-content: space-around;
+
+  & button {
+    text-transform: uppercase;
+    font-family: 'Roboto', serif;
+    font-size: 15px;
+  }
+}
+
+
+.back {
+  grid-area: content;
+  display: flex;
+  width: 100%;
+  height: 65vh;
+
+  & .fill {
+    //background-color: #05071F;
+    flex: 0;
+  }
+
+  & .details-background {
+    flex: 3;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+}
+
+.tab-button {
+  background: transparent;
+  color: white;
+  font-size: 15px;
+  font-family: 'Roboto', serif;
+  border: none;
+  border-bottom: 5px solid rgba(255, 255, 255, 0);
+  transition: all .5s;
+  z-index: 2;
+
+  &.active {
+    padding-bottom: 10px;
+    border-bottom: 5px solid white;
+
+
+  }
+}
+
+.related-videos {
+  grid-area: content;
+  align-self: center;
+  background-color: rgba(0, 0, 0, .4);
+}
+
+@media (min-width: 768px) {
+  .presentacion-text {
+    width: 60vw;
+
+    & h2 {
+      font-size: 3vw;
+    }
+
+    & h4 {
+      font-size: 1.7vw;
+    }
+  }
+  .reproducir-button {
+    // font-size: 1.5vw;
+  }
+  .details-tabs {
+    & button {
+      font-size: 2vw;
+    }
+  }
+  .back {
+    height: 80vh;
+
+    & .fill {
+      flex: 1;
+    }
+
+    & .details-background {
+      flex: 3;
+      background-size: cover;
+      position: relative;
+
+
+    }
+  }
+
+
+}
+
+.bg-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+
+}
+
+.overlay-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(to right, #05071F, rgba(5, 7, 31, .1) 80%),
+  linear-gradient(to bottom, #05071F, rgba(5, 7, 31, .1) 5%),
+  linear-gradient(to top, #05071F, rgba(5, 7, 31, .1) 40%);
+
+}

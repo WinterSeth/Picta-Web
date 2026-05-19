@@ -1,0 +1,19 @@
+<div class="login-page">
+  @if (reauthReason()) {
+    <div class="reauth-alert">
+      <span class="material-icons">info</span>
+      <p>Tu sesión expiró. Inicia sesión nuevamente para continuar.</p>
+    </div>
+  }
+
+  <img
+    ngSrc="img/login_bg.webp"
+    width="800"
+    height="600"
+    alt="Movie streaming background showing various entertainment content"
+    class="login-bg" />
+
+  <div class="login-overlay">
+    <app-login-form></app-login-form>
+  </div>
+</div>

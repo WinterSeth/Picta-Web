@@ -1,0 +1,284 @@
+<!-- components/shorts-player/shorts-player.component.html -->
+<div class="flex items-center justify-center h-[calc(100dvh-4.5rem)] sm:h-[calc(100dvh-5.5rem)] overflow-hidden" #videoContainer>
+  <div class="relative w-auto mx-auto shorts-player h-full">
+    
+    @if (isLoading()) {
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-white z-40">
+        <div class="border-2 border-white border-t-red-500 !rounded-full w-8 h-8 animate-spin"></div>
+        <p class="text-sm mt-2">Cargando short...</p>
+      </div>
+    }
+
+    @if (short()) {
+      <div class="flex gap-6 items-center h-full">
+        <div class="relative h-full max-h-full aspect-[9/16] w-auto max-w-lg">
+          <!-- Video -->
+          <video
+            id="short-video"
+            class="h-full w-full object-cover !rounded-2xl"
+            [poster]="short()!.url_imagen"
+            playsinline
+            loop
+            (click)="togglePlay()"
+            preload="none"
+          ></video>
+
+          <!-- Barra de progreso en la parte inferior -->
+          <div class="absolute bottom-0 left-4 right-4 h-1 bg-white/30 !rounded z-20">
+            <div class="h-full bg-red-500 !rounded" [style.width.%]="getProgress()"></div>
+          </div>
+
+          <!-- Controles superiores -->
+          <div class="absolute top-3 left-3 right-3 flex justify-between items-start z-10">
+            <!-- Botones izquierda: Play/Pause y Volumen -->
+            <div class="flex items-center gap-2">
+              <button 
+                class="bg-black/50 !rounded-full p-2 hover:bg-black/70 transition-all duration-200"
+                (click)="togglePlay(); $event.stopPropagation()"
+              >
+                @if (isPlaying()) {
+                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                  </svg>
+                } @else {
+                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                }
+              </button>
+              
+              <button 
+                class="bg-black/50 !rounded-full p-2 hover:bg-black/70 transition-all duration-200"
+                (click)="toggleMute(); $event.stopPropagation()"
+              >
+                @if (isMuted()) {
+                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                  </svg>
+                } @else {
+                  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                  </svg>
+                }
+              </button>
+            </div>
+
+            <!-- Botón derecha: Pantalla completa -->
+<!--             <button 
+              class="bg-black bg-opacity-50 !rounded-full p-2 hover:bg-opacity-70 transition-all duration-200"
+              (click)="toggleFullscreen(); $event.stopPropagation()"
+            >
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+              </svg>
+            </button> -->
+          </div>
+
+          <!-- Overlay de información -->
+          <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent z-10">
+            <div class="text-white">
+              <span class="text-sm font-semibold mb-1 line-clamp-2">{{ short()!.nombre }}</span>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs opacity-90">{{ short().canal.nombre }}</span>
+                @if (!subscribed()) {
+                <button (click)="handleSubscribe()" [title]="authService.isLoggedIn() ? 'Seguir' : 'Debes estar autenticado para seguir'"
+                  [ngStyle]="{ width: '130px' }"
+                  class="canal-subscribe-btn channel-follow-button !rounded-full flex items-center gap-2"
+                  [class.is-subscribing]="subscribing() || subscriptionLoading()"
+                  [disabled]="subscribing() || subscriptionLoading() || !authService.isLoggedIn()"
+                  mat-stroked-button>
+                  @if (subscribing() || subscriptionLoading()) {
+                    <span class="subscribe-spinner">
+                      <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent"></mat-progress-spinner>
+                    </span>
+                  }
+                  @if (!(subscribing() || subscriptionLoading())) {
+                    <span class="channel-follow-label">Seguir</span>
+                  }
+                </button>
+                } @else {
+                <button [matMenuTriggerFor]="followMenu" (click)="$event.stopPropagation()" [title]="'Opciones de seguimiento'"
+                  [ngStyle]="{ width: '130px' }"
+                  class="canal-subscribe-btn channel-follow-button !rounded-full subscribed flex items-center gap-2"
+                  [class.is-subscribing]="subscribing() || subscriptionLoading()"
+                  [disabled]="subscribing() || subscriptionLoading() || !authService.isLoggedIn()"
+                  mat-stroked-button>
+                  @if (subscribing() || subscriptionLoading()) {
+                    <span class="subscribe-spinner">
+                      <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent"></mat-progress-spinner>
+                    </span>
+                  } @else {
+                    <mat-icon>{{ notificationMode === 'all' ? 'notifications_active' : 'notifications_off' }}</mat-icon>
+                  }
+                  @if (!(subscribing() || subscriptionLoading())) {
+                    <span class="channel-follow-label">Siguiendo</span>
+                  }
+                </button>
+                }
+                <mat-menu #followMenu="matMenu" class="header-menu-panel">
+                  <button mat-menu-item (click)="handleNotificationChange('all')" [class.active]="notificationMode === 'all'">
+                    <mat-icon>notifications_active</mat-icon>
+                    <span>Todas</span>
+                  </button>
+                  <button mat-menu-item (click)="handleNotificationChange('none')" [class.active]="notificationMode === 'none'">
+                    <mat-icon>notifications_off</mat-icon>
+                    <span>Ninguna</span>
+                  </button>
+                  <button mat-menu-item (click)="handleUnsubscribe()">
+                    <mat-icon>close</mat-icon>
+                    <span>Dejar de seguir</span>
+                  </button>
+                </mat-menu>
+              </div>
+              <p class="text-xs opacity-80">
+                {{ short()!.cantidad_visitas | shortNumbers }} visitas • 
+                {{ cantidad_me_gusta() | shortNumbers }} likes
+              </p>
+            </div>
+          </div>
+
+          <!-- Acciones laterales - MÓVIL (VERTICAL) -->
+          <div class="lg:hidden absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center gap-4 z-30">
+            <!-- Avatar del creador -->
+            <img 
+              [src]="short()!.canal.url_avatar" 
+              [alt]="short()!.canal.nombre"
+              [routerLink]="'/canal/'+short()!.canal.alias"
+              class="w-10 h-10 !rounded-full border-2 border-white object-cover"
+            >
+
+            <!-- Botón Me gusta -->
+            <button class="flex flex-col items-center gap-1 text-white" (click)="handleLike(); $event.stopPropagation()">
+              <div class="bg-white/20 !rounded-full p-2">
+                @if (likeLoading()) {
+                  <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                } @else {
+                  <svg class="w-5 h-5" [class.text-blue-400]="liked()" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                  </svg>
+                }
+              </div>
+              <span class="text-xs font-medium">{{ cantidad_me_gusta() == 0 ? 'Me gusta' : cantidad_me_gusta() | number }}</span>
+            </button>
+
+            <!-- Botón No me gusta (NUEVO) -->
+            <button class="flex flex-col items-center gap-1 text-white" (click)="handleDisLike(); $event.stopPropagation()">
+              <div class="bg-white/20 !rounded-full p-2">
+                @if (dislikeLoading()) {
+                  <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                } @else {
+                  <svg class="w-5 h-5" [class.text-blue-400]="disliked()" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                  </svg>
+                }
+              </div>
+              <span class="text-xs font-medium">{{ cantidad_no_me_gusta() == 0 ? 'No me gusta' : cantidad_no_me_gusta() | number }}</span>
+            </button>
+
+            <!-- Botón Comentarios -->
+            <button class="flex flex-col items-center gap-1 text-white"
+            (click)="openComments(); $event.stopPropagation()"
+            [attr.aria-label]="'Comentarios de ' + short().nombre"
+            >
+              <div class="bg-white/20 !rounded-full p-2">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+              </div>
+              <span class="text-xs font-medium">{{ short()!.cantidad_comentarios == 0 ? 'Comentarios' : short()!.cantidad_comentarios | number }}</span>
+            </button>
+
+            <!-- Botón de compartir -->
+            <app-share-button 
+              [slugUrl]="short()!.slug_url" 
+              [title]="short()!.nombre" 
+            />
+          </div>
+        </div>
+
+        <!-- Acciones laterales - ESCRITORIO (FUERA del video) -->
+        <div class="hidden lg:flex flex-col items-center gap-6 ml-4">
+          <!-- Avatar del creador -->
+          <img 
+            [src]="short()!.canal.url_avatar" 
+            [alt]="short()!.canal.nombre"
+            [routerLink]="'/canal/'+short()!.canal.alias"
+            class="w-14 h-14 !rounded-full cursor-pointer border-2 border-white object-cover"
+          >
+          
+          <!-- Botón Me gusta -->
+          <button class="flex flex-col items-center gap-1 text-white transition-transform hover:scale-110"
+          (click)="handleLike()"
+          [disabled]="likeLoading()"
+          [ngClass]="{
+            'text-blue-500': liked(),
+          }"
+          >
+            <div class="bg-white/10 !rounded-full p-3 hover:bg-white/20 transition-colors">
+              @if (likeLoading()) {
+                <svg class="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              } @else {
+                <svg class="w-7 h-7" [class.text-blue-400]="liked()" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                </svg>
+              }
+            </div>
+            <span class="text-xs font-medium">{{ cantidad_me_gusta() == 0 ? 'Me gusta' : cantidad_me_gusta() | number }}</span>
+          </button>
+
+          <!-- Botón No me gusta (NUEVO) - REMPLAZA AL BOTÓN REMIX -->
+          <button class="flex flex-col items-center gap-1 text-white transition-transform hover:scale-110" 
+          (click)="handleDisLike(); $event.stopPropagation()"
+          [class.actived]="disliked()"
+          [ngClass]="{
+            'text-blue-500': disliked(),
+          }"
+          >
+            <div class="bg-white/10 !rounded-full p-3 hover:bg-white/20 transition-colors">
+               @if (dislikeLoading()) {
+                <svg class="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              } @else {
+                <svg class="w-7 h-7" [class.text-blue-400]="disliked()" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                </svg>
+              }
+            </div>
+            <span class="text-xs font-medium">{{ cantidad_no_me_gusta() == 0 ? 'No me gusta' : cantidad_no_me_gusta() | number }}</span>
+          </button>
+
+          <!-- Botón Comentarios -->
+          <button 
+            class="flex flex-col items-center gap-1 text-white transition-transform hover:scale-110" 
+            (click)="openComments(); $event.stopPropagation(); pauseCurrentVideo()"
+            [attr.aria-label]="'Comentarios de ' + short().nombre">
+            <div class="bg-white/10 !rounded-full p-3 hover:bg-white/20 transition-colors">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+            </div>
+              <span class="text-xs font-medium">{{ cantidad_comentarios() == 0 ? 'Comentarios' : cantidad_comentarios() | number }}</span>
+          </button>
+
+          <!-- Botón de compartir -->
+          <app-share-button
+            (click)="pauseCurrentVideo()"
+            [slugUrl]="short()!.slug_url" 
+            [title]="short()!.nombre" 
+          />
+        </div>
+      </div>
+    }
+  </div>
+</div>

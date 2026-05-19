@@ -1,0 +1,68 @@
+<div class="pointer-events-auto w-full max-w-sm !rounded-2xl border border-white/10 bg-isla-dark/95 px-4 py-3 shadow-2xl backdrop-blur-md"
+     [ngClass]="{
+       'border-emerald-400/30': type() === 'ok',
+       'border-red-500/30': type() === 'error',
+       'border-sky-400/30': type() === 'notification'
+     }">
+  <div class="flex items-start gap-3">
+    <div class="mt-0.5 flex h-8 w-8 items-center justify-center !rounded-full"
+         [ngClass]="{
+           'bg-emerald-400/15': type() === 'ok',
+           'bg-red-500/15': type() === 'error',
+           'bg-sky-400/15': type() === 'notification'
+         }">
+      @switch (type()) {
+        @case ('ok') {
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-emerald-300" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 16.2l-3.5-3.5L4 14.2l5 5 11-11-1.5-1.5L9 16.2z" />
+          </svg>
+        }
+        @case ('error') {
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-300" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 11h-2V7h2v6zm0 4h-2v-2h2v2z" />
+          </svg>
+        }
+        @default {
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-sky-300" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+          </svg>
+        }
+      }
+    </div>
+
+    <div class="flex-1">
+      <p class="font-secondary text-sm font-medium text-white/90">
+        {{ message() }}
+      </p>
+
+      @if (action()) {
+        <button
+          class="font-secondary mt-2 inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-bold text-white bg-sky-500 hover:bg-sky-400 transition-colors cursor-pointer"
+          (click)="onAction()"
+          type="button">
+          {{ action()!.label }}
+        </button>
+      }
+    </div>
+
+    <button
+      class="ml-2 inline-flex h-6 w-6 items-center justify-center !rounded-full text-white/60 transition-colors hover:text-white"
+      type="button"
+      aria-label="Cerrar notificación"
+      (click)="close()">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.3 5.71L12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.29 19.71 2.88 18.29 9.17 12 2.88 5.71 4.29 4.29l6.3 6.3 6.29-6.3 1.42 1.42z" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Progress bar indicating remaining duration -->
+  <div class="toast-progress"
+       [ngClass]="{
+         'type-ok': type() === 'ok',
+         'type-error': type() === 'error',
+         'type-notification': type() === 'notification'
+       }">
+    <div class="bar" [style.animationDuration]="duration() + 'ms'"></div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<section class="picta-confirm-modal">
+  <button (click)="dialogRef.close(false)" aria-label="Cerrar diálogo" class="picta-confirm-close" mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <header class="picta-confirm-header">
+    <p class="picta-confirm-kicker">Picta</p>
+    <h2 mat-dialog-title class="picta-confirm-title">{{ this.data.title || 'Confirmar acción' }}</h2>
+    <p class="picta-confirm-subtitle">{{ this.data.msg }}</p>
+  </header>
+
+  @if (data.showOption) {
+    <section class="picta-confirm-body">
+      <mat-checkbox labelPosition="after" [checked]="false" (change)="changeStatus($event)">
+        No volver a mostrar
+      </mat-checkbox>
+    </section>
+  }
+
+  <mat-dialog-actions class="picta-confirm-actions">
+    <button (click)="dialogRef.close(false)" mat-stroked-button class="picta-confirm-secondary-btn">No</button>
+    <button (click)="dialogRef.close(true)" mat-raised-button class="picta-confirm-primary-btn">Sí</button>
+  </mat-dialog-actions>
+</section>

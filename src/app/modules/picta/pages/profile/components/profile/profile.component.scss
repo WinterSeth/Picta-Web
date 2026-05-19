@@ -1,0 +1,188 @@
+:root {
+  --picta-font-primary: 'Bebas Neue', sans-serif;
+  --picta-font-secondary: 'Abel', sans-serif;
+  --picta-font-body: 'Roboto', sans-serif;
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+}
+
+// ===============================================
+// Picta Buttons (same as Login/Register)
+// ===============================================
+::ng-deep {
+  // Primary - yellow fill
+  .mat-mdc-flat-button.mat-primary,
+  [color='primary'].mat-mdc-flat-button,
+  .profile-primary-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: var(--picta-yellow) !important;
+    color: #0a1126 !important;
+    font-family: var(--picta-font-secondary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    border-radius: 999px !important;
+    min-height: 42px;
+    padding: 0 20px;
+    transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    
+    &:hover:not(:disabled) {
+      background-color: #e8de2c !important;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(243, 230, 40, 0.28);
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  // Outlined - yellow border (default)
+  .mat-mdc-outlined-button,
+  .mat-mdc-outlined-button.mat-primary,
+  [color='primary'].mat-mdc-outlined-button,
+  .mat-stroked-button:not([color="warn"]),
+  .profile-action-btn:not([color="warn"]) {
+    border: 1px solid var(--picta-yellow-border) !important;
+    color: var(--picta-yellow) !important;
+    background: transparent !important;
+    font-family: var(--picta-font-secondary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    border-radius: 999px !important;
+    min-height: 42px;
+    padding: 0 20px;
+    transition: background 160ms ease;
+    
+    &:hover:not(:disabled) {
+      background-color: var(--picta-yellow-soft) !important;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  // Warning/ danger - coral red outline
+  .mat-mdc-outlined-button[color="warn"],
+  .mat-stroked-button[color="warn"],
+  .profile-action-btn[color="warn"] {
+    border: 1px solid #e8462e !important;
+    color: #e8462e !important;
+    background: transparent !important;
+    font-family: var(--picta-font-secondary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    border-radius: 999px !important;
+    min-height: 42px;
+    padding: 0 20px;
+    
+    &:hover:not(:disabled) {
+      background-color: rgba(232, 70, 46, 0.16) !important;
+    }
+  }
+}
+
+.card-profile {
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+.profile-config {
+  min-height: 100vh;
+}
+
+.profile-page-header {
+  margin-bottom: 10px;
+}
+
+.profile-page-title {
+  font-family: var(--picta-font-primary);
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+.profile-page-subtitle {
+  color: var(--picta-text-muted);
+  font-family: var(--picta-font-body);
+  margin: 6px 0 0;
+  font-size: 0.95rem;
+}
+
+.profile-primary-btn {
+  min-height: 38px;
+}
+
+.profile-action-btn {
+  min-height: 38px;
+}
+
+.profile-primary-btn:focus-visible,
+.profile-action-btn:focus-visible {
+  outline: 2px solid rgba(232, 70, 46, 0.58);
+  outline-offset: 2px;
+}
+
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(5, 8, 20, 0.64);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.loading mat-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--picta-yellow);
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .profile-config {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    padding-top: 14px !important;
+  }
+
+  .card-profile {
+    padding: 14px !important;
+  }
+
+  .profile-page-subtitle {
+    font-size: 0.92rem;
+  }
+}

@@ -1,0 +1,710 @@
+<div class="categoria-tags-carousel" style="margin-bottom: 2%">
+  <!-- Header: titulo + controles en misma fila -->
+  <div class="carousel-header">
+    @if (title()) {
+      <h3 class="carousel-title">{{ title() }}</h3>
+    }
+    <div class="carousel-controls">
+      @if (hasMore()) {
+        <button
+          mat-stroked-button
+          type="button"
+          class="categoria-show-all-btn"
+          [routerLink]="showMoreRoute()"
+          (click)="onShowMore()">
+          <mat-icon>grid_view</mat-icon>
+          <span>Ver más</span>
+        </button>
+      }
+      @if (owlCar && arrows() && controls()) {
+        <button
+          mat-icon-button
+          type="button"
+          aria-label="izquierda"
+          class="categoria-tags-nav"
+          [disabled]="prevDisabled()"
+          (click)="navigatePrev(owlCar)">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          type="button"
+          aria-label="derecha"
+          class="categoria-tags-nav"
+          [disabled]="nextDisabled()"
+          (click)="navigateNext(owlCar)">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="categoria-tags-track" role="tablist">
+    <owl-carousel-o
+      [options]="resolvedOptions()"
+      (initialized)="onCarouselInitialized($event)"
+      (translated)="onCarouselTranslated($event)"
+      #owlCar>
+      @for (episode of videos(); track $index) {
+        <ng-container>
+          @if (series()) {
+            <ng-template carouselSlide let-owlItem [width]="200">
+              <div
+                class="slider"
+                [@favoriteRemovalCard]="
+                  isRemovingFavorite(episode) ? 'removing' : 'idle'
+                ">
+                <div class="cover-container">
+                  <a
+                    class="outer-link video-title"
+                    [routerLink]="['/serie', episode.nombre]">
+                    <div
+                      class="carousel-card-surface rounded-lg! relative overflow-hidden group"
+                      style="
+                        background-position: center center;
+                        background-size: cover;
+                      ">
+                      <img
+                        [ngSrc]="episode?.imagen_secundaria + '_300x750'"
+                        width="220"
+                        height="300"
+                        class="w-full h-full aspect-[2/3] object-cover rounded-lg!" />
+                      <span class="carousel-card-overlay"></span>
+                      @if (favoriteType() === 'series' || favoriteType() === 'animes' || favoriteType() === 'doramas') {
+                        <button
+                          mat-icon-button
+                          type="button"
+                          class="carousel-favorite-btn"
+                          matTooltip="Eliminar de favoritos"
+                          [attr.aria-label]="favoriteAriaLabel(episode)"
+                          (click)="toggleFavoriteEpisode(episode, $event)">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      }
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div id="details">
+                <a
+                  id="avatar-link"
+                  class="yt-simple-endpoint style-scope ytd-rich-grid-media"
+                  tabindex="-1"
+                  [title]="episode.canal.nombre"
+                  [routerLink]="['/canal', episode.canal.alias]">
+                  <img
+                    id="img"
+                    draggable="false"
+                    class="style-scope yt-img-shadow"
+                    alt=""
+                    width="42"
+                    height="42"
+                    [ngSrc]="episode.canal.url_avatar + '_48x48'" />
+                </a>
+                <div id="meta">
+                  <div class="font-semibold text-md line-clamp-1 my-1">
+                    <a
+                      id="video-title-link"
+                      class="hover-container"
+                      [title]="episode.nombre"
+                      [routerLink]="['/serie', episode.nombre]">
+                      {{ episode.nombre }}
+                    </a>
+                  </div>
+                  <div class="flex align-items-center text-xs text-gray-300">
+                    <span
+                      >{{ episode.cantidad_temporadas }}
+                      {{
+                        episode.cantidad_temporadas == 1
+                          ? 'Temporada'
+                          : 'Temporadas'
+                      }}
+                      • {{ episode.ano }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          }
+          @if (populares()) {
+            <ng-template carouselSlide let-owlItem [width]="200">
+              <div
+                class="slider"
+                [@favoriteRemovalCard]="
+                  isRemovingFavorite(episode) ? 'removing' : 'idle'
+                ">
+                <div class="cover-container">
+                  <a
+                    class="outer-link video-title"
+                    [routerLink]="['/movie', episode.slug_url]">
+                    <div
+                      class="carousel-card-surface relative rounded-lg! overflow-hidden group"
+                      style="
+                        background-position: center center;
+                        background-size: cover;
+                      ">
+                      <img
+                        [ngSrc]="
+                          (episode?.categoria?.pelicula?.imagen_secundaria || episode?.url_imagen || episode?.imagen_secundaria || '') +
+                          '_300x750'
+                        "
+                        width="220"
+                        height="300"
+                        class="w-full h-full aspect-[2/3] object-cover rounded-lg!" />
+                      <span class="carousel-card-overlay"></span>
+                      @if (favoriteType() === 'movie') {
+                        <button
+                          mat-icon-button
+                          type="button"
+                          class="carousel-favorite-btn"
+                          matTooltip="Eliminar de favoritos"
+                          [attr.aria-label]="favoriteAriaLabel(episode)"
+                          (click)="toggleFavoriteEpisode(episode, $event)">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      }
+                      @if (episode?.precios && episode?.precios.length > 0) {
+                        <span class="top-ranked-premium" aria-hidden="true">
+                          <mat-icon>star</mat-icon>
+                          <span class="top-ranked-premium-label">Premium</span>
+                        </span>
+                      }
+
+                      <span
+                        class="absolute left-2 bottom-2 z-10 bg-black/70 text-white px-2 py-1 !rounded-md text-xs">
+                        {{ episode?.duracion }}
+                      </span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div id="details">
+                <a
+                  id="avatar-link"
+                  class="yt-simple-endpoint style-scope ytd-rich-grid-media"
+                  tabindex="-1"
+                  [title]="episode.canal?.nombre"
+                  [routerLink]="['/canal', episode.canal?.alias]">
+                  <img
+                    id="img"
+                    draggable="false"
+                    class="style-scope yt-img-shadow"
+                    alt=""
+                    width="48"
+                    height="48"
+                    [ngSrc]="episode.canal?.url_avatar + '_48x48'" />
+                </a>
+                <div id="meta">
+                  <div class="video-title">
+                    <a
+                      id="video-title-link"
+                      class="hover-container"
+                      [title]="episode.nombre"
+                      [routerLink]="['/medias', episode.slug_url]">
+                      {{ episode.nombre }}
+                    </a>
+                  </div>
+                  <div class="text-xs text-gray-300 flex align-items-center">
+                    <span
+                      >{{ episode.cantidad_visitas | shortNumbers }}
+                      {{
+                        episode.cantidad_visitas > 0 ? 'vistas' : '0 vistas'
+                      }}</span
+                    >
+                    <span class="mx-1">•</span>
+                    <span>{{ episode?.categoria?.pelicula?.ano || episode?.ano || 'N/A' }}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          }
+          @if (topRanked()) {
+            <ng-template carouselSlide let-owlItem [width]="200">
+              <div
+                class="slider"
+                [@favoriteRemovalCard]="
+                  isRemovingFavorite(episode) ? 'removing' : 'idle'
+                ">
+                <div class="cover-container">
+                  <a
+                    class="outer-link video-title"
+                    [routerLink]="['/movie', episode.slug_url]">
+                    <div
+                      class="carousel-card-surface top-ranked-card relative rounded-lg! overflow-hidden group"
+                      style="
+                        background-position: center center;
+                        background-size: cover;
+                      ">
+                      <img
+                        [ngSrc]="
+                          (episode?.categoria?.pelicula?.imagen_secundaria || episode?.url_imagen || episode?.imagen_secundaria || '') +
+                          '_300x750'
+                        "
+                        width="220"
+                        height="300"
+                        class="w-full h-full aspect-[2/3] object-cover rounded-lg!" />
+                      <span class="carousel-card-overlay"></span>
+                      <!-- Posición del ranking -->
+                      <div class="top-ranked-position">
+                        <span
+                          class="top-ranked-rank"
+                          [class.top-ranked-rank-1]="$index === 0"
+                          [class.top-ranked-rank-2]="$index === 1"
+                          [class.top-ranked-rank-3]="$index === 2">
+                          {{ $index + 1 }}
+                        </span>
+                        <span class="top-ranked-divider"></span>
+                      </div>
+                      <!-- Indicador premium (theme-aware) -->
+                      @if (episode?.precios && episode?.precios.length > 0) {
+                        <span class="top-ranked-premium" aria-hidden="true">
+                          <mat-icon>star</mat-icon>
+                          <span class="top-ranked-premium-label">Premium</span>
+                        </span>
+                      }
+                      
+                      <span
+                        class="absolute left-2 bottom-2 z-10 bg-black/70 text-white px-2 py-1 !rounded-md text-xs">
+                        {{ episode?.duracion }}
+                      </span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div id="details">
+                <a
+                  id="avatar-link"
+                  class="yt-simple-endpoint style-scope ytd-rich-grid-media"
+                  tabindex="-1"
+                  [title]="episode.canal?.nombre"
+                  [routerLink]="['/canal', episode.canal?.alias]">
+                  <img
+                    id="img"
+                    draggable="false"
+                    class="style-scope yt-img-shadow"
+                    alt=""
+                    width="48"
+                    height="48"
+                    [ngSrc]="episode.canal?.url_avatar + '_48x48'" />
+                </a>
+                <div id="meta">
+                  <div class="video-title">
+                    <a
+                      id="video-title-link"
+                      class="hover-container"
+                      [title]="episode.nombre"
+                      [routerLink]="['/medias', episode.slug_url]">
+                      {{ episode.nombre }}
+                    </a>
+                  </div>
+                  <div class="text-xs text-gray-300 flex align-items-center">
+                    <span
+                      >{{ episode.cantidad_visitas | shortNumbers }}
+                      {{
+                        episode.cantidad_visitas > 0 ? 'vistas' : '0 vistas'
+                      }}</span
+                    >
+                    <span class="mx-1">•</span>
+                    <span>{{ episode?.categoria?.pelicula?.ano || episode?.ano || 'N/A' }}</span>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          }
+          @if (tipo()) {
+            <ng-template carouselSlide [width]="320">
+              <div class="slider">
+                <div class="cover-container">
+                  <a
+                    class="outer-link video-title"
+                    [routerLink]="['/serie', episode.nombre]">
+                    <div
+                      class="carousel-card-surface h-32 overflow-hidden"
+                      style="
+                        background-position: center center;
+                        background-size: cover;
+                      ">
+                      <img
+                        [ngSrc]="episode.url_imagen + '_350x200'"
+                        width="350"
+                        height="260"
+                        class="w-full h-full object-cover !rounded-md" />
+                      <span class="carousel-card-overlay"></span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div id="details">
+                <a
+                  id="avatar-link"
+                  class="yt-simple-endpoint style-scope ytd-rich-grid-media"
+                  tabindex="-1"
+                  [title]="episode.canal.nombre"
+                  [routerLink]="['/canal', episode.canal.alias]">
+                  <img
+                    id="img"
+                    draggable="false"
+                    class="style-scope yt-img-shadow"
+                    alt=""
+                    width="48"
+                    height="48"
+                    [ngSrc]="episode.canal.url_avatar + '_48x48'" />
+                </a>
+                <div id="meta">
+                  <div class="video-title">
+                    <a
+                      id="video-title-link"
+                      class="hover-container"
+                      [title]="episode.nombre"
+                      [routerLink]="['/serie', episode.nombre]">
+                      {{ episode.nombre }}
+                    </a>
+                  </div>
+                  <div class="text-xs text-gray-300 flex align-items-center">
+                    <span
+                      >{{ episode.cantidad_temporadas }}
+                      {{
+                        episode.cantidad_temporadas == 1
+                          ? 'Temporada'
+                          : 'Temporadas'
+                      }}
+                      • {{ episode.cantidad_capitulos }}
+                      {{
+                        episode.cantidad_capitulos == 1
+                          ? 'Capítulo'
+                          : 'Capítulos'
+                      }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          }
+          @if (envivo()) {
+            <ng-template carouselSlide [width]="340">
+              <div class="slider">
+                <div class="cover-container">
+                  <a
+                    class="outer-link video-title"
+                    [routerLink]="['/medias', episode.slug_url]">
+                    <div
+                      class="carousel-card-surface h-42 rounded-lg! overflow-hidden"
+                      style="
+                        background-position: center center;
+                        background-size: cover;
+                      ">
+                      <img
+                        [ngSrc]="episode.url_imagen + '_350x200'"
+                        width="350"
+                        height="260"
+                        class="w-full h-full object-cover rounded-md!" />
+                      <span class="carousel-card-overlay"></span>
+                      <div class="video-live">
+                        <div
+                          class="flex flex-column align-items-center"
+                          style="fill: currentcolor">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            enable-background="new 0 0 24 24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            focusable="false"
+                            style="
+                              pointer-events: none;
+                              display: inherit;
+                              width: 100%;
+                              height: 100%;
+                            ">
+                            <g>
+                              <path
+                                d="M14 12c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM6.36 6.33 4.95 4.92C3.13 6.73 2 9.24 2 12s1.13 5.27 2.95 7.08l1.41-1.41C4.9 16.22 4 14.21 4 12s.9-4.22 2.36-5.67zm12.69-1.41-1.41 1.41C19.1 7.78 20 9.79 20 12s-.9 4.22-2.36 5.67l1.41 1.41C20.87 17.27 22 14.76 22 12s-1.13-5.27-2.95-7.08zM9.19 9.16 7.77 7.75C6.68 8.83 6 10.34 6 12s.68 3.17 1.77 4.25l1.41-1.41C8.46 14.11 8 13.11 8 12s.46-2.11 1.19-2.84zm7.04-1.41-1.41 1.41C15.54 9.89 16 10.89 16 12s-.46 2.11-1.19 2.84l1.41 1.41C17.32 15.17 18 13.66 18 12s-.68-3.17-1.77-4.25z"></path>
+                            </g>
+                          </svg>
+                        </div>
+                        <span> EN DIRECTO </span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div id="details">
+                <div id="meta">
+                  <div class="video-title">
+                    <a
+                      id="video-title-link"
+                      class="hover-container"
+                      [title]="episode.nombre">
+                      {{ episode.nombre }}
+                    </a>
+                  </div>
+                  <div class="text-xs text-gray-300 flex align-items-center">
+                    <span
+                      >{{ episode.cantidad_visitas | shortNumbers }}
+                      {{ episode.cantidad_visitas > 0 ? 'vistas' : '0 vistas' }}
+                      • hace {{ episode.tiempo_creacion }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          }
+          @if (canal()) {
+            <ng-template carouselSlide [width]="340">
+              <div class="slider">
+                <div class="cover-container">
+                  <a
+                    class="outer-link video-title"
+                    [routerLink]="['/medias', episode.slug_url]">
+                    <div
+                      class="carousel-card-surface h-42 relative overflow-hidden"
+                      style="
+                        background-position: center center;
+                        background-size: cover;
+                      ">
+                      <img
+                        [ngSrc]="episode.url_imagen + '_350x200'"
+                        width="380"
+                        height="220"
+                        class="w-full h-full object-cover !rounded-lg" />
+                      <span class="carousel-card-overlay"></span>
+                      @if (episode?.precios && episode?.precios.length > 0) {
+                        <span class="top-ranked-premium" aria-hidden="true">
+                          <mat-icon>star</mat-icon>
+                          <span class="top-ranked-premium-label">Premium</span>
+                        </span>
+                      }
+
+                      @if (
+                        !(
+                          episode.tipo === 'live' &&
+                          episode.convertido === false
+                        )
+                      ) {
+                        <span
+                          class="absolute left-2 bottom-2 z-10 bg-black/70 text-white px-2 py-1 !rounded-md text-xs">
+                          {{ episode?.duracion }}
+                        </span>
+                      }
+                      @if (
+                        episode.tipo === 'live' && episode.convertido === false
+                      ) {
+                        <span
+                          class="absolute left-2 bottom-2 z-10 bg-[#e8462e] text-white px-2 py-1 !rounded-md text-xs font-bold">
+                          EN VIVO
+                        </span>
+                      }
+                      @if (
+                        episode.tipo === 'live' &&
+                        !episode.categoria.live.finalizado
+                      ) {
+                        <div class="video-live">
+                          <div class="flex flex-column align-items-center">
+                            <svg
+                              height="18pt"
+                              width="18pt"
+                              viewBox="0 0 16 16"
+                              preserveAspectRatio="xMidYMid meet"
+                              focusable="false">
+                              <g>
+                                <path
+                                  d="M9 8.00004C9 8.55004 8.55 9.00004 8 9.00004C7.45 9.00004 7 8.55004 7 8.00004C7 7.45004 7.45 7.00004 8 7.00004C8.55 7.00004 9 7.45004 9 8.00004ZM10.11 10.13L10.82 10.84C11.55 10.11 12 9.11004 12 8.00004C12 6.89004 11.55 5.89004 10.82 5.16004L10.11 5.87004C10.66 6.42004 11 7.17004 11 8.00004C11 8.83004 10.66 9.58004 10.11 10.13ZM5.18 10.84L5.89 10.13C5.34 9.58004 5 8.83004 5 8.00004C5 7.17004 5.34 6.42004 5.89 5.87004L5.18 5.16004C4.45 5.89004 4 6.89004 4 8.00004C4 9.11004 4.45 10.11 5.18 10.84ZM12.23 12.25L12.94 12.96C14.21 11.69 15 9.94004 15 8.00004C15 6.06004 14.21 4.31004 12.94 3.04004L12.23 3.75004C13.32 4.84004 14 6.34004 14 8.00004C14 9.66004 13.32 11.16 12.23 12.25ZM3.06 12.96L3.77 12.25C2.68 11.16 2 9.66004 2 8.00004C2 6.34004 2.68 4.84004 3.77 3.75004L3.06 3.04004C1.79 4.31004 1 6.06004 1 8.00004C1 9.94004 1.79 11.69 3.06 12.96Z"
+                                  class="style-scope yt-icon"></path>
+                              </g>
+                            </svg>
+                          </div>
+                          <span> EN DIRECTO </span>
+                        </div>
+                      }
+                    </div>
+                  </a>
+                  <!-- <a class="deleteVideo" [title]="Eliminar" *ngIf='continueWatching(episode) >= 0' (click)="deleteVideo(episode.slug_url)">
+                  <mat-icon role="img" class="mat-icon notranslate material-icons mat-ligature-font mat-icon-no-color" aria-hidden="true" data-mat-icon-type="font">close</mat-icon>
+                </a> -->
+                </div>
+                <!-- <div *ngIf='continueWatching(episode) >= 0' style="position: relative;">
+              <div class='back'></div>
+              <div class='position' [style.width.%]='continueWatching(episode)'></div>
+            </div> -->
+              </div>
+              <div id="details">
+                <div id="meta">
+                  <div class="video-title">
+                    <a
+                      id="video-title-link"
+                      class="hover-container"
+                      [title]="episode.nombre">
+                      {{ episode.nombre }}
+                    </a>
+                  </div>
+                  <div class="text-xs text-gray-300 flex align-items-center">
+                    <span
+                      >{{ episode.cantidad_visitas | shortNumbers }}
+                      {{ episode.cantidad_visitas > 0 ? 'vistas' : '0 vistas' }}
+                      • hace {{ episode.tiempo_creacion }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          }
+          @if (
+            !canal() &&
+            title() == 'Continuar Viendo' &&
+            continueWatching(episode) >= 0
+          ) {
+            <ng-template carouselSlide [width]="380">
+              <div class="slider mr-2">
+                <div class="cover-container">
+                  <a
+                    class="outer-link video-title"
+                    [routerLink]="['/medias', episode.slug_url]">
+                    <div
+                      class="carousel-card-surface relative overflow-hidden"
+                      style="
+                        height: 180px;
+                        background-position: center center;
+                        background-size: cover;
+                        border-radius: 10px;
+                      ">
+                      <img
+                        [ngSrc]="episode.url_imagen + '_350x200'"
+                        width="350"
+                        height="260"
+                        class="w-full h-full object-cover !rounded-md" />
+                      <span class="carousel-card-overlay"></span>
+                      @if (episode?.precios && episode?.precios.length > 0) {
+                        <span class="top-ranked-premium" aria-hidden="true">
+                          <mat-icon>star</mat-icon>
+                          <span class="top-ranked-premium-label">Premium</span>
+                        </span>
+                      }
+
+                      <span
+                        class="absolute left-2 bottom-2 z-10 bg-black/70 text-white px-2 py-1 !rounded-md text-xs">
+                        {{ episode?.duracion }}
+                      </span>
+                      @if (
+                        episode.tipo === 'live' &&
+                        !episode.categoria.live.finalizado
+                      ) {
+                        <div class="video-live">
+                          <div class="flex flex-column align-items-center">
+                            <svg
+                              height="18pt"
+                              width="18pt"
+                              viewBox="0 0 16 16"
+                              preserveAspectRatio="xMidYMid meet"
+                              focusable="false">
+                              <g>
+                                <path
+                                  d="M9 8.00004C9 8.55004 8.55 9.00004 8 9.00004C7.45 9.00004 7 8.55004 7 8.00004C7 7.45004 7.45 7.00004 8 7.00004C8.55 7.00004 9 7.45004 9 8.00004ZM10.11 10.13L10.82 10.84C11.55 10.11 12 9.11004 12 8.00004C12 6.89004 11.55 5.89004 10.82 5.16004L10.11 5.87004C10.66 6.42004 11 7.17004 11 8.00004C11 8.83004 10.66 9.58004 10.11 10.13ZM5.18 10.84L5.89 10.13C5.34 9.58004 5 8.83004 5 8.00004C5 7.17004 5.34 6.42004 5.89 5.87004L5.18 5.16004C4.45 5.89004 4 6.89004 4 8.00004C4 9.11004 4.45 10.11 5.18 10.84ZM12.23 12.25L12.94 12.96C14.21 11.69 15 9.94004 15 8.00004C15 6.06004 14.21 4.31004 12.94 3.04004L12.23 3.75004C13.32 4.84004 14 6.34004 14 8.00004C14 9.66004 13.32 11.16 12.23 12.25ZM3.06 12.96L3.77 12.25C2.68 11.16 2 9.66004 2 8.00004C2 6.34004 2.68 4.84004 3.77 3.75004L3.06 3.04004C1.79 4.31004 1 6.06004 1 8.00004C1 9.94004 1.79 11.69 3.06 12.96Z"
+                                  class="style-scope yt-icon"></path>
+                              </g>
+                            </svg>
+                          </div>
+                          <span> EN DIRECTO </span>
+                        </div>
+                      }
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div id="details">
+                <div id="meta">
+                  <div class="video-title">
+                    <a
+                      id="video-title-link"
+                      class="hover-container"
+                      [title]="episode.nombre">
+                      {{ episode.nombre }}
+                    </a>
+                  </div>
+                  <div class="text-xs text-gray-300 flex align-items-center">
+                    <span
+                      >{{ episode.cantidad_visitas | shortNumbers }}
+                      {{ episode.cantidad_visitas > 0 ? 'vistas' : '0 vistas' }}
+                      • hace {{ episode.tiempo_creacion }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          }
+          @if (!canal() && title() == 'Lo más reciente') {
+            <ng-template carouselSlide [width]="300">
+              <div class="slider mr-2">
+                <div class="cover-container">
+                  <a
+                    class="outer-link video-title"
+                    [routerLink]="['/medias', episode.slug_url]">
+                    <div
+                      class="carousel-card-surface relative overflow-hidden"
+                      style="
+                        height: 180px;
+                        background-position: center center;
+                        background-size: cover;
+                        border-radius: 10px;
+                      ">
+                      <img
+                        [ngSrc]="episode.url_imagen + '_350x200'"
+                        width="350"
+                        height="260"
+                        class="w-full h-full object-cover !rounded-md" />
+                      <span class="carousel-card-overlay"></span>
+                      <span
+                        class="absolute left-2 bottom-2 z-10 bg-black/70 text-white px-2 py-1 !rounded-md text-xs">
+                        {{ episode?.duracion }}
+                      </span>
+                      @if (
+                        episode.tipo === 'live' &&
+                        !episode.categoria.live.finalizado
+                      ) {
+                        <div class="video-live">
+                          <div class="flex flex-column align-items-center">
+                            <svg
+                              height="18pt"
+                              width="18pt"
+                              viewBox="0 0 16 16"
+                              preserveAspectRatio="xMidYMid meet"
+                              focusable="false">
+                              <g>
+                                <path
+                                  d="M9 8.00004C9 8.55004 8.55 9.00004 8 9.00004C7.45 9.00004 7 8.55004 7 8.00004C7 7.45004 7.45 7.00004 8 7.00004C8.55 7.00004 9 7.45004 9 8.00004ZM10.11 10.13L10.82 10.84C11.55 10.11 12 9.11004 12 8.00004C12 6.89004 11.55 5.89004 10.82 5.16004L10.11 5.87004C10.66 6.42004 11 7.17004 11 8.00004C11 8.83004 10.66 9.58004 10.11 10.13ZM5.18 10.84L5.89 10.13C5.34 9.58004 5 8.83004 5 8.00004C5 7.17004 5.34 6.42004 5.89 5.87004L5.18 5.16004C4.45 5.89004 4 6.89004 4 8.00004C4 9.11004 4.45 10.11 5.18 10.84ZM12.23 12.25L12.94 12.96C14.21 11.69 15 9.94004 15 8.00004C15 6.06004 14.21 4.31004 12.94 3.04004L12.23 3.75004C13.32 4.84004 14 6.34004 14 8.00004C14 9.66004 13.32 11.16 12.23 12.25ZM3.06 12.96L3.77 12.25C2.68 11.16 2 9.66004 2 8.00004C2 6.34004 2.68 4.84004 3.77 3.75004L3.06 3.04004C1.79 4.31004 1 6.06004 1 8.00004C1 9.94004 1.79 11.69 3.06 12.96Z"
+                                  class="style-scope yt-icon"></path>
+                              </g>
+                            </svg>
+                          </div>
+                          <span> EN DIRECTO </span>
+                        </div>
+                      }
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div id="details">
+                <div id="meta">
+                  <div class="video-title">
+                    <a
+                      id="video-title-link"
+                      class="hover-container"
+                      [title]="episode.nombre">
+                      {{ episode.nombre }}
+                    </a>
+                  </div>
+                  <div class="text-xs text-gray-300 flex align-items-center">
+                    <span
+                      >{{ episode.cantidad_visitas | shortNumbers }}
+                      {{ episode.cantidad_visitas > 0 ? 'vistas' : '0 vistas' }}
+                      • hace {{ episode.tiempo_creacion }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+</ng-template>
+          }
+        </ng-container>
+      }
+    </owl-carousel-o>
+  </div>
+</div>

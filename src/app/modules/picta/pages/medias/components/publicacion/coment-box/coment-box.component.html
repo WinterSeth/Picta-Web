@@ -1,0 +1,19 @@
+<div [id]="'commentBox'" class="comments-container">
+  <div class="comments-header">
+    <span class="comments-count">{{ video()?.cantidad_comentarios || 0 }} Comentarios</span>
+  </div>
+
+  @if (!video()?.lista_comentarios?.results) {
+    <div class="comments-empty">
+      <span>No hay comentarios hasta el momento. Sé el primero en hacerlo.</span>
+    </div>
+  }
+
+  @if (video()?.lista_comentarios && video()?.lista_comentarios.results) {
+    <div class="comments-list">
+      @for (comentario of video().lista_comentarios.results; track $index) {
+        <app-coment-box-item (updated)="actualizar()" [comentario]="comentario" [user]="this.user()" [canal]="this.canal()" [video]="video()"></app-coment-box-item>
+      }
+    </div>
+  }
+</div>

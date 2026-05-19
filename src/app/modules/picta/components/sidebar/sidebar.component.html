@@ -1,0 +1,230 @@
+<nav class="relative overflow-auto min-h-screen">
+  <button mat-icon-button (click)="toggleSidenav($event)" class="absolute top-2 right-2 z-10">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  @if (loggedUser) {
+    <div class="mt-4">
+      <div (click)="navigate('/profile')" class="flex flex-col items-center">
+        @if (loggedUser.avatar) {
+          <img class="w-24 h-24 !rounded-full ring-2 ring-white" [src]="loggedUser.avatar + '_320x320'" alt="Editar perfil" />
+        } @else {
+          <div class="flex justify-center items-center ring-1 ring-white h-16 w-16 !rounded-full font-bold text-2xl">{{ loggedUser.username.charAt(0) | uppercase }}</div>
+        }
+        <h6 class="text-lg mt-2">
+          {{ loggedUser.first_name && loggedUser.last_name ? loggedUser.first_name + ' ' + loggedUser.last_name : loggedUser.username }}
+        </h6>
+      </div>
+    </div>
+  }
+
+  <mat-nav-list class="menu-user mt-4">
+    @if (!loggedUser) {
+      <a (click)="toggleSidenav()" mat-list-item routerLink="/usuario/acceder" routerLinkActive="active">
+        <mat-icon matListItemIcon>face</mat-icon>
+        <h6 matLine>Entrar</h6>
+      </a>
+    }
+
+    @if (!loggedUser) {
+      <a (click)="toggleSidenav()" [routerLink]="['/usuario/registro']" mat-list-item routerLinkActive="active">
+        <mat-icon matListItemIcon>person_add</mat-icon>
+        <h6 matLine>Registro</h6>
+      </a>
+    }
+
+    @if (loggedUser) {
+      <div>
+        @if (isAdmin) {
+          <a (click)="openPictaAdmin()" mat-list-item>
+            <mat-icon matListItemIcon>settings</mat-icon>
+            <h6 matLine>Administrar Picta</h6>
+          </a>
+        }
+        <a (click)="toggleSidenav()" [routerLink]="['/profile/following']" mat-list-item routerLinkActive="active">
+          <mat-icon matListItemIcon>face</mat-icon>
+          <h6 matLine>Mi perfil</h6>
+        </a>
+        <a (click)="toggleSidenav()" [routerLink]="['/profile/mis-pagos']" mat-list-item routerLinkActive="active">
+          <mat-icon matListItemIcon>attach_money</mat-icon>
+          <h6 matLine>Mis pagos</h6>
+        </a>
+        <a (click)="logout()" mat-list-item>
+          <mat-icon matListItemIcon>exit_to_app</mat-icon>
+          <h6 matLine>Cerrar sesión</h6>
+        </a>
+        <h6 matSubheader>Listas recientes</h6>
+        @for (playlist of playlists | async; track playlist) {
+          <a
+            (click)="goTo(playlist)"
+            mat-list-item>
+            <mat-icon matListItemIcon>playlist_play</mat-icon>
+            <h6 matLine>{{ playlist.nombre }}</h6>
+          </a>
+        }
+        <a
+          (click)="toggleSidenav()"
+          [routerLink]="['/profile/playlists']"
+          mat-list-item
+          routerLinkActive="active"
+          style="color: #2d8cf0">
+          <mat-icon matListItemIcon>playlist_play</mat-icon>
+          <h6 matLine>Todas mis listas</h6>
+        </a>
+      </div>
+    }
+  </mat-nav-list>
+
+  <mat-nav-list>
+    <h6 matSubheader>Lugares</h6>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/categoria', 'Serie']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>video_library</mat-icon>
+      <h6 matLine>Series</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/categoria', 'Película']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>ondemand_video</mat-icon>
+      <h6 matLine>Películas</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/animes']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>movie</mat-icon>
+      <h6 matLine>Animes</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/doramas']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>live_tv</mat-icon>
+      <h6 matLine>Doramas</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/shows']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>theater_comedy</mat-icon>
+      <h6 matLine>Realities</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/categoria', 'Video Musical']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>music_video</mat-icon>
+      <h6 matLine>Musicales</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/categoria', 'Documental']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>language</mat-icon>
+      <h6 matLine>Documentales</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/tendencias']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>whatshot</mat-icon>
+      <h6 matLine>Tendencias</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/categoria', 'Live']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>surround_sound</mat-icon>
+      <h6 matLine>En Vivo</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/canal-list']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>video_label</mat-icon>
+      <h6 matLine>Canales</h6>
+    </a>
+    <a
+      (click)="toggleSidenav()"
+      [routerLink]="['/estrenos']"
+      mat-list-item
+      routerLinkActive="active">
+      <mat-icon matListItemIcon>fiber_new</mat-icon>
+      <h6 matLine>Próximos Estrenos</h6>
+    </a>
+  </mat-nav-list>
+
+  <!-- Redes sociales después de Lugares -->
+  <div class="sidebar-socials">
+    @for (social of footerSocials; track social.link) {
+      <a
+        [href]="social.link"
+        target="_blank"
+        rel="noopener noreferrer"
+        [attr.aria-label]="social.label"
+        class="sidebar-social-link">
+        <img [src]="social.icon" [alt]="social.label" class="sidebar-social-icon" />
+      </a>
+    }
+  </div>
+
+  @if (loggedUser) {
+    <mat-nav-list>
+      <h6 matSubheader>Siguiendo</h6>
+      @for (sub of subscriptions; track sub) {
+        <a
+          (click)="toggleSidenav()"
+          [routerLink]="['/canal', sub.canal.alias]"
+          mat-list-item
+          routerLinkActive="active">
+          <img
+            [alt]="sub.canal.nombre"
+            [src]="sub.canal.url_avatar + '_48x48'"
+            matListItemAvatar />
+            <h6 matLine>{{ sub.canal.nombre }}</h6>
+          </a>
+        }
+      </mat-nav-list>
+    }
+
+    <mat-nav-list dense>
+      <h6 matSubheader>Más de Picta</h6>
+
+      <a
+        (click)="toggleSidenav()"
+        [routerLink]="['/faq']"
+        mat-list-item
+        routerLinkActive="active">
+        <h6 matLine>Preguntas frecuentes</h6>
+      </a>
+
+      <a
+        (click)="toggleSidenav()"
+        [routerLink]="['/terms']"
+        mat-list-item
+        routerLinkActive="active">
+        <h6 matLine>Términos de uso</h6>
+      </a>
+
+      <a
+        (click)="toggleSidenav()"
+        [routerLink]="['/about']"
+        mat-list-item
+        routerLinkActive="active">
+        <h6 matLine>Acerca de Picta</h6>
+      </a>
+    </mat-nav-list>
+  </nav>

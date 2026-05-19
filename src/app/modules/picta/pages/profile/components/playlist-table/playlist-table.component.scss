@@ -1,0 +1,72 @@
+.full-width-table {
+  width: 100%;
+}
+
+mat-card {
+  background-color: rgba(#2d8cf0, .2);
+}
+
+.mat-list-option .mat-list-avatar {
+  width: 180px;
+  height: 80px;
+  border-radius: 0;
+}
+
+.post-list {
+  max-height: 700px;
+}
+
+mat-expansion-panel {
+  background-color: transparent !important;
+
+  & mat-expansion-panel-header:hover, &:hover, &.opened {
+    background-color: #1b2f48 !important;
+  }
+}
+
+.buttons-md {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ::ng-deep {
+    .mat-mdc-raised-button.mat-accent {
+      background-color: #f3e628;
+      color: #272727;
+
+      &:hover {
+        background-color: #ffef4e;
+      }
+
+      .mat-icon {
+        margin-right: 8px;
+      }
+    }
+
+    .mat-mdc-icon-button.mat-accent {
+      color: #f3e628;
+
+      &:hover {
+        background-color: rgba(#f3e628, 0.1);
+      }
+    }
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ::ng-deep {
+    .mat-mdc-icon-button.mat-accent {
+      color: #f3e628;
+
+      &:hover {
+        background-color: rgba(#f3e628, 0.1);
+      }
+    }
+  }
+}
+
+
