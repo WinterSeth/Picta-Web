@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>
+  Conversación - {{ data.report.title }}
+</h2>
+
+<mat-dialog-content>
+  @if (interactions.length === 0) {
+    <p class="empty">No hay interacciones todavía.</p>
+  } @else {
+    <div class="interaction-list">
+      @for (interaction of interactions; track interaction.id) {
+        <div class="interaction-item" [class.support]="isSupportInteraction(interaction)">
+          <div class="interaction-meta">
+            <strong>{{ isSupportInteraction(interaction) ? 'Soporte' : 'Tú' }}</strong>
+            <span>{{ interaction.created_at | date:'short' }}</span>
+          </div>
+          @if (interaction.message) {
+            <p class="interaction-message">{{ interaction.message }}</p>
+          }
+          @if (interaction.image) {
+            <div class="interaction-image">
+              <img [src]="buildSizedImageUrl(interaction.image, 300, 200)" alt="adjunto" (click)="openImage(interaction.image)" />
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (data.report.issue_state !== 'resolved') {
+    <div class="reply-box">
+      <mat-form-field appearance="fill" class="w-full">
+        <mat-label>Responder al soporte</mat-label>
+        <textarea matInput rows="3" [(ngModel)]="replyMessage" placeholder="Escribe tu respuesta aquí"></textarea>
+      </mat-form-field>
+
+      <div class="reply-upload">
+        <input type="file" (change)="onReplyFileSelected($event)" accept="image/*" />
+        @if (replyImageDataUrl) {
+          <button mat-button color="warn" (click)="clearReplyFile()">Quitar imagen</button>
+        }
+      </div>
+
+      @if (replyImageDataUrl) {
+        <div class="reply-preview">
+          <img [src]="replyImageDataUrl" alt="preview respuesta" (click)="openImage(replyImageDataUrl)" />
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="resolved-notice">Este reporte ha sido resuelto y no admite más respuestas.</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  @if (data.report.issue_state !== 'resolved') {
+    <button mat-flat-button color="primary" (click)="submitReply()" [disabled]="isSubmitting || !canSendReply()">
+      @if (isSubmitting) {
+        <mat-spinner diameter="18"></mat-spinner>
+      }
+      @if (!isSubmitting) {
+        <span>Enviar respuesta</span>
+      }
+    </button>
+  }
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

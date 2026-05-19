@@ -1,0 +1,278 @@
+<ng-container>
+  <div class="serie-container flex flex-col">
+    <div id="section-hero" class="nmtitle-section section-hero w-full">
+      <div class="hero-banner overflow-hidden !rounded-lg">
+        <img
+          #heroImg
+          [src]="movie?.url_imagen + '_1280x720'"
+          [alt]="movie?.nombre"
+          class="w-full h-[42vh] md:h-[50vh] object-cover" />
+
+        <div class="hero-overlay">
+          <div class="hero-details flex flex-col resumen px-1 sm:px-2">
+            <div class="title-info sm:ml-4">
+              <p class="font-extrabold mb-4 text-2xl line-clamp-1">
+                {{ movie?.nombre }}
+              </p>
+
+              <div class="title-info-metadata-wrapper">
+                <span class="text-sm text-gray-400">{{
+                  movie?.categoria?.documental?.pais
+                }}</span>
+                <span class="text-sm text-gray-400"> | </span>
+                <span class="text-sm text-gray-400">{{ movie?.duracion }}</span>
+
+                @if (movie?.descripcion) {
+                  <p class="mb-4 mt-3 max-w-lg line-clamp-2 text-sm text-left">
+                    {{ movie?.descripcion }}
+                  </p>
+                }
+              </div>
+
+              <div class="title-info-synopsis-talent">
+                <div class="play-download flex mt-3">
+                  <a
+                    [routerLink]="['/medias', movie?.slug_url]"
+                    color="accent"
+                    class="!rounded-full"
+                    mat-raised-button>
+                    <mat-icon>play_arrow</mat-icon>
+                    Reproducir
+                  </a>
+                  @if (
+                    movie?.descargable &&
+                    movie?.descarga &&
+                    movie?.url_manifiesto
+                  ) {
+                    <button
+                      #tooltip="matTooltip"
+                      (click)="loggedIn ? openDownload() : tooltip.toggle()"
+                      [matTooltip]="
+                        loggedIn
+                          ? 'Descargar video'
+                          : 'Debes estar autenticado para descargar'
+                      "
+                      class="ml-3 !rounded-full"
+                      mat-stroked-button>
+                      <mat-icon>get_app</mat-icon>
+                      Descargar
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<div *ngIf="serie.reparto.length||serie.director.length||serie.fotografia.length||serie.musica.length"
+      class="flex-column info-card mt-3 d-none d-md-flex">
+      <div *ngIf="serie.reparto.length&&personas" class="d-flex align-items-center mat-typography mt-2">
+        <h2 class="mr-3 mb-0">Reparto:</h2>
+        <mat-chip-list aria-label="Reparto" class="">
+          <mat-chip *ngFor="let cast of serie.reparto">{{getPersona(cast)}}</mat-chip>
+        </mat-chip-list>
+
+      </div>
+      <div *ngIf="serie.director.length&&personas" class="d-flex align-items-center mat-typography mt-2">
+        <h2 class="mr-3 mb-0">Dirección:</h2>
+        <mat-chip-list aria-label="Dirección" class="">
+          <mat-chip *ngFor="let cast of serie.director">{{getPersona(cast)}}</mat-chip>
+        </mat-chip-list>
+      </div>
+      <div *ngIf="serie.fotografia.length&&personas" class="d-flex align-items-center mat-typography mt-2">
+        <h2 class="mr-3 mb-0">Fotografía:</h2>
+        <mat-chip-list aria-label="Fotografía" class="">
+          <mat-chip *ngFor="let cast of serie.fotografia">{{getPersona(cast)}}</mat-chip>
+        </mat-chip-list>
+      </div>
+      <div *ngIf="serie.musica.length&&personas" class="d-flex align-items-center mat-typography mt-2">
+        <h2 class="mr-3 mb-0">Música:</h2>
+        <mat-chip-list aria-label="Música" class="">
+          <mat-chip *ngFor="let cast of serie.musica">{{getPersona(cast)}}</mat-chip>
+        </mat-chip-list>
+      </div>
+
+    </div>-->
+    </div>
+
+    <div id="section-more-details" class="nmtitle-section">
+      <div class="text-white">
+        <div class="max-w-screen-xl py-4 sm:pb-6 lg:pb-8">
+          <div class="max-w-xl">
+            <h2 class="text-xl font-bold">Más Detalles</h2>
+
+            <p class="mt-4 text-gray-300">
+              {{ movie?.descripcion }}
+            </p>
+          </div>
+
+          <div
+            class="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3">
+            <div class="flex items-start gap-4">
+              <span class="shrink-0 !rounded-full bg-gray-800 p-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="#e8eaed">
+                  <path
+                    d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+                </svg>
+              </span>
+
+              <div>
+                <h2 class="text-lg font-bold">Ver Offline</h2>
+
+                <p class="mt-1 text-sm text-gray-300">
+                  {{
+                    movie?.descargable
+                      ? 'Disponible para descarga. Lleva y ve Picta donde vayas.'
+                      : 'No está disponible para descargar.'
+                  }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <span class="shrink-0 !rounded-full bg-gray-800 p-4">
+                <mat-icon>public</mat-icon>
+              </span>
+
+              <div>
+                <h2 class="text-lg font-bold">País y Duración</h2>
+
+                <p class="mt-1 text-sm text-gray-300">
+                  {{ movie?.categoria?.documental?.pais || 'N/D' }} ·
+                  {{ movie?.duracion || 'N/D' }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <span class="shrink-0 !rounded-full bg-gray-800 p-4">
+                <mat-icon>sell</mat-icon>
+              </span>
+
+              <div>
+                <h2 class="text-lg font-bold">Este título es...</h2>
+
+                <p class="mt-1 text-sm text-gray-300">
+                  @if (movie?.palabraClave?.length) {
+                    @for (
+                      item of movie?.palabraClave;
+                      track item;
+                      let last = $last
+                    ) {
+                      <span>
+                        {{ item }}
+                        @if (!last) {
+                          <span>, </span>
+                        }
+                      </span>
+                    }
+                  } @else {
+                    Sin etiquetas.
+                  }
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <span class="shrink-0 !rounded-full bg-gray-800 p-4">
+                <mat-icon>volume_up</mat-icon>
+              </span>
+
+              <div>
+                <h2 class="text-lg font-bold">Audio</h2>
+
+                <p class="mt-1 text-sm text-gray-300">
+                  {{ movie?.url_subtitulo ? 'Inglés y Español' : 'Español' }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <span class="shrink-0 !rounded-full bg-gray-800 p-4">
+                <mat-icon>subtitles</mat-icon>
+              </span>
+
+              <div>
+                <h2 class="text-lg font-bold">Subtítulos</h2>
+
+                <p class="mt-1 text-sm text-gray-300">
+                  {{
+                    movie?.url_subtitulo
+                      ? 'Subtítulo disponible para descarga.'
+                      : 'Subtítulo no disponible para descarga.'
+                  }}
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <span class="shrink-0 !rounded-full bg-gray-800 p-4">
+                <mat-icon>info</mat-icon>
+              </span>
+
+              <div>
+                <h2 class="text-lg font-bold">Acerca de {{ movie?.nombre }}</h2>
+
+                <p class="mt-1 text-sm text-gray-300">
+                  {{ movie?.descripcion }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="relative pb-8 nmtitle-section mt-8">
+      <div class="w-screen-xl sm:py-6 lg:py-8">
+        <h2 class="text-xl font-bold mb-6">Más títulos similares a este</h2>
+        <div class="grid grid-cols-2 gap-4 lg:grid-cols-5 lg:gap-8">
+          @for (recomendado of videosRecomendados; track recomendado) {
+            <div [title]="recomendado.nombre" class="flex flex-col">
+              <div class="flex-1 mb-2">
+                <div
+                  class="group relative h-40 !rounded-md overflow-hidden hover:transition-transform duration-200 ease-in-out hover:scale-105">
+                  <img
+                    [src]="recomendado.url_imagen + '_350x200'"
+                    alt="recomendado imagen"
+                    class="w-full h-full object-cover absolute inset-0 opacity-90"
+                    onerror="this.src = '/img/default.webp'"
+                    loading="lazy" />
+                  @if (recomendado.precios?.length) {
+                    <div class="absolute top-2 left-2 !rounded-md px-1 my-1">
+                      <img src="favicon.ico" alt="Icono" class="w-6 h-6" />
+                    </div>
+                  }
+                  <div
+                    class="absolute inset-0 flex items-center justify-center">
+                    <svg
+                      [routerLink]="['/medias', recomendado.slug_url]"
+                      class="focus:outline-none cursor-pointer group-hover:transition-transform duration-200 ease-in-out group-hover:scale-150 hover:fill-yellow-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="40px"
+                      viewBox="0 -960 960 960"
+                      width="40px"
+                      fill="#e8eaed">
+                      <path
+                        d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                    </svg>
+                  </div>
+                </div>
+                <a
+                  [routerLink]="['/medias', recomendado.slug_url]"
+                  class="flex-1 mt-2 line-clamp-1">
+                  {{ recomendado.nombre }}
+                </a>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+</ng-container>

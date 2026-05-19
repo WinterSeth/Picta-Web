@@ -1,0 +1,115 @@
+:host {
+  display: block;
+  color: rgba(248, 250, 252, 0.96);
+}
+
+.genre-explorer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.genre-explorer-title {
+  margin: 0;
+  font-family: var(--picta-font-primary, 'Bebas Neue', sans-serif);
+  letter-spacing: 0.03em;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.genre-explorer-close {
+  color: rgba(248, 250, 252, 0.9) !important;
+}
+
+.genre-explorer-close:hover {
+  color: #ffffff !important;
+}
+
+.genre-explorer-content {
+  display: grid;
+  gap: 16px;
+  min-width: min(92vw, 1100px);
+  padding-top: 0;
+  // Altura fija para evitar cambios de tamaño al filtrar
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.genre-explorer-subtitle {
+  margin: 0;
+  color: rgba(226, 232, 240, 0.88);
+  font-family: var(--picta-font-secondary, 'Abel', sans-serif);
+  font-size: 1rem;
+}
+
+.genre-explorer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  // Altura mínima para mantener el tamaño del modal
+  min-height: 300px;
+  align-content: start;
+}
+
+.genre-explorer-grid-item {
+  min-width: 0;
+}
+
+.genre-explorer-search {
+  width: 100%;
+
+  ::ng-deep {
+    .mat-mdc-form-field-flex {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .mat-mdc-text-field-wrapper {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .mat-mdc-form-field-focus-overlay {
+      background-color: transparent;
+    }
+
+    .mdc-floating-label {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .mat-mdc-input-element {
+      color: #fff;
+    }
+
+    .mat-mdc-form-field-icon-prefix {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .mat-mdc-form-field-icon-suffix {
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+
+.genre-explorer-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  color: rgba(255, 255, 255, 0.5);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}

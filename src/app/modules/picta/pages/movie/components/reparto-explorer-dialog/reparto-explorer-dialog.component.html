@@ -1,0 +1,46 @@
+<div class="reparto-explorer-header">
+  <h2 mat-dialog-title class="reparto-explorer-title">{{ data.title }}</h2>
+  <button
+    mat-icon-button
+    type="button"
+    class="reparto-explorer-close"
+    aria-label="Cerrar modal"
+    (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="reparto-explorer-content">
+  <div class="reparto-dialog__grid">
+    @for (actor of data.actores; track actor.id) {
+      @if (hasActorSlug(actor)) {
+        <a
+          [routerLink]="getActorSlug(actor)"
+          (click)="navigateAndClose()"
+          class="reparto-actor-card modal-animated-item">
+          <div class="reparto-actor-card__avatar">
+            <img
+              [ngSrc]="actor.url_avatar ? actor.url_avatar + '_180x180' : (actor.imagen ? 'https://www.picta.cu/' + actor.imagen + '_180x180' : 'https://ui-avatars.com/api/?name=' + (actor.nombre || 'A') + '&background=1f2937&color=9ca3af&size=180&font-size=0.4&bold=true')"
+              width="140"
+              height="140"
+              class="reparto-actor-card__avatar-img"
+              [alt]="actor.nombre || 'Actor'" />
+          </div>
+          <p class="reparto-actor-card__name">{{ actor.nombre }}</p>
+        </a>
+      } @else {
+        <div class="reparto-actor-card modal-animated-item">
+          <div class="reparto-actor-card__avatar">
+            <img
+              [ngSrc]="actor.url_avatar ? actor.url_avatar + '_180x180' : (actor.imagen ? 'https://www.picta.cu/' + actor.imagen + '_180x180' : 'https://ui-avatars.com/api/?name=' + (actor.nombre || 'A') + '&background=1f2937&color=9ca3af&size=180&font-size=0.4&bold=true')"
+              width="140"
+              height="140"
+              class="reparto-actor-card__avatar-img"
+              [alt]="actor.nombre || 'Actor'" />
+          </div>
+          <p class="reparto-actor-card__name">{{ actor.nombre }}</p>
+        </div>
+      }
+    }
+  </div>
+</mat-dialog-content>

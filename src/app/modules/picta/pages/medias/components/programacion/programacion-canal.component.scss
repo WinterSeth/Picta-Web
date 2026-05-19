@@ -1,0 +1,385 @@
+.programacion-card {
+	/* let material provide base colors; add small overrides */
+	display: block;
+	/* limit the card height to match the player via CSS variable set by the parent */
+	max-height: var(--player-max-height, 70vh);
+	overflow: hidden;
+	padding: 0; /* mat-card handles padding */
+	/* Use Picta primary palette (fallback to a close hex) */
+	background-color: rgba(41,44,72,0.92);
+	color: #f4f7fb;
+	display: flex;
+	flex-direction: column;
+}
+
+.programacion-header { display:flex; align-items:center; gap:12px; width:100%; }
+.programacion-header .header-left { display:flex; flex-direction:column; }
+
+.chev-icon { transition: transform .22s ease; }
+.expanded .chev-icon { transform: rotate(180deg); }
+
+.channel-title { color: rgba(0,0,0,0.6); font-size: 1rem; }
+
+/* Header tweaks to fit dark primary background */
+.programacion-card mat-card-header {
+	padding: 12px 16px;
+}
+.programacion-card mat-card-title,
+.programacion-card mat-card-subtitle {
+	color: #f4f7fb;
+}
+
+.programacion-list {
+	padding: 8px 0;
+}
+
+.programacion-scroll-container {
+	overflow: auto;
+	/* make the scroll area fit the remaining space */
+	max-height: calc(var(--player-max-height, 70vh) - 88px);
+	/* 88px approximates header + paddings; adjust if needed */
+	scroll-behavior: smooth; /* smooth scrolling when using scrollIntoView */
+	overflow: auto;
+	transition: max-height .32s cubic-bezier(.2,.9,.2,1), opacity .22s ease;
+	opacity: 1;
+}
+
+.programacion-item {
+	display: flex;
+	gap: 12px;
+	align-items: flex-start;
+	padding: 10px 16px;
+	scroll-margin-top: 8px;
+	border-left: 4px solid transparent;
+	transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+/* Ensure content never overflows the program item container */
+.programacion-item {
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.programacion-item .meta {
+	min-width: 0; /* allow flex children to shrink */
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.programacion-item .title {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.programacion-item .description {
+	white-space: normal;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow-wrap: break-word;
+}
+
+.collapsed-summary {
+	display: flex;
+	align-items: stretch; /* make left and right columns match height */
+	gap: 12px;
+	padding: 10px 12px;
+	cursor: pointer;
+}
+
+.collapsed-summary .description {
+	/* truncate to 2 lines */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+	line-height: 1.15rem;
+	max-height: calc(2 * 1.15rem);
+	color: rgba(244,247,251,0.72);
+	font-size: 0.85rem;
+}
+
+/* New collapsed layout: left column for badge+time, right column for title+desc */
+.collapsed-left {
+	display: flex;
+	flex-direction: column;
+	justify-content: center; /* center badge+time vertically */
+	align-items: flex-start;
+	gap: 6px;
+	flex: 0 0 96px; /* fixed column width to keep alignment */
+	min-width: 0;
+	height: 100%;
+}
+.collapsed-left .live-badge { margin-right: 0; }
+.collapsed-left .time {
+	font-size: 1.16rem; /* slightly larger per request */
+	font-weight: 800;
+	color: rgba(244,247,251,0.95);
+	line-height: 1;
+	margin-top: 0; /* ensure no extra top offset */
+}
+.collapsed-right {
+	flex: 1 1 auto;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center; /* vertically center title/description */
+	gap: 4px;
+	height: 100%;
+}
+
+/* ensure live-badge and live-text align nicely within the left column */
+.collapsed-left .live-badge { display: flex; align-items: center; gap: 6px; }
+.collapsed-left .live-text { font-size: 0.82rem; font-weight: 700; color: #ffd9d6; }
+.collapsed-right .title {
+	font-size: 0.97rem;
+	font-weight: 700;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.collapsed-right .description {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: rgba(244,247,251,0.72);
+	font-size: 0.9rem;
+}
+
+/* Hidden state for both collapsed summary and expanded list: animate height and opacity */
+.hidden {
+	max-height: 0 !important;
+	opacity: 0 !important;
+	overflow: hidden !important;
+	padding: 0 !important;
+}
+
+.collapsed-summary { /* when visible ensure max-height limit */
+	max-height: 3.6rem;
+	transition: max-height .28s cubic-bezier(.2,.9,.2,1), opacity .2s ease;
+}
+
+.programacion-scroll-container { /* when hidden will collapse via .hidden */
+	/* already has max-height for expanded */
+}
+
+.header-actions {
+	margin-left: auto;
+}
+
+.live-badge {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-right: 8px;
+}
+
+/* pulsing live dot */
+.live-dot { animation: live-pulse 1.6s infinite ease-in-out; }
+@keyframes live-pulse {
+  0% { transform: scale(1); opacity: 1 }
+  50% { transform: scale(1.25); opacity: 0.85 }
+  100% { transform: scale(1); opacity: 1 }
+}
+
+/* stronger contrast and subtle glow for live dot */
+.live-dot circle { filter: drop-shadow(0 0 6px rgba(232,70,46,0.28)); }
+
+.live-dot {
+	width: 12px;
+	height: 12px;
+}
+
+.live-text {
+	color: #ffd9d6;
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+.live-dot-inline { vertical-align: middle; margin-right:6px }
+.live-text-inline { color: #e8462e; font-weight:600; font-size:0.75rem; margin-right:6px }
+
+.programacion-item .time {
+	width: 64px;
+	font-size: 0.75rem;
+	color: rgba(244,247,251,0.60);
+	flex: 0 0 64px;
+}
+
+.programacion-item .meta { flex: 1 1 auto; }
+.programacion-item .title { font-weight: 600; color: #f4f7fb; }
+.programacion-item .description { font-size: 0.8rem; color: rgba(244,247,251,0.62); margin-top: 2px; }
+
+/* Current program highlight — use Picta accent as primary visible indicator */
+.programacion-item.current {
+	background-color: var(--mat-option-selected-state-layer-color, rgba(232,70,46,0.16));
+	border-left-color: var(--mat-option-selected-state-label-text-color, #e8462e);
+}
+
+/* subtle elevated look when expanded */
+.expanded {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.24);
+}
+
+/* Improve divider spacing */
+mat-divider { margin: 0; }
+
+/* Screen-reader only */
+.sr-only {
+	position: absolute !important;
+	width: 1px !important;
+	height: 1px !important;
+	padding: 0 !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	clip: rect(0, 0, 0, 0) !important;
+	white-space: nowrap !important;
+	border: 0 !important;
+}
+
+/* Responsive adjustments using common breakpoints */
+@media (max-width: 599px) {
+	/* Mobile: larger touch targets, slightly larger fonts */
+	.programacion-card { max-height: var(--player-max-height, 65vh); }
+	.programacion-item { padding: 14px 16px; gap: 10px; }
+	.programacion-item .time { width: 56px; flex: 0 0 56px; font-size: 0.8rem; }
+	.programacion-item .title { font-size: 0.98rem; }
+	.programacion-item .description { font-size: 0.9rem; }
+	.collapsed-summary { padding: 12px 14px; }
+	.collapsed-summary .description { font-size: 0.95rem; line-height: 1.2rem; -webkit-line-clamp:2 }
+	.live-dot { width: 14px; height: 14px }
+	.live-text { font-size: 0.9rem }
+	.programacion-scroll-container { -webkit-overflow-scrolling: touch; max-height: calc(var(--player-max-height, 65vh) - 92px); }
+}
+
+/* Tighter collapsed-summary layout fixes for narrow side panels */
+@media (max-width: 420px) {
+	.collapsed-summary {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 6px;
+		padding: 12px 10px;
+	}
+
+	.collapsed-summary .live-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 2px 6px;
+		border-radius: 999px;
+		background: rgba(232,70,46,0.06);
+		color: #e8462e;
+		font-weight: 600;
+		font-size: 0.8rem;
+	}
+
+	.collapsed-summary .time {
+		font-size: 0.85rem;
+		color: rgba(244,247,251,0.64);
+		margin-left: 0;
+	}
+
+	.collapsed-summary .meta { width: 100%; }
+
+	.collapsed-summary .title {
+		font-size: 0.98rem;
+		font-weight: 700;
+		color: #ffffff;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.collapsed-summary .description {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-top: 2px;
+		color: rgba(244,247,251,0.72);
+		font-size: 0.9rem;
+		line-height: 1.18rem;
+	}
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+	/* Tablet: comfortable spacing, more room for meta */
+	.programacion-card { max-height: var(--player-max-height, 72vh); }
+	.programacion-item { padding: 12px 18px; }
+	.programacion-item .time { width: 68px; flex: 0 0 68px; }
+	.collapsed-summary { max-height: 4.2rem; }
+	.programacion-scroll-container { max-height: calc(var(--player-max-height, 72vh) - 92px); }
+}
+
+@media (min-width: 1024px) {
+	/* Desktop: denser layout, subtle hover affordances */
+	.programacion-item { padding: 12px 18px; gap: 14px; }
+	.programacion-item:hover { background-color: rgba(244,247,251,0.02); }
+	.collapsed-summary { cursor: pointer; display: flex; align-items: center; gap: 12px; }
+
+	/* Desktop: collapsed summary layout — badge + time + title/description */
+	.collapsed-summary .live-badge { order: 0; flex: 0 0 auto; }
+	.collapsed-summary .time { order: 1; flex: 0 0 72px; width: 72px; font-size: 0.85rem; color: rgba(244,247,251,0.68); }
+	.collapsed-summary .meta { order: 2; flex: 1 1 auto; min-width: 0; }
+	.collapsed-summary .title {
+		font-size: 1rem;
+		font-weight: 600;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.collapsed-summary .description {
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		color: rgba(244,247,251,0.64);
+		font-size: 0.9rem;
+	}
+
+	/* Expanded list items: ensure meta can shrink and text truncates nicely */
+	.programacion-item .meta { min-width: 0; }
+	.programacion-item .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
+/* Narrow tablets and small desktops: prevent overflow and increase meta shrinkability */
+@media (max-width: 800px) {
+	.programacion-item { gap: 10px; padding: 10px 12px; }
+	.programacion-item .time { flex: 0 0 56px; width: 56px; font-size: 0.82rem; }
+	.programacion-item .meta { min-width: 0; }
+	.programacion-item .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+	.programacion-item .description { -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+
+	/* Collapsed summary: avoid tight horizontal packing */
+	.collapsed-summary { gap: 8px; }
+	.collapsed-summary .meta { min-width: 0; }
+	.collapsed-summary .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+	.collapsed-summary .description { -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+	/* For narrow widths, stack the live badge and show time below it to save horizontal space */
+	.collapsed-summary {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	/* allow taller collapsed summary when stacked to show time below badge */
+	.collapsed-summary { max-height: none; }
+	.collapsed-summary .live-badge { order: 0; }
+	.collapsed-summary .time {
+		order: 1;
+		flex: 0 0 auto;
+		width: auto;
+		font-size: 1.02rem;
+		font-weight: 700;
+		color: rgba(244,247,251,0.82);
+		margin-top: 6px;
+	}
+}

@@ -1,0 +1,98 @@
+@if (loading) {
+      <!-- Estado de carga -->
+  <div class="inset-0 flex flex-col items-center justify-center h-screen z-50">
+   <div class="p-4 rounded-lg! flex flex-col items-center">
+     <mat-spinner aria-label="cargando" [diameter]="50" color="warn"></mat-spinner>
+     <p class="mt-4">Cargando...</p>
+   </div>
+ </div>
+} @else {
+
+    <div class="categoria-carousel">
+
+        <div class="mt-3 populares">
+            <div class="page-live">
+                <div class="page-header">
+                    <div class="yt-content-preview-image-view-model-wiz yt-content-preview-image-view-model-wiz--circle-image page-header-view-model-wiz__page-header-headline-image" style="width: 72px; height: 72px;margin-right: 16px;">
+                    <img alt="" class="picta-core-image" src="img/trending.webp" style="border-radius: 50px;">
+                    </div>
+                  
+                    <div class="dynamic-text-view-model-wiz page-header-view-model-wiz__page-header-title page-header-view-model-wiz__page-header-title--page-header-title-large">
+                        <h1 class="dynamic-text-view-model-wiz__h1" aria-label="">
+                        <span class="yt-core-attributed-string yt-core-attributed-string--white-space-pre-wrap" dir="auto" role="text">Tendencias</span>
+                        </h1>
+                    </div>
+                </div>
+                <div class="page-header-view-model-wiz__page-header-headline-info"></div>
+              </div>
+    
+            <div id="rich-shelf-header">
+                <div class="style-scope ytd-rich-shelf-renderer yEDJQ">
+                    <span id="title" class="style-scope ytd-rich-shelf-renderer">Películas Cubanas Populares</span>
+                    <a style="align-items: center; display: flex; gap: 5px;" [queryParams]="{pais: pais}" [routerLink]="['/categoria/Película']" class="PSEzo">
+                        Más Películas Cubanas
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 256 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>
+                    </a>
+                </div>
+            </div>
+            <app-my-carousel-o [populares]="true" class="envivo" title='Películas Cubanas Populares' [videos]="popularCubanMovie"></app-my-carousel-o>
+            
+            <div class="page-header-view-model-wiz__page-header-headline-info"></div>
+            
+            <div id="rich-shelf-header">
+                <div class="style-scope ytd-rich-shelf-renderer yEDJQ">
+                    <span id="title" class="style-scope ytd-rich-shelf-renderer">Últimas Series Cubanas</span>
+                    <a style="align-items: center; display: flex; gap: 5px;" [queryParams]="{pais: pais}" [routerLink]="['/categoria/Serie']" class="PSEzo">
+                        Más Series Cubanas
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 256 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>
+                    </a>
+                </div>
+            </div>
+            <app-my-carousel-o class="envivo" [tipo]="true" title='Últimas Series Cubanas' [videos]="popularCubanSerie"></app-my-carousel-o>
+            
+            <div class="page-header-view-model-wiz__page-header-headline-info"></div>
+            
+            <div id="rich-shelf-header">
+                <div class="style-scope ytd-rich-shelf-renderer">
+                    <span id="title" class="style-scope ytd-rich-shelf-renderer">Populares en el mes</span>
+                </div>
+            </div>
+            <app-my-carousel-o [populares]="true" class="envivo" title='Populares en el mes' [videos]="popular"></app-my-carousel-o>
+    
+            <div id="rich-shelf-header">
+                <div class="style-scope ytd-rich-shelf-renderer yEDJQ">
+                    <span id="title" class="style-scope ytd-rich-shelf-renderer">Películas populares de la semana</span>
+                    <a style="align-items: center; display: flex; gap: 5px;" [routerLink]="['/categoria', 'Película']" class="PSEzo">
+                        Más Películas
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 256 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>
+                    </a>
+                </div>
+            </div>
+            <app-my-carousel-o [populares]="true" class="envivo" title='Películas populares de la semana' [videos]="popularMovie"></app-my-carousel-o>
+    
+            <div id="rich-shelf-header">
+                <div class="style-scope ytd-rich-shelf-renderer yEDJQ">
+                    <span id="title" class="style-scope ytd-rich-shelf-renderer">Series populares de la semana</span>
+                    <a style="align-items: center; display: flex; gap: 5px;" [routerLink]="['/categoria', 'Serie']" class="PSEzo">
+                        Más Series
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 256 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>
+                    </a>
+                </div>
+            </div>
+            <app-my-carousel-o [populares]="true" class="envivo" title='Series populares de la semana' [videos]="popularLikeSerie"></app-my-carousel-o>
+    
+            <div id="rich-shelf-header">
+                <div class="style-scope ytd-rich-shelf-renderer yEDJQ">
+                    <span id="title" class="style-scope ytd-rich-shelf-renderer">Animes populares de la semana</span>
+                    <a style="align-items: center; display: flex; gap: 5px;" [routerLink]="['/animes']" class="PSEzo">
+                        Más Animes
+                        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 256 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>
+                    </a>
+                </div>
+            </div>
+            <app-my-carousel-o [populares]="true" class="envivo" title='Animes populares de la semana' [videos]="popularAnime"></app-my-carousel-o>
+        </div>
+    </div>
+}
+
+

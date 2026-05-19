@@ -1,0 +1,134 @@
+:host {
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+
+  // ── Form field overrides ──────────────────────────────────────────────
+  --mat-form-field-filled-container-color: rgba(255, 255, 255, 0.06);
+  --mat-form-field-filled-hover-container-color: rgba(255, 255, 255, 0.09);
+  --mat-form-field-filled-label-text-color: rgba(244, 247, 251, 0.62);
+  --mat-form-field-filled-focus-label-text-color: var(--picta-yellow);
+  --mat-form-field-filled-input-text-color: #f4f7fb;
+  --mat-form-field-filled-active-indicator-color: rgba(255, 255, 255, 0.28);
+  --mat-form-field-filled-focus-active-indicator-color: var(--picta-yellow);
+  --mat-form-field-filled-caret-color: var(--picta-yellow);
+}
+
+:host ::ng-deep {
+  .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    border-radius: 8px 8px 0 0;
+  }
+  .mdc-text-field__input    { color: #f4f7fb !important; caret-color: var(--picta-yellow) !important; }
+  .mdc-floating-label       { color: rgba(244, 247, 251, 0.62) !important; }
+  .mdc-floating-label--float-above { color: var(--picta-yellow) !important; }
+  .mdc-line-ripple::before  { border-bottom-color: rgba(255, 255, 255, 0.25) !important; }
+  .mdc-line-ripple::after   { border-bottom-color: var(--picta-yellow) !important; }
+}
+
+// ── Dialog header ──────────────────────────────────────────────────────────────
+mat-dialog-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.02em;
+  color: #f4f7fb;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  padding-bottom: 12px;
+  margin-bottom: 0;
+}
+
+mat-dialog-content {
+  max-height: 65vh;
+  min-height: 220px;
+}
+
+// ── Empty state ────────────────────────────────────────────────────────────
+.empty {
+  margin: 8px 0;
+  color: var(--picta-text-muted);
+}
+
+// ── Interaction items ────────────────────────────────────────────────────────
+.interaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.interaction-item {
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(244, 247, 251, 0.88);
+}
+
+.interaction-item.support {
+  border-color: var(--picta-yellow-border);
+  background: var(--picta-yellow-softer);
+}
+
+.interaction-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: var(--picta-text-muted);
+
+  strong {
+    color: #f4f7fb;
+  }
+}
+
+.interaction-message {
+  margin: 0;
+  white-space: pre-wrap;
+  color: rgba(244, 247, 251, 0.88);
+}
+
+.interaction-image img {
+  margin-top: 8px;
+  max-width: 240px;
+  max-height: 160px;
+  border-radius: 8px;
+  display: block;
+  cursor: pointer;
+}
+
+// ── Reply box ─────────────────────────────────────────────────────────────
+.reply-box {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.reply-upload {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.reply-preview img {
+  margin-top: 8px;
+  max-width: 240px;
+  max-height: 160px;
+  border-radius: 8px;
+  display: block;
+  cursor: pointer;
+}
+
+// ── Resolved notice ─────────────────────────────────────────────────────────────
+.resolved-notice {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  background: var(--picta-yellow-softer);
+  border: 1px solid var(--picta-yellow-border);
+  color: var(--picta-yellow);
+}

@@ -1,0 +1,169 @@
+.denuncia-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.denuncia-form-header {
+  text-align: left;
+}
+
+.denuncia-form-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--picta-text, #f4f7fb);
+}
+
+.denuncia-form-desc {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: var(--picta-text-muted, rgba(244,247,251,0.7));
+}
+
+.denuncia-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.denuncia-skeleton {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.skeleton-item {
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(243, 230, 40, 0.06);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+
+.denuncia-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.denuncia-option {
+  border-radius: 10px !important;
+  border: 1px solid rgba(243, 230, 40, 0.12) !important;
+  background: rgba(243, 230, 40, 0.04) !important;
+  padding: 10px 12px !important;
+  font-size: 0.85rem !important;
+  color: var(--picta-text, #f4f7fb) !important;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(243, 230, 40, 0.08) !important;
+  }
+  
+  &.mat-mdc-radio-checked {
+    border-color: rgba(243, 230, 40, 0.3) !important;
+    background: rgba(243, 230, 40, 0.1) !important;
+  }
+  
+  ::ng-deep .mdc-label {
+    color: inherit !important;
+  }
+}
+
+.denuncia-file {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(243, 230, 40, 0.12);
+  background: rgba(243, 230, 40, 0.04);
+}
+
+.denuncia-file-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85rem;
+  color: var(--picta-text-muted, rgba(244,247,251,0.6));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.denuncia-file button[mat-stroked-button] {
+  border-radius: 20px !important;
+  font-weight: 600;
+}
+
+.denuncia-info {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(243, 230, 40, 0.08);
+  background: rgba(243, 230, 40, 0.03);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--picta-text-muted, rgba(244,247,251,0.65));
+}
+
+.denuncia-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+
+  button {
+    flex: 1;
+    height: 44px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: none;
+  }
+}
+
+// Estilos para mat-stroked-button (Cancelar)
+.denuncia-actions button[mat-stroked-button] {
+  border-color: rgba(243, 230, 40, 0.3) !important;
+  color: var(--picta-yellow, #f3e628) !important;
+  background: transparent !important;
+  border-style: solid !important;
+  
+  &:hover {
+    border-color: rgba(243, 230, 40, 0.5) !important;
+    background: rgba(243, 230, 40, 0.08) !important;
+  }
+}
+
+// Estilos para mat-raised-button (Denunciar)
+.denuncia-actions button[mat-raised-button] {
+  background: var(--picta-yellow, #f3e628) !important;
+  color: rgba(10, 17, 38, 0.95) !important;
+  border: none !important;
+  box-shadow: none !important;
+  
+  &:hover:not([disabled]) {
+    background: rgba(255, 245, 157, 1) !important;
+  }
+  
+  &[disabled] {
+    opacity: 0.5;
+    background: var(--picta-yellow, #f3e628) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .denuncia-options {
+    grid-template-columns: 1fr;
+    max-height: 160px;
+  }
+  
+  .denuncia-skeleton {
+    grid-template-columns: 1fr;
+  }
+}

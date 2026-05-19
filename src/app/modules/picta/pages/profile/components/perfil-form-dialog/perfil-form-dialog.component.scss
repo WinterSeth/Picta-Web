@@ -1,0 +1,241 @@
+:host {
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.perfil-form-dialog {
+  min-width: 380px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 16px;
+}
+
+/* Header con gradiente y glow - Tema Picta */
+.dialog-header {
+  position: relative;
+  padding: 20px 24px 16px;
+  background: linear-gradient(135deg, rgba(16, 25, 53, 0.95) 0%, rgba(13, 20, 46, 0.98) 100%);
+  border-bottom: 1px solid var(--picta-yellow-border);
+  overflow: hidden;
+}
+
+.header-glow {
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(243, 230, 40, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.header-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: var(--picta-yellow);
+  filter: drop-shadow(0 0 8px rgba(243, 230, 40, 0.4));
+}
+
+.dialog-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: #f4f7fb;
+  margin: 0;
+  line-height: 1;
+}
+
+.dialog-body {
+  padding: 20px 24px 24px;
+  background: linear-gradient(180deg, rgba(16, 25, 53, 0.98) 0%, rgba(10, 17, 38, 1) 100%);
+}
+
+/* Tipografía y colores del form field */
+::ng-deep .mat-mdc-form-field {
+  --mdc-filled-text-field-container-color: rgba(255, 255, 255, 0.05);
+  --mdc-filled-text-field-label-text-color: var(--picta-text-muted);
+  --mdc-filled-text-field-input-text-color: #f4f7fb;
+  --mdc-filled-text-field-focus-label-text-color: var(--picta-yellow);
+  --mdc-filled-text-field-focus-active-indicator-color: var(--picta-yellow);
+  --mdc-filled-text-field-hover-container-color: rgba(255, 255, 255, 0.08);
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused {
+  --mdc-filled-text-field-container-color: rgba(243, 230, 40, 0.08);
+}
+
+/* Tipo de perfil - Radio buttons custom */
+.tipo-section {
+  margin-bottom: 24px;
+}
+
+.tipo-label {
+  display: block;
+  font-family: 'Abel', sans-serif;
+  font-size: 0.9rem;
+  color: var(--picta-text-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+
+.tipo-options {
+  display: flex;
+  gap: 16px;
+}
+
+.tipo-option {
+  flex: 1;
+}
+
+.option-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.option-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 200ms var(--ease-out-quart);
+}
+
+.option-icon-child {
+  color: var(--picta-yellow);
+}
+
+::ng-deep .mat-mdc-radio-button {
+  --mdc-radio-unselected-icon-color: rgba(255, 255, 255, 0.4);
+  --mdc-radio-selected-icon-color: var(--picta-yellow);
+  --mat-radio-label-text-color: #f4f7fb;
+}
+
+::ng-deep .mat-mdc-radio-button.mat-mdc-radio-checked .option-icon {
+  color: var(--picta-yellow);
+}
+
+/* Botones - Estilos del tema Picta */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.btn-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  margin-left: -4px;
+}
+
+/* ===============================================
+   Picta-themed Buttons (same as Login/Register)
+   =============================================== */
+::ng-deep {
+  // Primary buttons - mismo que .login-submit / .register-submit
+  .mat-mdc-flat-button.mat-primary,
+  [color='primary'].mat-mdc-flat-button,
+  .picta-btn-primary {
+    background-color: #f3e628 !important;
+    color: #0a1126 !important;
+    font-family: 'Abel', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border-radius: 999px !important;
+    min-height: 44px;
+    padding: 0 24px;
+    transition: all 180ms var(--ease-out-quart);
+    box-shadow: 0 2px 8px rgba(243, 230, 40, 0.2);
+
+    &:hover:not(:disabled) {
+      background-color: #e8de2c !important;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(243, 230, 40, 0.28);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(243, 230, 40, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  // Outlined buttons
+  .mat-mdc-outlined-button.mat-primary,
+  [color='primary'].mat-mdc-outlined-button,
+  .picta-btn-outlined {
+    border: 1px solid var(--picta-yellow-border) !important;
+    color: var(--picta-yellow) !important;
+    background: transparent !important;
+    font-family: 'Abel', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border-radius: 999px !important;
+    min-height: 44px;
+    padding: 0 24px;
+    transition: all 180ms var(--ease-out-quart);
+
+    &:hover:not(:disabled) {
+      background-color: var(--picta-yellow-soft) !important;
+      border-color: var(--picta-yellow) !important;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .perfil-form-dialog {
+    min-width: 300px;
+  }
+
+  .dialog-header {
+    padding: 16px 20px 14px;
+  }
+
+  .dialog-body {
+    padding: 16px 20px 20px;
+  }
+
+  .tipo-options {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  ::ng-deep {
+    .picta-btn-outlined,
+    .picta-btn-primary {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,91 @@
+:host {
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  display: block;
+  color: #f4f7fb;
+}
+
+.reason-dialog-wrap {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #05071f;
+}
+
+.reason-dialog-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.reason-dialog-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6) !important;
+  color: #fff !important;
+  backdrop-filter: blur(8px);
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.85) !important;
+  }
+}
+
+.reason-dialog-content {
+  position: relative;
+  z-index: 5;
+  padding: 40px;
+  background: linear-gradient(
+    0deg,
+    rgba(5, 7, 31, 0.95) 0%,
+    rgba(5, 7, 31, 0.6) 50%,
+    transparent 100%
+  );
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reason-icon-wrap {
+  color: var(--picta-yellow);
+
+  fa-icon {
+    font-size: 2rem;
+  }
+}
+
+.reason-dialog-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: #f4f7fb;
+  margin: 0;
+}
+
+.reason-dialog-text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  color: rgba(244, 247, 251, 0.82);
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .reason-dialog-content {
+    padding: 24px 16px;
+  }
+
+  .reason-dialog-title {
+    font-size: 1.2rem;
+  }
+}

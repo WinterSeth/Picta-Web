@@ -1,0 +1,56 @@
+<div class="login-form-container">
+  <a href="#" class="login-logo">
+    <img ngSrc="img/logo.svg" width="80" height="80" alt="logo">
+  </a>
+
+  <div class="login-card">
+    <h1 class="login-title">Iniciar sesión en Picta</h1>
+
+    @if (error()) {
+      <div class="form-message form-message--error">
+        <span>{{ error() }}</span>
+        <button type="button" class="message-close" (click)="error.set('')" aria-label="Cerrar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
+
+    <form [formGroup]="loginForm" class="login-fields">
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Usuario / Teléfono / Correo</mat-label>
+        <input (keydown.enter)="$event.preventDefault(); login()" placeholder="Usuario, teléfono o correo" formControlName="username" matInput>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Contraseña</mat-label>
+        <input [type]="showPass() ? 'text' : 'password'" formControlName="password" matInput (keydown.enter)="$event.preventDefault(); login()">
+        <button type="button" class="password-toggle" (click)="toggleVisibility($event)" [matTooltip]="showPass() ? 'Ocultar contraseña' : 'Mostrar contraseña'" mat-icon-button matSuffix>
+          <mat-icon>{{ showPass() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <a (click)="openRecoveryModal()" class="forget-link">¿Olvidaste la contraseña?</a>
+
+      <button
+        type="button"
+        (click)="login()"
+        [disabled]="!loginForm.get('username').value || !loginForm.get('password').value || !loginForm.valid || isLoggingIn()"
+        class="login-submit">
+        @if (isLoggingIn()) {
+          <mat-spinner [diameter]="20"></mat-spinner>
+          <span>Accediendo...</span>
+        } @else {
+          Iniciar sesión
+        }
+      </button>
+
+      <p class="register-link">
+        ¿Primera vez en Picta? <a routerLink="/usuario/registro">Regístrate ahora.</a>
+      </p>
+
+      <button type="button" (click)="activateModal()" class="activate-btn">
+        Activar cuenta vía SMS
+      </button>
+    </form>
+  </div>
+</div>

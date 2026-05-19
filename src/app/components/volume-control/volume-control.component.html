@@ -1,0 +1,18 @@
+<div class="volume-control" role="group" aria-label="Radio volume control">
+  <button
+    mat-icon-button
+    (click)="toggleMute()"
+    [attr.aria-pressed]="muted"
+    [title]="muted ? 'Unmute' : 'Mute'">
+    <mat-icon>{{ muted ? 'volume_off' : (volume() >= 0.66 ? 'volume_up' : (volume() >= 0.33 ? 'volume_down' : 'volume_mute')) }}</mat-icon>
+  </button>
+
+  <mat-slider
+    color="primary"
+    class="volume-slider"
+    min="0"
+    max="100"
+    step="1">
+    <input matSliderThumb [value]="volume() * 100" (valueChange)="setVolume($event / 100)" />
+  </mat-slider>
+</div>

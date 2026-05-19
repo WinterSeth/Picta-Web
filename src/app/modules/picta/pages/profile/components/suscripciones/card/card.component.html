@@ -1,0 +1,75 @@
+@if (loading) {
+  <div class="plan-loading-state inset-0 flex items-center justify-center z-50" role="status" aria-live="polite">
+    <div class="p-8 rounded-lg shadow-lg flex flex-col items-center">
+      <mat-spinner aria-label="cargando" [diameter]="40" color="accent"></mat-spinner>
+      <p class="mt-4" style="color: var(--picta-text-muted)">Cargando plan...</p>
+    </div>
+  </div>
+} @else {
+  <div class="membership-card w-full px-4 py-4 relative">
+
+    <h5 class="mb-4 text-xl font-medium text-white hover:cursor-pointer" [matTooltip]="plan().descripcion">
+      {{ plan().nombre }}
+    </h5>
+
+    <div class="flex justify-between items-baseline">
+      <span class="text-3xl font-extrabold tracking-tight relative">
+        {{ plan().precio }}
+        <span class="text-base font-medium absolute top-0 tracking-wider">CUP</span>
+      </span>
+      <span class="ms-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+        por {{ plan().duracion }} días
+      </span>
+    </div>
+
+    <ul role="list" class="benefit-list space-y-5 my-3">
+      @for (benefit of benefits; track benefit.nombre_raw) {
+        <li class="flex justify-between items-center">
+          <article class="flex items-center">
+
+            @if (benefit.valor.toLowerCase()=='no') {
+              <mat-icon class="text-red-500">block</mat-icon>
+            } @else {
+              <mat-icon class="text-green-500" >check_circle_outline</mat-icon>
+            }
+
+
+            <span class="text-base font-normal leading-tight ms-3">
+              {{ benefit.nombre }}
+            </span>
+          </article>
+          <span class="!rounded-full px-3 py-1 text-xs font-medium">
+            {{ benefit.valor }}
+          </span>
+        </li>
+        @if (!$last) {
+          <mat-divider class="my-2"></mat-divider>
+        }
+      }
+    </ul>
+
+    <div [ngClass]="!plan().activo ? 'items-center justify-center' : ''" class="w-full flex gap-2.5">
+      @if (plan().activo) {
+        <div class="flex justify-between w-full">
+          <button [disabled]="plan().activo" class="!rounded-full" mat-flat-button color="primary">
+            <mat-icon>check_circle_outline</mat-icon>
+            <span class="ml-1">Plan {{ plan().precio == 0 ? 'gratis' : 'activo' }}</span>
+          </button>
+          @if (buyed()) {
+            <button mat-flat-button [disabled]="plan().pago" class="!rounded-full" color="accent" matTooltip="Renovar plan" (click)="(handleSubscribe(plan()))">
+              <mat-icon>update</mat-icon>
+              <span>Renovar</span>
+            </button>
+          }
+        </div>
+      } @else {
+        <button mat-flat-button [disabled]="plan().pago" [color]="plan().id == 40 ? 'accent' : 'primary'" class="!rounded-full" matTooltip="Comprar plan" (click)="buyed() ? handleSubscribe(plan()) :  openPayment()">
+          <mat-icon>attach_money</mat-icon>
+          <span>{{plan().id == 40 ? '¡Obtener Oferta!' : 'Comprar'}}</span>
+        </button>
+      }
+    </div>
+  </div>
+}
+
+

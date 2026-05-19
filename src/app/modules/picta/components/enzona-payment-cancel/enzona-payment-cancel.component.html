@@ -1,0 +1,14 @@
+<div class="enzona-payment-page">
+  <mat-card>
+    <mat-card-content>
+      <div class="content">
+        <mat-icon class="icon cancel">cancel</mat-icon>
+        <h1>Pago cancelado en Enzona</h1>
+        @if (transactionUuid) {
+          <h2>Transacción: <span>{{ transactionUuid }}</span></h2>
+        }
+        <a mat-flat-button color="primary" routerLink="/suscripciones">Volver a suscripciones</a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

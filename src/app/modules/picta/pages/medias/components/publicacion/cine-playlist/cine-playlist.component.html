@@ -1,0 +1,91 @@
+<div class="cine-playlist-overlay">
+  <!-- Header -->
+  <div class="cine-playlist-header">
+    <div class="cine-playlist-header-content">
+      <h3 class="cine-playlist-title">{{ playlist()?.nombre || 'Lista de Reproducción' }}</h3>
+      <div class="cine-playlist-meta-row">
+        <span class="cine-playlist-count">{{ playlistItems.length }} capítulos</span>
+        <span class="cine-playlist-divider">•</span>
+        <span class="cine-playlist-current">Capítulo {{ currentIndex() + 1 }}</span>
+      </div>
+    </div>
+    <button (click)="onClose()" mat-icon-button class="cine-playlist-close rounded-full! flex! justify-center!" aria-label="Cerrar playlist">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Contenido scrollable -->
+  <div class="cine-playlist-content">
+    @for (item of playlistItems; track item.id; let i = $index) {
+      <div 
+        class="cine-playlist-item"
+        [class.active]="isActive(item)"
+        [class.viewed]="isViewed(item)">
+        
+        <!-- Número/Índice -->
+        <div class="cine-playlist-index" [class.playing]="isActive(item)">
+          @if (isActive(item)) {
+            <div class="playing-indicator">
+              <span class="bar"></span>
+              <span class="bar"></span>
+              <span class="bar"></span>
+            </div>
+          } @else {
+            <span>{{ i + 1 }}</span>
+          }
+        </div>
+
+        <!-- Contenedor con miniatura y contenido -->
+        <div class="cine-playlist-card" (click)="onSelectVideo(item)">
+          <!-- Miniatura -->
+          <div class="cine-playlist-thumb-container">
+            <img [src]="item.url_imagen + '_160x90'" [alt]="item.nombre" class="cine-playlist-thumb" />
+            
+            <!-- Duración -->
+            @if (item.duracion) {
+              <span class="cine-playlist-duration">{{ item.duracion }}</span>
+            }
+            
+            <!-- Play button overlay -->
+            <div class="cine-playlist-play-overlay">
+              <div class="cine-playlist-play-btn">
+                <mat-icon>play_arrow</mat-icon>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="cine-playlist-details">
+            <span class="cine-playlist-name">{{ item.nombre }}</span>
+            <div class="cine-playlist-meta-row">
+              @if (item.categoria?.tipologia?.nombre) {
+                <span class="cine-playlist-type">{{ item.categoria.tipologia.nombre }}</span>
+              }
+              @if (item.anno) {
+                <span class="cine-playlist-year">{{ item.anno }}</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Acción de descarga -->
+        @if (item.descarga) {
+          <button 
+            class="cine-playlist-action-btn"
+            (click)="onDownload(item, $event)"
+            matTooltip="Descargar">
+            <mat-icon>download</mat-icon>
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Footer con progress -->
+  <div class="cine-playlist-footer">
+    <div class="cine-playlist-progress">
+      <div class="cine-playlist-progress-bar" [style.width.%]="progressPercent()"></div>
+    </div>
+    <span class="cine-playlist-progress-text">{{ progressPercent() }}% completado</span>
+  </div>
+</div>

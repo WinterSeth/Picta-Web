@@ -1,0 +1,68 @@
+<div [class.playing]="isPlaying" [id]="publicacion.id" class="playlist-item">
+  <div  class="px-3 py-2 flex align-items-center justify-content-between">
+    <div (click)="playVideo()" class="listview" title="Reproducir">
+      <div id="index-container" class="w-5">
+        @if (isPlaying) {
+          <span class="mr-3" id="index">▶</span>
+        }
+        @if (!isPlaying) {
+          <span id="index">{{playlist + 1}}</span>
+        }
+      </div>
+      <img [ngSrc]="publicacion.url_imagen+'_100x56'" width="100" height="56" alt="" class="mr-3" loading="lazy">
+      <div class="flex flex-column">
+        <h6 class="mb-0">{{publicacion.nombre}}</h6>
+        <h4 class="mb-0">{{publicacion.duracion}}</h4>
+      </div>
+    </div>
+
+    <!-- Botón de descarga - siempre visible si el video es descargable -->
+    @if (publicacion.descargable && publicacion.descarga && publicacion.tipo != 'live') {
+      <button #tooltip3="matTooltip" 
+        (click)="openDownload()" 
+        [matTooltip]="user ? (listas === 'Si' ? 'Descargar video' : 'Descargar disponible con plan premium') : 'Debes estar autenticado para descargar'" 
+        mat-icon-button>
+        @if (precioDescarga && !video?.pd) {
+          <mat-icon matBadge="$" matBadgeColor="#fff">get_app</mat-icon>
+        }
+        @if (!precioDescarga || video?.pd) {
+          <mat-icon>get_app</mat-icon>
+        }
+      </button>
+    }
+  </div>
+</div>
+
+<!-- Modal de upgrade para descarga desde lista -->
+@if (showDownloadUpgradeModal()) {
+  <div class="picta-modal-overlay">
+    <section class="picta-ad-modal">
+      <button (click)="closeDownloadUpgradeModal()" aria-label="Cerrar diálogo" class="picta-ad-close flex! justify-center!" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+
+      <header class="picta-ad-header">
+        <p class="picta-ad-kicker">Picta</p>
+        <h2 class="picta-ad-title">Descargar desde listas</h2>
+        <p class="picta-ad-subtitle">
+          Para poder descargar videos desde tus listas de reproducción, adquiere una suscripción.
+        </p>
+      </header>
+
+      <section class="picta-ad-note">
+        <p>
+          Con un plan activo obtienes acceso a descargar videos desde tus listas y más beneficios premium.
+        </p>
+      </section>
+
+      <div class="picta-ad-actions">
+        <button (click)="closeDownloadUpgradeModal()" mat-stroked-button class="picta-ad-secondary-btn">
+          Cancelar
+        </button>
+        <button (click)="navigateToSubscriptions()" mat-raised-button class="picta-ad-primary-btn">
+          Ver planes
+        </button>
+      </div>
+    </section>
+  </div>
+}

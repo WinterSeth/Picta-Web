@@ -1,0 +1,38 @@
+<section class="series-updated-expanded" aria-live="polite">
+  <header class="series-updated-expanded-header">
+    <div>
+      <h1 class="series-updated-expanded-title">Realities actualizados</h1>
+      <p class="series-updated-expanded-subtitle">
+        Listado de los 20 realities más recientemente actualizados.
+      </p>
+    </div>
+
+    <a
+      mat-stroked-button
+      [routerLink]="['/shows']"
+      class="series-updated-expanded-back"
+      aria-label="Volver a Realities">
+      <mat-icon>arrow_back</mat-icon>
+      Volver a Realities
+    </a>
+  </header>
+
+  @if (loading()) {
+    <div class="series-updated-expanded-skeleton" aria-hidden="true">
+      @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) {
+        <div class="series-updated-expanded-skeleton-card"></div>
+      }
+    </div>
+  } @else if (!shows().length) {
+    <div class="series-updated-expanded-empty">
+      <mat-icon>search_off</mat-icon>
+      <p>No hay realities actualizados para mostrar.</p>
+    </div>
+  } @else {
+    <div class="series-updated-expanded-grid">
+      @for (show of shows(); track trackShow($index, show)) {
+        <app-serie-card [serie]="show"></app-serie-card>
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,38 @@
+<section class="recent-expanded" aria-live="polite">
+  <header class="recent-expanded-header">
+    <div>
+      <h1 class="recent-expanded-title">{{ pageTitle() }}</h1>
+      <p class="recent-expanded-subtitle">{{ pageSubtitle() }}</p>
+    </div>
+
+    <a mat-stroked-button [routerLink]="backLink()" class="recent-expanded-back" [attr.aria-label]="backLabel()">
+      <mat-icon>arrow_back</mat-icon>
+      {{ backLabel() }}
+    </a>
+  </header>
+
+  @if (loading()) {
+    <div class="recent-expanded-skeleton" aria-hidden="true">
+      @for (item of [1,2,3,4,5,6,7,8]; track item) {
+        <div class="recent-expanded-skeleton-card"></div>
+      }
+    </div>
+  } @else if (!items().length) {
+    <div class="recent-expanded-empty">
+      <mat-icon>search_off</mat-icon>
+      <p>No hay títulos recientes de Cuba para mostrar.</p>
+    </div>
+  } @else {
+    <div class="recent-expanded-grid">
+      @if (isMovieView()) {
+        @for (movie of items(); track trackMovie($index, movie)) {
+          <app-movie-card [movie]="$any(movie)"></app-movie-card>
+        }
+      } @else {
+        @for (serie of items(); track trackSerie($index, serie)) {
+          <app-serie-card [serie]="$any(serie)"></app-serie-card>
+        }
+      }
+    </div>
+  }
+</section>

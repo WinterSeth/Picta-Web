@@ -1,0 +1,43 @@
+<div class="comment-form-container">
+  <div class="comment-form-layout">
+    <!-- Avatar del usuario -->
+    @if (user().avatar) {
+      <img
+        [alt]="user().username"
+        [ngSrc]="user().avatar + '_48x48'"
+        width="48" height="48"
+        class="user-avatar"
+      />
+    } @else {
+      <div class="user-avatar initial">
+        {{ user().username.charAt(0) | uppercase }}
+      </div>
+    }
+    
+    <!-- Input -->
+    <mat-form-field class="comment-input">
+      <input
+        (focusin)="comentar = true"
+        [formControl]="comentBox"
+        class="input-field"
+        matNativeControl
+        placeholder="Redacta un comentario sobre este video"
+        type="text"
+      />
+    </mat-form-field>
+  </div>
+  
+  @if (comentar) {
+    <div class="comment-form-actions">
+      <button [disabled]="isSubmiting" (click)="handleCancelComment()" class="cancel-btn" mat-stroked-button>
+        Cancelar
+      </button>
+      <button [disabled]="isSubmiting" (click)="handleComment(); stoppropagation($event)" class="submit-btn" mat-raised-button>
+        @if (isSubmiting) {
+          <mat-spinner diameter="18" class="spinner"></mat-spinner>
+        }
+        <span>{{ mode === 'add' ? 'Comentar' : 'Actualizar' }}</span>
+      </button>
+    </div>
+  }
+</div>

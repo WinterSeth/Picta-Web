@@ -1,0 +1,96 @@
+<div class="flex flex-col items-stretch">
+  <section class="playlist-manage p-3 solicitud-header-wrap">
+    <div class="p-3 flex items-center justify-between">
+      <div class="uppercase text-2xl text-white font-bold py-6">Mis solicitudes</div>
+      <button [matMenuTriggerFor]="solicitud" aria-label="solicitud-button" class="solicitud-button md:block" mat-raised-button title="Nueva solicitud">
+        <mat-icon>add_circle</mat-icon>
+        Nueva solicitud
+      </button>
+      <mat-menu #solicitud="matMenu" xPosition="after">
+        <button [routerLink]="['/profile/request-channel']" mat-menu-item color="primary">Canal</button>
+        <button [routerLink]="['/profile/seller-form']" mat-menu-item color="primary">Vendedor</button>
+      </mat-menu>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="mt-3"></div>
+  </section>
+
+  <div class="example-container p-3">
+    @if (isLoadingResults) {
+      <div class="example-loading-shade">
+        @if (isLoadingResults) {
+          <mat-spinner></mat-spinner>
+        }
+      </div>
+    }
+
+    @if (!isLoadingResults && solicitudesVendedor.length) {
+      <div class="example-table-container">
+        <h4>Solicitud de Vendedor</h4>
+        <mat-table [dataSource]="solicitudesVendedor" class="example-table flex flex-col">
+          <ng-container matColumnDef="nombre">
+            <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.data.name}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="correo">
+            <mat-header-cell [ngClass]="showColumn()" *matHeaderCellDef>Correo</mat-header-cell>
+            <mat-cell [ngClass]="showColumn()" *matCellDef="let row">{{row.data.email}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.estado}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="fecha">
+            <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.fecha | date:'yyyy/MM/dd'}}</mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumnsVendedor"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumnsVendedor;"></mat-row>
+        </mat-table>
+      </div>
+    } @else if (!isLoadingResults) {
+      <h4>Usted no posee solicitud de vendedor.</h4>
+    }
+
+    @if (!isLoadingResults && solicitudesCanal.length) {
+      <div class="example-table-container canal">
+        <div><h4>Solicitudes de Canal</h4></div>
+        <mat-table [dataSource]="solicitudesCanal" class="example-table">
+          <ng-container matColumnDef="nombre">
+            <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.data.nombre}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="alias">
+            <mat-header-cell [ngClass]="showColumn()" *matHeaderCellDef>Alias</mat-header-cell>
+            <mat-cell [ngClass]="showColumn()" *matCellDef="let row">{{row.data.alias}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="correo">
+            <mat-header-cell [ngClass]="showColumn()" *matHeaderCellDef>Correo</mat-header-cell>
+            <mat-cell [ngClass]="showColumn()" *matCellDef="let row">{{row.data.email_notification}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="estado">
+            <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.estado}}</mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="fecha">
+            <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.fecha | date:'yyyy/MM/dd'}}</mat-cell>
+          </ng-container>
+          <mat-header-row mat-header-row *matHeaderRowDef="displayedColumnsCanal"></mat-header-row>
+          <mat-row mat-row *matRowDef="let row; columns: displayedColumnsCanal;"></mat-row>
+        </mat-table>
+        <!-- <mat-paginator [length]="solicitudesCanal.length" [pageSize]="5" aria-label="Selecciona la pagina de solicitudes de vendedor"></mat-paginator> -->
+      </div>
+    } @else if (!isLoadingResults) {
+      <h4>Usted no posee solicitudes de canal.</h4>
+    }
+    <!-- <mat-paginator [length]="solicitudesVendedor.length" [pageSize]="5" aria-label="Selecciona la pagina de solicitudes de vendedor"></mat-paginator> -->
+  </div>
+
+
+
+  <ng-template #noSolicitud>
+    <h4>Usted no posee solicitud</h4>
+  </ng-template>
+
+</div>

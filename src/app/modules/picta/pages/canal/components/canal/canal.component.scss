@@ -1,0 +1,681 @@
+.solid {
+  position: fixed !important;
+  top: 0 !important;
+  //margin-top: 0!important;
+  //background-color: #05071F !important;
+  transition: all .3s ease 0s;
+  z-index: 10000 !important;
+}
+
+:host {
+  --canal-text-primary: #ffffff;
+  --canal-text-secondary: #b0b4c2;
+  --canal-surface: #1d2036;
+  --canal-surface-soft: #252943;
+  --canal-border: rgba(255, 255, 255, 0.1);
+  --canal-accent: #e8462e;
+  --canal-shadow: 0 18px 36px -24px rgba(0, 0, 0, 0.55);
+
+  display: block;
+}
+
+.canal-page {
+  padding: 0 14px 28px;
+}
+
+.canal-container {
+  //width: 100vw;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Ensure app-portada and profile card share the same width within the container (Impeccable: consistent aligned blocks) */
+.canal-container app-portada,
+.canal-profile-card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.header {
+  width: 100vw;
+  height: 100%;
+  & img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.canal-bar {
+  height: auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  & .info-bar {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: baseline;
+    flex: 1;
+  }
+
+  & img {
+    border-radius: 100%;
+    border: solid white 2px;
+    margin-top: -50px;
+    width: 84px;
+    height: 84px;
+  }
+
+  & .canal-title {
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 27px;
+    margin-left: 15px;
+  }
+
+  & .canal-subs, .canal-vids {
+    font-size: 13px;
+    line-height: 19.5px;
+    margin-left: 15px;
+  }
+}
+
+.canal-sub-bar {
+  display: flex;
+  background-color: transparent;
+  flex-direction: row;
+  gap: 12px;
+  align-items: stretch;
+
+  /* Match the banner width exactly: occupy full content width and use box-sizing
+     so inner card aligns with `app-portada` which is full-width inside the page container. */
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+
+  & .buttons {
+    flex: 1;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  & .search {
+    flex: 4;
+  }
+}
+
+.canal-profile-card {
+  background: linear-gradient(180deg, rgba(41, 44, 72, 0.72) 0%, rgba(29, 32, 54, 0.88) 100%);
+  border: 1px solid var(--canal-border);
+  border-radius: 12px;
+  box-shadow: var(--canal-shadow);
+  flex: 1 1 auto;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Ensure the sub-bar children don't add extra horizontal offset (tailwind margins)
+   and that the visual width matches the banner block exactly. */
+.canal-sub-bar > * {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+.canal-profile-content {
+  align-items: flex-start;
+  display: flex;
+  gap: 14px;
+  padding: 14px 18px;
+}
+
+.canal-avatar-wrap {
+  flex: 0 0 auto;
+}
+
+.canal-avatar {
+  border: 2px solid rgba(232, 70, 46, 0.45);
+  height: clamp(78px, 9vw, 116px);
+  object-fit: cover;
+  width: clamp(78px, 9vw, 116px);
+}
+
+.canal-profile-meta {
+  flex: 1;
+  gap: 6px;
+  min-width: 0;
+}
+
+.canal-title {
+  color: var(--canal-text-primary);
+  font-size: clamp(1.1rem, 1.5vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.canal-stats {
+  color: var(--canal-text-secondary) !important;
+  margin: 0;
+}
+
+.canal-description {
+  color: var(--canal-text-secondary) !important;
+  line-height: 1.42;
+  max-height: 4.4em;
+  overflow: hidden;
+}
+
+/* Impeccable: clamp description to 3 lines when needed */
+.canal-description.clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Wrapper and overlay for inline 'Ver más' with subtle Impeccable styling */
+.canal-description-wrap {
+  position: relative;
+}
+
+.canal-description.clamped {
+  position: relative;
+  padding-bottom: 1.25rem; /* space for overlay */
+}
+
+.canal-description-overlay {
+  position: absolute;
+  right: 8px;
+  bottom: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.canal-description-overlay .ellipsis {
+  color: var(--canal-text-secondary);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.canal-description-overlay .ver-mas-inline {
+  background-color: rgba(29, 32, 54, 0.85);
+  color: var(--canal-accent);
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  line-height: 1;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+}
+
+.canal-description-overlay:focus,
+.canal-description-overlay:focus-visible {
+  outline: 2px solid rgba(232,70,46,0.28);
+  outline-offset: 2px;
+}
+
+.ver-mas-btn {
+  color: var(--canal-accent);
+  padding: 0;
+  min-width: 0;
+}
+
+.channel-dialog {
+  padding: 18px;
+  color: var(--canal-text-primary);
+}
+.channel-dialog__header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.channel-dialog__close {
+  margin-left: auto;
+  position: relative;
+  top: -8px;
+  right: -8px;
+  color: var(--canal-text-secondary);
+}
+.channel-dialog__published {
+  color: var(--canal-text-secondary);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+.channel-dialog__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(232, 70, 46, 0.45);
+}
+.channel-dialog__title {
+  margin: 0;
+  font-size: 1.2rem;
+}
+.channel-dialog__stats {
+  color: var(--canal-text-secondary);
+  font-size: 0.9rem;
+}
+.channel-dialog__body { margin-top: 12px; }
+.channel-dialog__actions { margin-top: 16px; display:flex; gap:8px; justify-content:flex-end; }
+
+.canal-subscribe-btn {
+  border-color: rgba(232, 70, 46, 0.55) !important;
+  color: #1a1a2e !important; /* Texto oscuro para fondo blanco */
+  font-weight: 600;
+  min-height: 38px;
+  transition: transform 170ms ease, background-color 170ms ease;
+  background: #ffffff !important; /* Fondo blanco cuando NO sigue */
+}
+
+/* Standardize follow buttons: center inline content and keep label visible while loading */
+.canal-subscribe-btn,
+.channel-follow-btn,
+.channel-follow-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 38px;
+}
+
+.canal-subscribe-btn .subscribe-spinner,
+.channel-follow-btn .subscribe-spinner,
+.channel-follow-button .subscribe-spinner {
+  display: flex;
+  position: static;
+  margin-right: 0; /* use gap on .follow-content to control spacing for true centering */
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.canal-subscribe-btn .subscribe-spinner mat-progress-spinner,
+.channel-follow-btn .subscribe-spinner mat-progress-spinner,
+.channel-follow-button .subscribe-spinner mat-progress-spinner {
+  width: 18px;
+  height: 18px;
+  display: block;
+  margin: 0;
+}
+
+.channel-follow-label {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.follow-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  gap: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.follow-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.follow-slot.right {
+  visibility: hidden; /* reserve space but stay invisible to balance the label */
+}
+
+.channel-follow-icon {
+  display: flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Subscribed (active) state: yellow background and dark text */
+.channel-follow-button.subscribed,
+.canal-subscribe-btn.subscribed,
+.channel-follow-btn.subscribed {
+  background: var(--picta-yellow, #f3e628) !important;
+  color: #111 !important;
+  border-color: rgba(243, 230, 40, 0.28) !important;
+}
+
+.channel-follow-button.subscribed .channel-follow-label,
+.canal-subscribe-btn.subscribed .channel-follow-label,
+.channel-follow-btn.subscribed .channel-follow-label {
+  color: #111 !important;
+}
+
+/* Keep label visible during subscribing to satisfy UX requirement */
+.channel-follow-button.is-subscribing .channel-follow-label,
+.canal-subscribe-btn.is-subscribing .channel-follow-label,
+.channel-follow-btn.is-subscribing .channel-follow-label {
+  visibility: visible !important;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.canal-subscribe-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  transform: translateY(-1px);
+}
+
+/* Match `publicacion` hover effect for channel-follow-button (including subscribed state) */
+.channel-follow-button:hover {
+  background: rgba(255, 255, 255, 0.85);
+  --mat-button-outlined-outline-color: rgba(232, 70, 46, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Disable hover visual changes for follow buttons in canal: keep background and transform static */
+.canal-subscribe-btn:hover,
+.channel-follow-button:hover,
+.channel-follow-btn:hover,
+.canal-subscribe-btn.subscribed:hover,
+.channel-follow-button.subscribed:hover,
+.channel-follow-btn.subscribed:hover {
+  background: inherit !important;
+  background-color: inherit !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Stronger override to defeat global/publicacion hover rules */
+:host ::ng-deep .channel-follow-button:hover,
+:host ::ng-deep .canal-subscribe-btn:hover {
+  background: #ffffff !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .channel-follow-button.subscribed:hover,
+:host ::ng-deep .canal-subscribe-btn.subscribed:hover {
+  background: var(--picta-yellow, #f3e628) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.canal-subscribe-btn[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #f0f0f0 !important;
+}
+
+.canal-subscribe-btn .animate-spin {
+  animation: spin 1s linear infinite;
+  color: #1a1a2e !important;
+}
+
+.canal-subscribe-btn mat-icon {
+  color: #1a1a2e !important;
+}
+
+.canal-subscribe-btn.subscribed mat-icon {
+  color: #111 !important;
+}
+
+.canal-subscribe-btn.cdk-keyboard-focused,
+.canal-subscribe-btn.cdk-program-focused,
+.canal-subscribe-btn:hover {
+  &:not(.subscribed) .mat-icon {
+    color: #1a1a2e !important;
+  }
+  
+  &.subscribed .mat-icon {
+    color: #111 !important;
+  }
+}
+
+:host ::ng-deep .subscribe-menu.header-menu-panel {
+  .mat-mdc-menu-item {
+    min-height: 42px;
+    border-radius: 12px;
+    padding: 0 16px;
+    color: #1a1a2e;
+    
+    .mat-icon {
+      margin-right: 12px;
+      color: #1a1a2e;
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    &.mat-mdc-menu-item-highlighted {
+      background: rgba(232, 70, 46, 0.12) !important;
+    }
+    
+    &.active {
+      background: rgba(232, 70, 46, 0.15) !important;
+    }
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.canal-actions {
+  align-items: flex-start;
+  display: flex;
+}
+
+.canal-donate-btn {
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  color: var(--canal-text-primary) !important;
+  min-height: 40px;
+}
+
+/* Override: make the subscribe spinner inline so it sits to the left of the label
+   instead of absolutely positioned and overlapping the text (used in canal view). */
+.canal-subscribe-btn .subscribe-spinner,
+.channel-follow-btn .subscribe-spinner,
+.channel-follow-button .subscribe-spinner {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  display: inline-flex !important;
+  margin-right: 0.5rem !important;
+  vertical-align: middle !important;
+}
+
+/* Ensure the button contents (spinner + label/icon) are treated as a single centered inline group
+   and never overflow the fixed button width. */
+.channel-follow-button,
+.canal-subscribe-btn,
+.channel-follow-btn {
+  overflow: hidden; /* keep content inside the button */
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.channel-follow-button .channel-follow-label,
+.canal-subscribe-btn .channel-follow-label,
+.channel-follow-btn .channel-follow-label {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.channel-follow-button .subscribe-spinner,
+.canal-subscribe-btn .subscribe-spinner,
+.channel-follow-btn .subscribe-spinner {
+  margin-right: 0.5rem !important;
+}
+
+.canal-donate-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.canal-donate-btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.search {
+  width: min(100%, 560px);
+}
+
+.canal-tabs-section {
+  margin-top: 6px;
+}
+
+.canal-tab-pane {
+  border-radius: 14px;
+  min-height: 180px;
+}
+
+.canal-filter-row {
+  background: linear-gradient(180deg, rgba(37, 41, 67, 0.45) 0%, rgba(29, 32, 54, 0.35) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  gap: 8px;
+  padding: 10px 12px;
+}
+
+.canal-sort-btn {
+  color: var(--canal-text-primary);
+}
+
+.canal-empty-state {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  min-height: 120px;
+  padding: 10px;
+}
+
+.canal-empty-text {
+  color: var(--canal-text-secondary);
+  font-size: 1rem;
+  text-align: center;
+}
+
+
+.description {
+  font-size: 1rem;
+}
+
+.canal-carousel {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+
+  & button {
+    align-self: center;
+    margin-bottom: 30px;
+  }
+}
+
+:host ::ng-deep .canal-tabs .mat-mdc-tab-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  margin-bottom: 6px;
+}
+
+:host ::ng-deep .canal-tabs .mdc-tab {
+  min-width: 90px;
+}
+
+:host ::ng-deep .canal-tabs .mdc-tab__text-label {
+  color: var(--canal-text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+:host ::ng-deep .canal-tabs .mdc-tab--active .mdc-tab__text-label {
+  color: var(--canal-text-primary);
+}
+
+:host ::ng-deep .canal-tabs .mdc-tab-indicator__content--underline {
+  border-color: var(--canal-accent) !important;
+}
+
+@media (max-width: 1023px) {
+  .canal-sub-bar {
+    flex-direction: column;
+  }
+
+  .canal-actions {
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .canal-page {
+    padding: 0 10px 20px;
+  }
+
+  .canal-profile-content {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .canal-avatar {
+    height: 68px;
+    width: 68px;
+  }
+
+  .canal-title {
+    font-size: 1.05rem;
+  }
+
+  .canal-description {
+    font-size: 0.9rem;
+    max-height: 4.2em;
+  }
+
+  .canal-subscribe-btn {
+    width: 100% !important;
+  }
+
+  .canal-filter-row {
+    align-items: stretch !important;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center !important;
+    padding: 10px;
+  }
+
+  .canal-sort-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .canal-subscribe-btn {
+    transition: none;
+  }
+
+  .canal-subscribe-btn:hover {
+    transform: none;
+  }
+}

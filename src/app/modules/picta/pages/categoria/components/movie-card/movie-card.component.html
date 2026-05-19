@@ -1,0 +1,153 @@
+<mat-card class="movie-card">
+  <div class="movie-card-media">
+    <a
+      [routerLink]="['/movie', movie().slug_url]"
+      class="movie-card-media-link"
+      [attr.aria-label]="'Ver detalles de ' + movie().nombre"
+    >
+      <img
+        mat-card-image
+        [ngSrc]="movie().url_imagen + '_350x200'"
+        width="350"
+        height="200"
+        [alt]="'Poster de ' + movie().nombre"
+        class="movie-card-image"
+        loading="lazy"
+        decoding="async"
+      />
+    </a>
+
+    <div class="movie-card-media-overlay"></div>
+
+    <div class="movie-card-topline">
+      @if (movieYear()) {
+        <a
+          class="movie-card-badge movie-card-badge--soft movie-card-year-link"
+          [routerLink]="['/categoria', 'Película']"
+          [queryParams]="{ year: movieYear() }"
+          [attr.aria-label]="'Filtrar películas por el año ' + movieYear()"
+        >
+          <mat-icon>calendar_month</mat-icon>
+          {{ movieYear() }}
+        </a>
+      } @else {
+        <span class="movie-card-badge movie-card-badge--soft">
+          <mat-icon>calendar_month</mat-icon>
+          Sin año
+        </span>
+      }
+
+      @if (movie().duracion) {
+        <span class="movie-card-badge">
+          <mat-icon>schedule</mat-icon>
+          {{ movie().duracion }}
+        </span>
+      }
+    </div>
+
+    @if (movie().precios?.length) {
+      <div class="movie-card-price-stack">
+        @for (p of movie().precios; track p.tipo) {
+          @if (p.tipo == 'reproduccion') {
+            <span class="price-chip" title="Compra por reproducción">
+              <mat-icon class="price-chip-icon">play_arrow</mat-icon>
+              <span>Compra · {{ p.valor }} CUP</span>
+            </span>
+          } @else if (p.tipo == 'renta') {
+            <span class="price-chip" title="Renta temporal">
+              <mat-icon class="price-chip-icon">schedule</mat-icon>
+              <span>Renta · {{ p.valor }} CUP</span>
+            </span>
+          }
+        }
+      </div>
+    }
+  </div>
+
+  <div class="movie-card-body">
+    <div class="movie-card-heading">
+      <div class="movie-card-title-block">
+        <a
+          [routerLink]="['/movie', movie().slug_url]"
+          class="movie-card-title-link"
+          [matTooltip]="movie().nombre"
+          matTooltipPosition="above"
+          matTooltipShowDelay="180"
+          [attr.aria-label]="'Abrir película ' + movie().nombre"
+        >
+          <h3 class="movie-card-title">{{ movie().nombre }}</h3>
+        </a>
+        <p class="movie-card-subtitle">
+          @if (movieCountry()) {
+            <a
+              class="movie-card-country-link"
+              [routerLink]="['/categoria', 'Película']"
+              [queryParams]="{ pais: movieCountry() }"
+              [attr.aria-label]="'Filtrar películas por país ' + movieCountry()"
+            >
+              {{ movieCountry() }}
+            </a>
+          } @else {
+            <span>País no definido</span>
+          }
+        </p>
+      </div>
+
+      @if (movie().canal?.alias) {
+        <a
+          [routerLink]="['/canal', movie().canal.alias]"
+          class="movie-card-channel"
+          [attr.aria-label]="'Ver canal ' + movie().canal.nombre"
+        >
+          <img
+            [ngSrc]="movie().canal.url_avatar + '_48x48'"
+            width="40"
+            height="40"
+            [alt]="'Avatar de ' + movie().canal.nombre"
+            class="movie-card-channel-avatar"
+          />
+          <span>{{ movie().canal.nombre }}</span>
+        </a>
+      }
+    </div>
+
+    <p
+      class="movie-card-description"
+      [matTooltip]="movie().descripcion || ''"
+      matTooltipPosition="below"
+      matTooltipShowDelay="180"
+    >
+      {{ movie().descripcion }}
+    </p>
+
+    <div class="movie-card-meta">
+      @if (movie().audios) {
+        <span class="movie-meta-pill" [matTooltip]="'Idiomas de audio: ' + movie().audios" matTooltipPosition="above">
+          <mat-icon class="movie-meta-icon">volume_up</mat-icon>
+          <span>{{ movie().audios }}</span>
+        </span>
+      }
+
+      @if (movie().subtitulos?.length > 0) {
+        <span class="movie-meta-pill" [matTooltip]="'Subtítulos: ' + movie().subtitulos?.join(', ')" matTooltipPosition="above">
+          <mat-icon class="movie-meta-icon">subtitles</mat-icon>
+          <span>
+            {{ movie().subtitulos[0] }}{{ movie().subtitulos.length > 1 ? ' +' + (movie().subtitulos.length - 1) : '' }}
+          </span>
+        </span>
+      }
+    </div>
+
+    <div class="movie-card-actions">
+      <a [routerLink]="['/medias', movie().slug_url]" class="movie-action-link movie-action-link--primary" aria-label="Reproducir película">
+        <mat-icon svgIcon="play" aria-hidden="false" aria-label="play"></mat-icon>
+        <span>Reproducir</span>
+      </a>
+
+      <a [routerLink]="['/movie', movie().slug_url]" class="movie-action-link movie-action-link--secondary" aria-label="Ver detalles de película">
+        <mat-icon svgIcon="info" aria-hidden="false" aria-label="info"></mat-icon>
+        <span>Detalles</span>
+      </a>
+    </div>
+  </div>
+</mat-card>

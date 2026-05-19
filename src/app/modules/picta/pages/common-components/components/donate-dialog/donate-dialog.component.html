@@ -1,0 +1,66 @@
+<mat-dialog-content style="padding: 0;margin: 0;">
+
+  <mat-horizontal-stepper #stepper labelPosition="bottom" class="paymentStepper">
+    <mat-step>
+      <div class="flex flex-column">
+        <div class="font-medium tracking-wide">Ingrese el monto a donar</div>
+        <mat-form-field appearance="outline">
+          <input type="number" matInput [formControl]="amount" min="1" class="text-right">
+          @if (amount.hasError('required')) {
+            <mat-error>
+              El monto mínimo a donar es requerido.
+            </mat-error>
+          }
+          @if (amount.hasError('min')) {
+            <mat-error>
+              El monto mínimo a donar es 1 CUP.
+            </mat-error>
+          }
+        </mat-form-field>
+        <button matStepperNext mat-raised-button color="primary" class="mb-3" [disabled]="amount.invalid">
+          Continuar
+        </button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <div class="flex flex-column">
+        <mat-selection-list #methods [multiple]="false"
+          class="beneficios-list">
+          <div mat-subheader>Selecciona un Método de pago</div>
+          <mat-list-option (click)="handleTransfermovil()" value="transfermovil">
+            <img alt="Transfermóvil logo" matListAvatar src="icons/cu.etecsa.cubacel.tr.tm.webp"/>
+            <h3 matLine> Transfermóvil </h3>
+          </mat-list-option>
+          <!--<mat-list-option value="enzona">
+          <img alt="Enzona logo" matListAvatar src="assets/icons/cu.xetid.apk.enzona.png"/>
+          <h3 matLine> Enzona </h3>
+        </mat-list-option>-->
+      </mat-selection-list>
+    </div>
+  </mat-step>
+  <mat-step>
+    <div class="flex mat-typography flex-column align-items-center justify-content-center">
+      <h2>Pago con Transfermóvil</h2>
+      <p style="text-align: justify">Escanea el código qr para completar la donación</p>
+      <!--         <qr-code [value]="parsedQR" [size]="200"></qr-code>
+      -->        <p style="text-align: justify">@if (platform.ANDROID || platform.IOS) {
+      <a [href]="tmLink" class="payLink">Abrir
+      en Transfermóvil</a>
+    }</p>
+    <div class="flex justify-content-around align-items-center" style="width: 100%;">
+      <button mat-stroked-button (click)="checkPayment()">Comprobar</button>
+      <button mat-raised-button color="primary" mat-dialog-close>Cerrar</button>
+    </div>
+  </div>
+</mat-step>
+
+
+</mat-horizontal-stepper>
+</mat-dialog-content>
+<!--<mat-dialog-actions>
+<button color="warn" mat-button mat-dialog-close>Cancelar</button>
+&lt;!&ndash;<button (click)="goPremium()" color="primary" mat-raised-button>
+<mat-icon>payment</mat-icon>
+Shut up and take my money!!
+</button>&ndash;&gt;
+</mat-dialog-actions>-->

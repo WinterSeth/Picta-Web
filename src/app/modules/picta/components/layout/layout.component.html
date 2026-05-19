@@ -1,0 +1,363 @@
+<div
+  class="example-container app-shell min-h-[100dvh]"
+  [class.example-is-mobile]="mobileQuery.matches"
+  [class.cine-mode-active]="cineModeService.isCineMode()">
+  <app-material-header
+    (newItemEvent)="addItem($event)"
+    [isMobile]="isMobile"
+    class="app-header fixed top-0 left-0 right-0 z-50"
+    [style.display]="cineModeService.isCineMode() ? 'none' : 'block'"></app-material-header>
+
+  <mat-sidenav-container
+    class="app-sidenav-container min-h-[100dvh]"
+    [class.sidenav-over]="sidenavMode === 'over'"
+    [class.cine-mode-active]="cineModeService.isCineMode()">
+    @if (!isDesktop) {
+      <mat-sidenav
+        class="app-sidenav"
+        #sidenav
+        [mode]="sidenavMode"
+        fixedInViewport="true"
+        fixedTopGap="52"
+        [opened]="sidenavOpened">
+        <div class="sidenav-scroll">
+          @if (!isLoginIn()) {
+            <div class="sidenav-group">
+              <p class="nav-section-title">Cuenta</p>
+              <mat-nav-list>
+                <a
+                  class="nav-link"
+                  mat-list-item
+                  (click)="onNavLinkClick()"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: false }"
+                  routerLink="/inicio">
+                  <mat-icon
+                    matListItemIcon
+                    aria-hidden="false"
+                    aria-label="Acceder"
+                    fontIcon="person"></mat-icon>
+                  <span matListItemTitle class="text-sm">Acceder</span>
+                </a>
+              </mat-nav-list>
+              <mat-divider></mat-divider>
+            </div>
+          }
+
+          <div
+            class="sidenav-subscription-card"
+            aria-label="Suscripciones Picta">
+            <a
+              class="sidenav-subscription-link"
+              routerLink="/suscripciones"
+              (click)="onNavLinkClick()"
+              aria-label="Ir a suscripciones">
+              <span class="sidenav-subscription-icon-wrap" aria-hidden="true">
+                <mat-icon fontIcon="workspace_premium"></mat-icon>
+              </span>
+              <span class="sidenav-subscription-copy">
+                <span class="sidenav-subscription-title">Suscripciones</span>
+                <span class="sidenav-subscription-subtitle"
+                  >Descubre planes y beneficios</span
+                >
+              </span>
+              <mat-icon
+                class="sidenav-subscription-arrow"
+                fontIcon="arrow_forward"></mat-icon>
+            </a>
+          </div>
+
+          <div class="sidenav-group">
+            <p class="nav-section-title">Categorias</p>
+            <mat-nav-list aria-selected="true" color="warn">
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                routerLink="/categoria/Serie">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Series"
+                  fontIcon="video_library"></mat-icon>
+                <span matListItemTitle class="text-sm">Series</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                active-indicator-color="accent"
+                routerLink="/categoria/Película">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Peliculas"
+                  fontIcon="ondemand_video"></mat-icon>
+                <span matListItemTitle class="text-sm">Peliculas</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/shows">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Realities"
+                  fontIcon="groups"></mat-icon>
+                <span matListItemTitle class="text-sm">Realities</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/novelas">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Novelas"
+                  fontIcon="auto_stories"></mat-icon>
+                <span matListItemTitle class="text-sm">Novelas</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/animes">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Animes"
+                  fontIcon="movie"></mat-icon>
+                <span matListItemTitle class="text-sm">Animes</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/doramas">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Doramas"
+                  fontIcon="live_tv"></mat-icon>
+                <span matListItemTitle class="text-sm">Doramas</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/categoria/Video Musical">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Musicales"
+                  fontIcon="music_video"></mat-icon>
+                <span matListItemTitle class="text-sm">Musicales</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/categoria/Documental">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Documentales"
+                  fontIcon="language"></mat-icon>
+                <span matListItemTitle class="text-sm">Documentales</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/infantiles">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Infantiles"
+                  fontIcon="child_care"></mat-icon>
+                <span matListItemTitle class="text-sm">Infantiles</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/videojuegos">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Videojuegos"
+                  fontIcon="sports_esports"></mat-icon>
+                <span matListItemTitle class="text-sm">Videojuegos</span>
+              </a>
+            </mat-nav-list>
+            <mat-divider></mat-divider>
+          </div>
+
+          <div class="sidenav-group sidenav-group-last">
+            <p class="nav-section-title">Descubrir</p>
+            <mat-nav-list>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/shorts">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Shorts"
+                  fontIcon="offline_bolt"></mat-icon>
+                <span matListItemTitle class="text-sm">Shorts</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/tendencias">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Tendencias"
+                  fontIcon="whatshot"></mat-icon>
+                <span matListItemTitle class="text-sm">Tendencias</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/estrenos">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Estrenos"
+                  fontIcon="fiber_new"></mat-icon>
+                <span matListItemTitle class="text-sm">Estrenos</span>
+              </a>
+              <a
+                class="nav-link"
+                mat-list-item
+                (click)="onNavLinkClick()"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                routerLink="/canal-list">
+                <mat-icon
+                  matListItemIcon
+                  aria-hidden="false"
+                  aria-label="Canales"
+                  fontIcon="video_label"></mat-icon>
+                <span matListItemTitle class="text-sm">Canales</span>
+              </a>
+            </mat-nav-list>
+
+            <!-- Redes sociales en sidenav -->
+            <div class="sidenav-socials">
+              @for (social of footerSocials; track social.link) {
+                <a
+                  [href]="social.link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  [attr.aria-label]="social.label"
+                  class="sidenav-social-link">
+                  <img [src]="social.icon" [alt]="social.label" class="sidenav-social-icon" />
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+      </mat-sidenav>
+    }
+
+    <mat-sidenav-content class="app-content pt-2 mt-14" [class.cine-mode-content]="cineModeService.isCineMode()">
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <!-- Footer -->
+  @if (!isShortsRoute) {
+  <footer class="app-footer" [style.display]="cineModeService.isCineMode() ? 'none' : 'block'">
+    <div class="footer-grid">
+      <!-- Columna 1: Logo, redes sociales, correo -->
+      <div class="footer-col footer-col-brand">
+        <a routerLink="/" class="footer-logo-link" aria-label="Picta inicio">
+          <img src="img/logo.svg" alt="Picta" class="footer-logo" />
+        </a>
+        <div class="footer-socials">
+          @for (social of footerSocials; track social.link) {
+            <a
+              [href]="social.link"
+              target="_blank"
+              rel="noopener noreferrer"
+              [attr.aria-label]="social.label"
+              class="footer-social-link">
+              <img [src]="social.icon" [alt]="social.label" class="footer-social-icon" />
+            </a>
+          }
+        </div>
+        <a href="mailto:soporte@picta.cu" class="footer-email">soporte&#64;picta.cu</a>
+      </div>
+
+      <!-- Columna 2: Descargas y ayuda -->
+      <div class="footer-col">
+        <h3 class="footer-heading">Explorar</h3>
+        <nav class="footer-nav">
+          @for (item of footerDownloads; track item.link) {
+            <a
+              [href]="item.link"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="footer-link">
+              <mat-icon fontIcon="{{ item.icon }}"></mat-icon>
+              {{ item.label }}
+            </a>
+          }
+          @for (item of footerLinks; track item.link) {
+            <a
+              [routerLink]="item.link"
+              class="footer-link">
+              {{ item.label }}
+            </a>
+          }
+</nav>
+      </div>
+
+      <!-- Columna 3: Legal -->
+      <div class="footer-col">
+        <h3 class="footer-heading">Legal</h3>
+        <nav class="footer-nav">
+          @for (item of footerLegal; track item.link) {
+            <a
+              [routerLink]="item.link"
+              class="footer-link">
+              {{ item.label }}
+            </a>
+          }
+        </nav>
+      </div>
+    </div>
+  </footer>
+  }

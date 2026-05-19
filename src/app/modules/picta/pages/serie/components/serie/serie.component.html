@@ -1,0 +1,697 @@
+<ng-container>
+  @if (serie$ | async; as serie) {
+    @if (serie) {
+      <!-- Contenido principal -->
+      <div
+        class="nmtitle-wrapper with-fixed-header flex flex-col">
+        <section id="section-hero" class="nmtitle-section section-hero">
+          <div class="hero-container">
+            <div class="info-container">
+              <div class="details-container">
+                <div class="title-info sm:ml-4">
+                  <h2
+                    class="section-header-text section-item mb-4 line-clamp-1">
+                    {{ serie.nombre }}
+                  </h2>
+                  <div class="title-info-metadata-wrapper serie-meta-wrapper">
+                    <div class="serie-meta-inline">
+                      <a
+                        class="text-sm text-gray-400 serie-meta-link"
+                        [routerLink]="[getCategoryRoute()]"
+                        [queryParams]="{ ano: serie.ano }"
+                        aria-label="Ver series por año">
+                        {{ serie.ano }}
+                      </a>
+                      <span class="info-spacer">|</span>
+                      <a
+                        class="text-sm text-gray-400 serie-meta-link"
+                        [routerLink]="[getCategoryRoute()]"
+                        [queryParams]="{ pais: serie.pais }"
+                        aria-label="Ver series por país">
+                        {{ serie.pais }}
+                      </a>
+                      <span class="info-spacer">|</span>
+                      <span class="title-info-metadata-item item-runtime movie-meta-text">
+                        <span class="duration">
+                          <span class="test_dur_str">
+                            {{ serie?.cantidad_temporadas }}
+                            {{
+                              serie?.cantidad_temporadas > 1
+                                ? 'Temporadas'
+                                : 'Temporada'
+                            }}
+                          </span>
+                        </span>
+                      </span>
+                      <span *ngIf="resolucion" class="info-spacer">|</span>
+                      <span *ngIf="resolucion" class="movie-badge resolution" [ngClass]="resolucion">
+                        {{ resolucion }}
+                      </span>
+                      <span *ngIf="subtitle" class="info-spacer">|</span>
+                      <span *ngIf="subtitle" class="movie-badge subtitles">CC</span>
+                      <span *ngIf="clasificacion" class="info-spacer">|</span>
+                      <span *ngIf="clasificacion" class="movie-clasificacion" [ngClass]="getClasificacionClase(clasificacion)">
+                        {{ getClasificacionDisplay(clasificacion) }}
+                      </span>
+                    </div>
+
+                      <mat-chip-set
+                      aria-label="generos"
+                      *ngIf="serie?.genero"
+                      class="genre-chip-set">
+                      <mat-chip
+                        class="genre-chip"
+                        *ngFor="let genre of serie?.genero"
+                        [queryParams]="{ genre: genre.nombre }"
+                        [routerLink]="['/categoria/Serie']"
+                        >{{ genre.nombre }}</mat-chip
+                      >
+                    </mat-chip-set>
+
+                    <p class="movie-description mb-4 max-w-lg line-clamp-2 text-sm text-left cursor-pointer" (click)="openDescripcionDialog()">
+                      {{ description }}
+                    </p>
+
+                    <div class="flex items-center serie-credit-line flex-wrap gap-1">
+                      <span class="text-sm text-gray-400 mr-2">Dirigido por:</span>
+                      @for (
+                        item of serie.director;
+                        track item.id;
+                        let last = $last
+                      ) {
+                        <a
+                          [routerLink]="getDirectorSlug(item)"
+                          class="serie-meta-link">
+                          {{ item.nombre }}
+                        </a>
+                        @if (!last) {
+                          <span class="text-sm text-gray-400">&comma;&nbsp;</span>
+                        }
+                      }
+                    </div>
+                    <div class="flex items-center mb-4 serie-credit-line flex-wrap gap-1">
+                      <span class="text-sm text-gray-400 mr-2">Actúan:</span>
+                      @for (
+                        item of actoresPrincipales;
+                        track $index;
+                        let last = $last
+                      ) {
+                        <a
+                          [routerLink]="getActorSlug(item)"
+                          class="serie-meta-link">
+                          {{ item.nombre }}
+                        </a>
+                        @if (!last) {
+                          <span class="text-sm text-gray-400">&comma;&nbsp;</span>
+                        }
+                      }
+                      @if (mostrarMasActores) {
+                        <button
+                          (click)="openRepartoExplorer()"
+                          class="reparto-show-more-btn"
+                          aria-label="Ver todo el reparto">
+                          <span class="reparto-show-more-text">más</span>
+                        </button>
+                      }
+                    </div>
+
+                    <div class="serie-actions-row mt-3">
+                      @if (trailerURL) {
+                        <button
+                          mat-stroked-button
+                          type="button"
+                          class="serie-action-btn serie-action-btn-trailer"
+                          (click)="openTrailer()">
+                          <mat-icon>play_arrow</mat-icon>
+                          Ver Trailer
+                        </button>
+                      }
+
+                      <button
+                        mat-stroked-button
+                        type="button"
+                        class="serie-action-btn serie-action-btn-favorite"
+                        [attr.aria-pressed]="
+                          isFavoriteSerie(serie.pelser_id) ? 'true' : 'false'
+                        "
+                        [attr.aria-label]="
+                          isFavoriteSerie(serie.pelser_id)
+                            ? 'Quitar de favoritos'
+                            : 'Agregar a favoritos'
+                        "
+                        (click)="toggleFavoriteSerie(serie, $event)">
+                        <mat-icon>{{
+                          isFavoriteSerie(serie.pelser_id)
+                            ? 'favorite'
+                            : 'favorite_border'
+                        }}</mat-icon>
+                        {{
+                          isFavoriteSerie(serie.pelser_id)
+                            ? 'En favoritos'
+                            : 'Agregar a favoritos'
+                        }}
+                      </button>
+                    </div>
+                  </div>
+                  <div class="title-info-synopsis-talent"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-image-container">
+              <img
+                priority
+                [ngSrc]="serie?.url_imagen + '_1280x720'"
+                fill
+                alt="Imagen de la serie"
+                class="absolute right-0 object-cover !rounded-lg" />
+            </div>
+          </div>
+          <div class="value-prop-with-cta my-4 serie-value-banner" data-uia="value-prop-with-cta">
+            <a
+              class="serie-value-banner-link"
+              [routerLink]="['/suscripciones']"
+              aria-label="Ir a suscripciones">
+              <span class="serie-value-banner-icon" aria-hidden="true">
+                <mat-icon>workspace_premium</mat-icon>
+              </span>
+              <span class="serie-value-banner-copy">
+                <span class="serie-value-banner-title" data-uia="value-prop"
+                  >Ve todo lo que quieras.</span
+                >
+                <span class="serie-value-banner-subtitle"
+                  >Descubre los planes de suscripción de Picta</span
+                >
+              </span>
+              <mat-icon class="serie-value-banner-arrow" aria-hidden="true"
+                >arrow_forward</mat-icon>
+            </a>
+          </div>
+
+          <!-- Trailers Carousel -->
+          <div *ngIf="trailerEpisodes.length > 0" class="trailers-carousel">
+            <h3 class="carousel-title">Trailers</h3>
+            <owl-carousel-o [options]="trailerOption">
+              @for (trailer of trailerEpisodes; track trailer.id) {
+                <ng-template carouselSlide [width]="280">
+                  <div class="flex flex-col">
+                    <div class="flex-1 mb-2">
+                      <div class="group relative h-40 !rounded-md overflow-hidden hover:transition-transform duration-200 ease-in-out hover:scale-105">
+                        <img 
+                          [ngSrc]="trailer.url_imagen + '_350x200'" 
+                          height="200"
+                          width="350"
+                          alt="{{ trailer.nombre }}"
+                          class="w-full h-full object-cover absolute inset-0 opacity-90"
+                          onerror="this.src = '/img/default.webp'" 
+                        />
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <svg (click)="playVideo(trailer)" class="focus:outline-none cursor-pointer group-hover:transition-transform duration-200 ease-in-out group-hover:scale-150 hover:fill-yellow-500" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e8eaed">
+                            <path d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                          </svg>
+                        </div>
+                        @if (trailer.duracion) {
+                          <div class="absolute bottom-2 right-2 rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-body font-semibold tracking-wide text-white shadow-lg backdrop-blur-sm">
+                            {{ trailer.duracion }}
+                          </div>
+                        }
+                      </div>
+                    </div>
+                    <a class="flex flex-1 mt-2 flex-col">
+                      <span class="text-base font-medium leading-none text-white truncate">
+                        {{ trailer.nombre }}
+                      </span>
+                    </a>
+                  </div>
+                </ng-template>
+              }
+            </owl-carousel-o>
+            <div class="section-divider"></div>
+          </div>
+        </section>
+
+        <section id="section-seasons-and-episodes" class="nmtitle-section">
+          <div class="section-header">
+            <h2 class="section-header-text section-item">Episodios</h2>
+            <h2 class="section-subheader-text section-item">
+              {{ serie?.nombre }}
+            </h2>
+          </div>
+
+          <div id="season-selector-container">
+            <div *ngIf="temporadas.length == 1" id="season-selector-container">
+              <div class="select-label">
+                {{ serie?.nombre }}
+              </div>
+            </div>
+
+            <div *ngIf="temporadas.length > 1" class="ui-select-wrapper">
+              <div class="select-arrow medium">
+                <mat-form-field>
+                  <mat-select
+                    [(value)]="defaultTemp"
+                    (selectionChange)="onSelectEvent($event.value)">
+                    <mat-option
+                      *ngFor="let temporada of filteredTemporadas"
+                      [value]="temporada?.id"
+                      >{{ temporada?.nombre }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="temporadas.length; else notFound"
+            id="seasons-and-episodes-list-container relative">
+            <div class="season-metadata">
+              <div class="season-release-year">
+                Año de estreno: {{ serie?.ano }}
+              </div>
+              <p class="season-synopsis">{{ description }}</p>
+            </div>
+            <div class="w-screen-xl sm:py-8 lg:py-12">
+              @if (episodesLoading && !defaultCapi.length) {
+                <div class="flex items-center justify-center py-8">
+                  <mat-spinner
+                    aria-label="cargando capitulos"
+                    [diameter]="40"
+                    color="warn"></mat-spinner>
+                </div>
+              } @else {
+                <div class="grid grid-cols-2 gap-4 lg:grid-cols-5 lg:gap-8">
+                  @for (recomendado of defaultCapi; track recomendado.id) {
+                    <div
+                      title="Episodio {{
+                        recomendado?.categoria?.capitulo?.numero ?? ''
+                      }}"
+                      class="flex flex-col">
+                      <div class="flex-1 mb-2">
+                        <div
+                          class="group relative h-40 !rounded-md overflow-hidden hover:transition-transform duration-200 ease-in-out hover:scale-105">
+                          <img
+                            [ngSrc]="recomendado.url_imagen + '_350x200'"
+                            height="200"
+                            width="350"
+                            alt="recomendado imagen"
+                            class="w-full h-full object-cover absolute inset-0 opacity-90"
+                            onerror="this.src = '/img/default.webp'" />
+                          <div
+                            class="absolute inset-0 flex items-center justify-center">
+                            <svg
+                              [routerLink]="['/medias', recomendado.slug_url]"
+                              class="focus:outline-none cursor-pointer group-hover:transition-transform duration-200 ease-in-out group-hover:scale-150 hover:fill-yellow-500"
+                              xmlns="http://www.w3.org/2000/svg"
+                              height="40px"
+                              viewBox="0 -960 960 960"
+                              width="40px"
+                              fill="#e8eaed">
+                              <path
+                                d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                            </svg>
+                          </div>
+                          <div
+                            class="absolute bottom-2 right-2 rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-body font-semibold tracking-wide text-white shadow-lg backdrop-blur-sm">
+                            {{ recomendado?.duracion }}
+                          </div>
+                        </div>
+                      </div>
+                      <a
+                        [routerLink]="['/medias', recomendado.slug_url]"
+                        class="flex flex-1 mt-2 flex-col">
+                        <span
+                          class="font-primary text-lg leading-none text-white">
+                          Episodio
+                          {{ recomendado?.categoria?.capitulo?.numero ?? '' }}
+                        </span>
+                        <span
+                          class="mt-1 line-clamp-2 font-body text-sm leading-snug text-gray-400">
+                          {{ recomendado?.descripcion }}
+                        </span>
+                      </a>
+                    </div>
+                  }
+                </div>
+
+                @if (episodesLoadingMore) {
+                  <div
+                    class="flex flex-col items-center justify-center py-6 gap-2">
+                    <mat-spinner
+                      aria-label="cargando mas capitulos"
+                      [diameter]="34"
+                      color="warn"></mat-spinner>
+                    <p class="text-sm text-gray-400">
+                      Cargando más capítulos...
+                    </p>
+                  </div>
+                } @else if (episodesNextPage !== null) {
+                  <div class="flex items-center justify-center py-6">
+                    <button
+                      mat-stroked-button
+                      class="load-more-episodes-btn"
+                      (click)="loadMoreEpisodes()"
+                      [disabled]="episodesLoading || episodesLoadingMore"
+                      aria-label="Cargar más capítulos">
+                      Cargar más capítulos
+                    </button>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        </section>
+
+        <!--         <section id="section-more-details" class="nmtitle-section">
+          <div class="section-header">
+            <h2 class="section-header-text section-item">Más detalles</h2>
+          </div>
+    
+          <div class="more-details-container">
+                   <div class="more-details-cell cell-download">
+                    <div class="more-details-label">Ver offline</div>
+                    <div class="more-details-item-container">
+                      <span *ngIf="first?.descargable && first?.descarga && first?.url_manifiesto" class="more-details-item item-download">
+                        {{ first?.descargable === true ? 'Disponible para descarga' : 'Descarga no disponible' }}
+                      </span>
+                    </div>
+                  </div>
+          
+                  <div class="more-details-cell cell-genres">
+                    <div class="more-details-label">Géneros</div>
+                    <div class="more-details-item-container">
+                      <span *ngFor="let genre of serie?.genero" class="more-details-item item-genres"><a class="more-details-item item-genres">{{ genre.nombre }}</a>, </span>
+                    </div>
+                  </div>
+    
+                  <div class="more-details-cell cell-genres">
+                    <div class="more-details-label">Dirección</div>
+                    <div class="more-details-item-container">
+                      <span *ngFor="let direct of serie?.director" class="more-details-item item-genres"><a class="more-details-item item-genres">{{ direct.nombre }}</a>, </span>
+                    </div>
+                  </div>
+    
+                  <div class="more-details-cell cell-genres">
+                    <div class="more-details-label">Guión</div>
+                    <div class="more-details-item-container">
+                      <span *ngFor="let gui of serie?.guion" class="more-details-item item-genres"><a class="more-details-item item-genres">{{ gui.nombre }}</a>, </span>
+                    </div>
+                  </div>
+          
+                    <div class="more-details-cell cell-tudum">
+                      <div class="more-details-label">Acerca de {{ serie?.nombre }}</div>
+                      <span class="more-details-item item-tudum">{{ description }}</span>
+                    </div>
+          </div>
+    
+          <div class="more-details-container-cast">
+            <div class="more-details-cell cell-cast">
+              <div class="more-details-label">Elenco</div>
+              <div class="more-details-item-container">
+                <span *ngFor="let repa of serie?.reparto" class="more-details-item item-cast">{{ repa.nombre }}</span>
+              </div>
+            </div>
+          </div>
+        </section> -->
+
+        <section class="movie-details-section">
+          <div class="text-white">
+            <div class="py-4 sm:pb-6 lg:pb-8">
+              <div class="max-w-2xl">
+                <h2 class="text-xl font-bold">Más Detalles</h2>
+
+                <p class="mt-4 text-gray-300">
+                  {{ description }}
+                </p>
+              </div>
+
+              <div
+                class="mt-8 grid grid-cols-1 gap-8 md:mt-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3 movie-detail-grid">
+                <div class="flex items-start gap-4 movie-detail-card">
+                  <span class="movie-detail-icon shrink-0 !rounded-full p-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24px"
+                      viewBox="0 -960 960 960"
+                      width="24px"
+                      fill="currentColor">
+                      <path
+                        d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+                    </svg>
+                  </span>
+
+                  <div>
+                    <span class="text-lg font-bold">Ver Offline</span>
+
+                    <p class="mt-1 text-sm text-gray-300">
+                      @if (
+                        first?.descargable &&
+                        first?.descarga &&
+                        first?.url_manifiesto
+                      ) {
+                        Disponible para descarga.<br />
+                        Lleva y ve Picta donde vayas.
+                      } @else {
+                        No está disponible para descargar
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-start gap-4 movie-detail-card">
+                  <span class="movie-detail-icon shrink-0 !rounded-full p-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24px"
+                      viewBox="0 -960 960 960"
+                      width="24px"
+                      fill="currentColor">
+                      <path
+                        d="m260-520 220-360 220 360H260ZM700-80q-75 0-127.5-52.5T520-260q0-75 52.5-127.5T700-440q75 0 127.5 52.5T880-260q0 75-52.5 127.5T700-80Zm-580-20v-320h320v320H120Zm580-60q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29Zm-500-20h160v-160H200v160Zm202-420h156l-78-126-78 126Zm78 0ZM360-340Zm340 80Z" />
+                    </svg>
+                  </span>
+
+                  <div>
+                    <span class="text-lg font-bold">Género</span>
+
+                    <p class="mt-1 text-sm text-gray-300">
+                      @for (item of serie.genero; track item) {
+                        @if (serie.genero.length - 1 == $index) {
+                          {{ item.nombre }}
+                        } @else {
+                          {{ item.nombre + ', ' }}
+                        }
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                <!--  <div class="flex items-start gap-4">
+                  <span class="shrink-0 !rounded-lg bg-gray-800 p-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M320-240h320v-80H320v80Zm0-160h320v-80H320v80ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+                  </span>
+          
+                   <div>
+                    <h2 class="text-lg font-bold">Este título es...</h2>
+          
+                    <p class="mt-1 text-sm text-gray-300">
+                      @for (item of film.palabraClave; track item) {
+                        @if (film.palabraClave.length-1 == $index ) {
+                            {{ item }}
+                        } @else {
+                            {{ item +', ' }}
+                        }
+                      }
+                    </p>
+                  </div>
+                </div> -->
+
+<!-- Dirección y Guión -->
+                <div class="flex items-start gap-4 movie-detail-card">
+                  <span class="movie-detail-icon shrink-0 !rounded-full p-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="24px"
+                      viewBox="0 -960 960 960"
+                      width="24px"
+                      fill="currentColor">
+                      <path d="M480-80q33 0 56.5-23.5T560-160v-240q0-33-23.5-56.5T480-480q-33 0-56.5 23.5T400-400v240q0 33 23.5 56.5T480-80Zm0-480Zm0 96q16 0 31-4t27-11l-66-66q-14-14-14-33t14-33q14-14 33-14t33 14l66 66q-7 13-11 27t-4 31q0 83-58.5 141.5T480-184Zm0-96Z" />
+                    </svg>
+                  </span>
+
+                  <div>
+                    <span class="text-lg font-bold">Dirección</span>
+
+                    <p class="mt-1 text-sm text-gray-300">
+                      @if (serie.director && serie.director.length > 0) {
+                        @for (item of serie.director; track item.id) {
+                          {{ item.nombre }}{{ serie.director.length - 1 != $index ? ', ' : '' }}
+                        }
+                      } @else {
+                        Desconocido
+                      }
+                    </p>
+
+                    @if (serie.guion && serie.guion.length > 0) {
+                      <p class="mt-3 text-sm text-gray-300">
+                        <span class="text-gray-400">Guión: </span>
+                        @for (item of serie.guion; track item.id) {
+                          {{ item.nombre }}{{ serie.guion.length - 1 != $index ? ', ' : '' }}
+                        }
+                      </p>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reparto Carousel - Nueva sección debajo de los detalles -->
+        @if (serie.reparto && serie.reparto.length > 0) {
+          <section class="reparto-section">
+            <div class="sm:pb-6 lg:pb-8">
+              <div class="categoria-tags-carousel">
+                <div class="carousel-header">
+                  <h3 class="carousel-title">Reparto</h3>
+                  <div class="carousel-controls">
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      class="categoria-show-all-btn"
+                      (click)="openRepartoExplorer()">
+                      <mat-icon>grid_view</mat-icon>
+                      <span>Ver más</span>
+                    </button>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      aria-label="anterior"
+                      class="categoria-tags-nav"
+                      [disabled]="prevRepartoDisabled()"
+                      (click)="navigatePrevReparto()">
+                      <mat-icon>chevron_left</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      aria-label="siguiente"
+                      class="categoria-tags-nav"
+                      [disabled]="nextRepartoDisabled()"
+                      (click)="navigateNextReparto()">
+                      <mat-icon>chevron_right</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                
+                <owl-carousel-o
+                  #repartoCar
+                  [options]="repartoOption"
+                  (initialized)="onRepartoInitialized($event)"
+                  (translated)="onRepartoTranslated($event)">
+                  @for (actor of serie.reparto; track actor.id) {
+                    <ng-template carouselSlide [width]="160">
+                      @if (hasActorSlug(actor)) {
+                        <a [routerLink]="getActorSlug(actor)" class="reparto-item text-center block">
+                          <div class="reparto-avatar-container">
+                            <img
+                              [ngSrc]="actor.url_avatar ? actor.url_avatar + '_150x150' : (actor.imagen ? 'https://www.picta.cu/' + actor.imagen + '_150x150' : 'https://ui-avatars.com/api/?name=' + (actor.nombre || 'A') + '&background=1f2937&color=9ca3af&size=150&font-size=0.4&bold=true')"
+                              width="110"
+                              height="110"
+                              class="reparto-avatar-img"
+                              [alt]="actor.nombre || 'Actor'" />
+                          </div>
+                          <p class="reparto-actor-name">{{ actor.nombre }}</p>
+                        </a>
+                      } @else {
+                        <div class="reparto-item text-center">
+                          <div class="reparto-avatar-container">
+                            <img
+                              [ngSrc]="actor.url_avatar ? actor.url_avatar + '_150x150' : (actor.imagen ? 'https://www.picta.cu/' + actor.imagen + '_150x150' : 'https://ui-avatars.com/api/?name=' + (actor.nombre || 'A') + '&background=1f2937&color=9ca3af&size=150&font-size=0.4&bold=true')"
+                              width="110"
+                              height="110"
+                              class="reparto-avatar-img"
+                              [alt]="actor.nombre || 'Actor'" />
+                          </div>
+                          <p class="reparto-actor-name">{{ actor.nombre }}</p>
+                        </div>
+                      }
+                    </ng-template>
+                  }
+                </owl-carousel-o>
+              </div>
+            </div>
+          </section>
+        }
+
+        <section id="section-more-titles" class="nmtitle-section relative pb-8">
+          @if (recomendadosLoading) {
+            <div class="w-screen-xl">
+              <div class="grid grid-cols-2 gap-4 lg:grid-cols-5">
+                @for (card of numbers; track card) {
+                  <div
+                    class="animate-pulse overflow-hidden rounded-xl border border-white/10 bg-white/5 p-2 shadow-[0_14px_26px_-22px_rgba(5,7,31,0.8)]">
+                    <div class="overflow-hidden rounded-lg bg-white/10">
+                      <div class="relative aspect-[2/3] w-full bg-white/10">
+                        <div
+                          class="absolute inset-0 bg-gradient-to-b from-white/0 via-white/0 to-black/10"></div>
+                      </div>
+                    </div>
+                    <div class="mt-3 flex items-start gap-3 px-1 pb-1">
+                      <div
+                        class="h-8 w-8 shrink-0 rounded-full bg-white/10"></div>
+                      <div class="min-w-0 flex-1 space-y-2 pt-1">
+                        <div class="h-4 w-11/12 rounded bg-white/10"></div>
+                        <div class="h-3 w-2/3 rounded bg-white/10"></div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          } @else {
+            <div class="w-screen-xl">
+              <app-my-carousel-o
+                [horizontal]="true"
+                [series]="true"
+                [showSideOverlays]="false"
+                [title]="'Títulos similares'"
+                [videos]="(recomendados$ | async) ?? []"
+                [hasMore]="true"
+                [showMoreRoute]="['/categoria', 'Serie']"
+                [arrows]="true"
+                [controls]="true"></app-my-carousel-o>
+            </div>
+          }
+        </section>
+
+        <ng-template #notFound>
+          <div class="flex justify-center items-center mt-5 px-4">
+            <h2>Próximamente.</h2>
+          </div>
+        </ng-template>
+
+        <ng-template #notFound>
+          <div class="flex justify-center items-center mt-5 px-4">
+            <h2>Próximamente.</h2>
+          </div>
+        </ng-template>
+      </div>
+    } @else {}
+  } @else if (loading) {
+    <!-- Estado de carga -->
+    <div
+      class="inset-0 flex flex-col items-center justify-center h-screen z-50">
+      <div class="p-4 !rounded-lg flex flex-col items-center">
+        <mat-spinner
+          aria-label="cargando"
+          [diameter]="50"
+          color="warn"></mat-spinner>
+        <p class="mt-4">Cargando...</p>
+      </div>
+    </div>
+  } @else {
+    <!-- Estado de "Not Found" -->
+    <app-not-found />
+  }
+</ng-container>

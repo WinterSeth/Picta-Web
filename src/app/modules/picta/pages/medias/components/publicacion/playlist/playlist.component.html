@@ -1,0 +1,33 @@
+<div class="mb-4">
+  <mat-expansion-panel class="playlist" expanded="true">
+    <mat-expansion-panel-header class="h-auto my-2">
+      <mat-panel-title>
+        <div class="flex items-center py-2">
+          <mat-icon class="playlist-icon mr-3">playlist_play</mat-icon>
+          <div class="flex flex-col">
+            <span class="mb-0">{{playlist().nombre}}</span>
+            @if (playlist().canal) {
+              <span class="channel-link">
+                {{playlist().canal.nombre}} 
+                <span class="playlist-count">- {{currentP + 1}}/{{playlist().publicaciones.length}}</span>
+              </span>
+            }
+          </div>
+        </div>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <ng-template matExpansionPanelContent>
+      <div class="item-list">
+        @for (p of playlist().publicaciones||playlist().publicacion; track $index) {
+          <app-playlist-item 
+            (selectVideo)="playVideo($event)" 
+            [isPlaying]="currentVideo()===p.id" 
+            [publicacion]="p" 
+            [playlist]="p.posicion"
+          ></app-playlist-item>
+        }
+      </div>
+    </ng-template>
+  </mat-expansion-panel>
+</div>

@@ -1,0 +1,459 @@
+:host {
+  display: block;
+  color: #f4f7fb;
+}
+
+.pay-item-dialog-content {
+  position: relative;
+  padding-top: 8px;
+}
+
+.pay-item-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 5;
+  color: #f4f7fb;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.pay-item-close-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.pay-item-close-btn:focus-visible {
+  outline: 2px solid rgba(232, 70, 46, 0.62);
+  outline-offset: 2px;
+}
+
+.payment-step {
+  padding: 4px 2px 10px;
+}
+
+.step-heading {
+  margin: 0 0 10px;
+}
+
+.step-heading h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.step-heading p {
+  color: var(--picta-text-muted);
+  margin: 4px 0 0;
+}
+
+// metodos de pago en fila horizontal
+.payment-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-methods-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+// En mobile: una columna
+@media (max-width: 599px) {
+  .payment-methods-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  // En mobile, mantener layout horizontal para cada option
+  :host ::ng-deep .mat-mdc-list-option.payment-option-inline {
+    min-height: 64px;
+  }
+}
+
+.payment-method-img {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.payment-method-img img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline {
+  display: flex;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 12px 16px !important;
+  border-radius: 12px !important;
+  min-height: 72px;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+// Ensure the avatar is on the left
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline .mdc-list-item__start {
+  width: 48px !important;
+  height: 48px !important;
+  margin-right: 12px !important;
+  flex-shrink: 0 !important;
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline .mdc-list-item__start img,
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline img[matListItemAvatar] {
+  width: 48px !important;
+  height: 48px !important;
+  object-fit: contain !important;
+  border-radius: 8px !important;
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 12px !important;
+  border-radius: 12px !important;
+  min-height: 100px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+// Solo aplicar hover si NO está deshabilitado
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline:hover:not([disabled]) {
+  transform: translateY(-2px);
+  border-color: var(--picta-yellow) !important;
+  background: var(--picta-yellow-soft) !important;
+}
+
+// Estilos cuando está deshabilitado - sin hover, sin cursor
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+
+// Asegurar que elementos deshabilitados no tengan transform
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline[disabled]:hover {
+  transform: none !important;
+}
+
+// Title (name of payment method)
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline .mdc-list-item__primary-text,
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline [matListItemTitle] {
+  font-family: 'Abel', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+// Subtitle (description)
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline .mdc-list-item__secondary-text,
+:host ::ng-deep .mat-mdc-list-option.payment-option-inline [matListItemLine] {
+  font-size: 0.75rem;
+  color: var(--picta-text-muted);
+}
+
+.method-badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.method-loading-banner {
+  background: var(--picta-yellow-soft);
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.method-loading-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.mat-list.beneficios-list {
+  background: transparent;
+}
+
+:host ::ng-deep .paymentStepper {
+  --mat-stepper-container-color: transparent;
+  --mat-stepper-header-selected-state-label-text-color: #f4f7fb;
+  --mat-stepper-header-label-text-color: var(--picta-text-muted);
+  --mat-stepper-header-icon-foreground-color: #f4f7fb;
+  --mat-stepper-header-icon-background-color: var(--picta-yellow-soft);
+  --mat-stepper-header-selected-state-icon-background-color: var(--picta-yellow);
+  --mat-stepper-line-color: rgba(255, 255, 255, 0.18);
+}
+
+:host ::ng-deep .paymentStepper .mat-horizontal-stepper-header-container {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 12px;
+}
+
+:host ::ng-deep .paymentStepper .mat-step-header:hover,
+:host ::ng-deep .paymentStepper .mat-step-header.cdk-program-focused,
+:host ::ng-deep .paymentStepper .mat-step-header.cdk-keyboard-focused {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+:host ::ng-deep .paymentStepper .mat-step-header .mat-step-label {
+  color: rgba(244, 247, 251, 0.62) !important;
+}
+
+:host ::ng-deep .paymentStepper .mat-step-header .mat-step-label.mat-step-label-active {
+  color: #f4f7fb !important;
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option {
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option .mdc-list-item__content,
+:host ::ng-deep .mat-mdc-list-option.payment-option .mdc-list-item__primary-text {
+  width: 100%;
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option .mdc-list-item__start {
+  margin-right: 0;
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option .mdc-list-item__start img {
+  object-fit: contain;
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option.mdc-list-item--selected {
+  border-color: #7c6cff !important;
+  background: rgba(124, 108, 255, 0.16) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option.mdc-list-item--disabled {
+  opacity: 0.55;
+  filter: grayscale(0.35);
+  background: rgba(255, 255, 255, 0.03);
+  pointer-events: none;
+}
+
+:host ::ng-deep .mat-mdc-list-option.payment-option .mdc-list-item__primary-text,
+:host ::ng-deep .mat-mdc-list-option.payment-option h6,
+:host ::ng-deep .mat-mdc-list-option.payment-option span {
+  color: rgba(244, 247, 251, 0.9) !important;
+}
+
+:host ::ng-deep .mat-horizontal-content-container {
+  padding-top: 8px;
+  color: #f4f7fb;
+}
+
+.gateway-panel {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      var(--picta-bg-deep) 0%,
+      var(--picta-bg-card) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  padding: 24px;
+  backdrop-filter: blur(16px);
+  box-shadow: 
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 80px rgba(243, 230, 40, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.gateway-header {
+  text-align: center;
+}
+
+.gateway-header h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.gateway-header p {
+  color: var(--picta-text-muted);
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+}
+
+.qr-wrap {
+  width: min(100%, 256px);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.gateway-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+// Gateway info (title and description in redirect panels)
+.gateway-info {
+  text-align: center;
+}
+
+.gateway-info h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.gateway-info p {
+  color: var(--picta-text-muted);
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+}
+
+// Gateway panel images
+.gateway-panel > img:first-child {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+:host ::ng-deep h2,
+:host ::ng-deep h3,
+:host ::ng-deep p {
+  color: rgba(244, 247, 251, 0.9);
+}
+
+:host ::ng-deep qrcode canvas,
+:host ::ng-deep qrcode img {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #fff;
+}
+
+:host ::ng-deep a[mat-flat-button][color='primary'] {
+  background: var(--picta-yellow) !important;
+  color: var(--picta-bg-deep) !important;
+  min-width: 180px;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+:host ::ng-deep a[mat-flat-button][color='primary']:hover {
+  background: rgba(255, 245, 157, 1) !important;
+}
+
+// Botones del gateway - estilo Picta (general para todos los botones)
+:host ::ng-deep .gateway-panel button {
+  min-width: 140px;
+  min-height: 44px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+:host ::ng-deep .gateway-panel button[mat-stroked-button] {
+  border-color: var(--picta-yellow-border) !important;
+  color: var(--picta-yellow) !important;
+  border-style: solid !important;
+}
+
+:host ::ng-deep .gateway-panel button[mat-stroked-button]:hover {
+  border-color: var(--picta-yellow) !important;
+  background: var(--picta-yellow-soft) !important;
+}
+
+:host ::ng-deep .gateway-panel button[mat-raised-button][color='primary'] {
+  background: var(--picta-yellow) !important;
+  color: var(--picta-bg-deep) !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+:host ::ng-deep .gateway-panel button[mat-raised-button][color='primary']:hover:not([disabled]) {
+  background: rgba(255, 245, 157, 1) !important;
+}
+
+:host ::ng-deep .gateway-panel button[mat-raised-button][color='primary'][disabled] {
+  opacity: 0.5;
+  background: var(--picta-yellow) !important;
+}
+
+.qrImage {
+  width: 100%;
+  height: 100%;
+  max-width: 340px;
+}
+
+.payLink {
+  color: #d8d2ff;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+:host ::ng-deep .paymentStepper .mat-step-header {
+  border-radius: 10px;
+}
+
+:host ::ng-deep .paymentStepper .mat-step-header .mat-step-icon {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+@media (max-width: 767px) {
+  :host ::ng-deep .mat-mdc-list-option.payment-option .mdc-list-item__start {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    min-height: 80px;
+    flex: 0 0 80px;
+  }
+
+  .gateway-actions {
+    flex-direction: column;
+  }
+
+  .gateway-actions button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host ::ng-deep .mat-mdc-list-option.payment-option {
+    transition: none !important;
+  }
+}

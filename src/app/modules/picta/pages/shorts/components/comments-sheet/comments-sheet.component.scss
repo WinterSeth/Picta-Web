@@ -1,0 +1,27 @@
+/* Estilos para el bottom sheet de comentarios */
+.comments-bottom-sheet {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  overflow: hidden;
+}
+
+.comments-bottom-sheet .mat-mdc-bottom-sheet-container {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background-color: transparent;
+  padding: 0;
+}
+
+.comments-bottom-sheet .mat-mdc-bottom-sheet-container::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 4px;
+  background-color: #4b5563;
+  border-radius: 2px;
+  margin: 8px auto;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}

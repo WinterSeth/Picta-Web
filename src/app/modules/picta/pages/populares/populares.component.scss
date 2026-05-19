@@ -1,0 +1,77 @@
+  .yEDJQ {
+    display: flex;
+    -moz-box-align: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .PSEzo {
+    color: rgb(147, 149, 156);
+    //font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  
+  .PSEzo:hover {
+    color: rgb(255, 255, 255);
+  }
+
+  .page-header-view-model-wiz__page-header-headline-info {
+    border-bottom: 1px solid gray;
+    margin: 1% 0;
+  }
+  
+  @media only screen and (max-width: 599px) {
+    .categoria-carousel {
+      //margin: 75px 0px 0px 0px;
+      padding: 10% 0%;
+    }
+  }
+  
+  .page-header {
+    display: -moz-box;
+    display: flex;
+    -moz-box-align: center;
+    align-items: center;
+  }
+  
+  #rich-shelf-header {
+    margin: 8px 0px -8px 8px;
+    -moz-box-pack: justify;
+    justify-content: space-between;
+    display: flexbox;
+    display: -moz-box;
+    display: flex;
+    -moz-box-orient: horizontal;
+    -moz-box-direction: normal;
+    flex-direction: row;
+  }
+  
+  #rich-shelf-header.ytd-rich-shelf-renderer h2.ytd-rich-shelf-renderer {
+    -moz-box-align: center;
+    align-items: center;
+    align-self: center;
+    display: flexbox;
+    display: -moz-box;
+    display: flex;
+    -moz-box-orient: horizontal;
+    -moz-box-direction: normal;
+    flex-direction: row;
+  }
+  
+  #title.ytd-rich-shelf-renderer {
+    font-family: "Roboto","Arial",sans-serif;
+    font-size: 20px;
+    //line-height: 2.8rem;
+    font-weight: 600;
+    //overflow: hidden;
+    max-height: 2.8rem;
+    -webkit-line-clamp: 1;
+    //display: box;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    white-space: normal;
+    display: block;
+  }

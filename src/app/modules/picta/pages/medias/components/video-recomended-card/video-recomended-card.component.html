@@ -1,0 +1,5 @@
+<div>
+  <img [alt]="video.nombre" width="320" height="180" ngSrc="{{video.url_imagen + '_320x180'}}">
+  <a [routerLink]="['/medias',video.slug_url]"><span>{{video.nombre}}</span></a>
+  <span>{{video.cantidad_visitas | shortNumbers}} vistas</span>
+</div>

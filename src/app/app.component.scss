@@ -1,0 +1,159 @@
+// Back to Top Button Container
+.back-to-top-container {
+  position: fixed;
+  bottom: 80px;
+  right: 32px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 599px) {
+    bottom: 24px;
+    right: 24px;
+  }
+}
+
+// Back to Top Button - Picta Theme Yellow
+.back-to-top-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3e628;
+  color: #0f172a;
+  font-weight: 600;
+  box-shadow:
+    0 3px 5px -1px rgba(0, 0, 0, 0.2),
+    0 6px 10px 0 rgba(0, 0, 0, 0.14),
+    0 1px 18px 0 rgba(0, 0, 0, 0.12);
+  transition:
+    transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    box-shadow:
+      0 5px 8px -1px rgba(0, 0, 0, 0.2),
+      0 8px 16px 1px rgba(0, 0, 0, 0.14),
+      0 3px 20px 1px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(-4px);
+    box-shadow:
+      0 7px 10px -1px rgba(0, 0, 0, 0.2),
+      0 4px 14px 0 rgba(0, 0, 0, 0.14),
+      0 2px 16px 1px rgba(0, 0, 0, 0.12);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mdc-filled-button-focus-outline-color, #1976d2);
+    outline-offset: 2px;
+  }
+
+  &__icon {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2.5;
+  }
+
+  @media (max-width: 599px) {
+    width: 44px;
+    height: 44px;
+
+    &__icon {
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: background-color 150ms ease;
+
+    &:active {
+      transform: none;
+    }
+  }
+}
+
+// Back to Top Label
+.back-to-top-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #f3e628;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  .back-to-top-container.visible & {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.update-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.badge {
+  background: #ff4081;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.overlay {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  transition: all 0.5s ease-in-out;
+}
+
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+#main {
+  position: relative;
+}
+
+.pwa-button {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  padding: 5px 20px;
+}

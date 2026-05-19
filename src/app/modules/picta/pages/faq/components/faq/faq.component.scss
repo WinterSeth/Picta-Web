@@ -1,0 +1,190 @@
+:host {
+  display: block;
+  color: #f4f7fb;
+
+  // ── Picta design tokens ────────────────────────────────────────────────
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+
+  // ── Expansion panel tokens ──────────────────────────────────────────────
+  --mat-expansion-panel-container-color: transparent;
+  --mat-expansion-toolbar-background-color: transparent;
+  --mat-expansion-header-indicator-color: var(--picta-yellow);
+  --mat-expansion-header-collapsed-state-text-color: rgba(244, 247, 251, 0.65);
+  --mat-expansion-header-expanded-state-text-color: var(--picta-yellow);
+  --mat-expansion-container-elevation-shadow: none;
+  --mat-expansion-container-no-toggle-elevation-shadow: none;
+}
+
+// ── Deep overrides ────────────────────────────────────────────────────────────
+:host ::ng-deep {
+  // ── Accordion container ─────────────────────────────────────────
+  .mat-mdc-expansion-panel {
+    background: 
+      radial-gradient(
+        circle at top right,
+        var(--picta-yellow-softer),
+        transparent 34%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(10, 17, 38, 0.98) 0%,
+        rgba(16, 25, 53, 0.98) 100%
+      ) !important;
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    overflow: hidden;
+    margin-bottom: 10px;
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+
+  // ── Panel header (the question row) ─────────────────────────────────
+  .mat-expansion-panel-header {
+    padding: 16px 20px !important;
+    border-radius: 12px !important;
+    background: transparent !important;
+    transition: background-color 160ms ease;
+
+    &:hover {
+      background: var(--picta-yellow-softer) !important;
+    }
+  }
+
+  // ── Question number + title ─────────────────────────────────────
+  .mat-expansion-panel-header .mat-content {
+    color: var(--picta-text-muted);
+    transition: color 160ms ease;
+  }
+
+  .mat-expansion-panel-header.mat-expanded .mat-content {
+    color: var(--picta-yellow);
+  }
+
+  // ── Expand/collapse icon ──────────────────────────────────────
+  .mat-expansion-indicator {
+    color: var(--picta-text-muted);
+    transition: color 160ms ease, transform 200ms ease;
+
+    &::after {
+      border-color: var(--picta-text-muted) !important;
+    }
+  }
+
+  .mat-expansion-panel-header.mat-expanded .mat-expansion-indicator {
+    color: var(--picta-yellow);
+
+    &::after {
+      border-color: var(--picta-yellow) !important;
+    }
+  }
+
+  // ── Panel body (the answer text) ────────────────────────────
+  .mat-expansion-panel-body {
+    padding: 0 20px 20px !important;
+    color: rgba(244, 247, 251, 0.82) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+}
+
+// ── Page wrapper ────────────────────────────────────────────────────────────
+.faq-page {
+  min-height: 100vh;
+  padding: 20px 0;
+  background: #05071f;
+}
+
+// ── Header ─────────────────────────────────────────────────────────────
+.faq-header {
+  margin: 0 16px 24px;
+  padding: 16px 20px;
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+.faq-header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin: 0;
+  color: #f4f7fb;
+}
+
+.faq-header-subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  color: var(--picta-text-muted);
+  margin: 6px 0 0;
+}
+
+// ── Accordion ────────────────────────────────────────────────────────
+.accordion-faq {
+  margin: 0 16px;
+}
+
+// ── Question title ──────────────────────────────────────────────────
+.q-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--picta-text-muted);
+  transition: color 160ms ease;
+}
+
+.mat-expansion-panel-header.mat-expanded .q-title {
+  color: var(--picta-yellow);
+}
+
+// ── Answer paragraph ──────────────────────────────────────────────────
+.faq-answer {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: rgba(244, 247, 251, 0.82);
+}
+
+// ── Responsive ────────────────────────────────────────────────────────
+@media (max-width: 600px) {
+  .faq-header {
+    margin: 0 8px 20px;
+    padding: 14px;
+  }
+
+  .accordion-faq {
+    margin: 0 8px;
+  }
+
+  :host ::ng-deep {
+    .mat-expansion-panel-header {
+      padding: 14px 16px !important;
+    }
+
+    .mat-expansion-panel-body {
+      padding: 0 16px 16px !important;
+    }
+  }
+}

@@ -1,0 +1,107 @@
+:root {
+  --picta-font-primary: 'Bebas Neue', sans-serif;
+  --picta-font-secondary: 'Abel', sans-serif;
+  --picta-font-body: 'Roboto', sans-serif;
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+  --picta-bg-deep: rgba(10, 17, 38, 0.98);
+  --picta-bg-card: rgba(16, 25, 53, 0.98);
+}
+
+.profile-card {
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      var(--picta-bg-deep) 0%,
+      var(--picta-bg-card) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+// ===============================================
+// Picta Buttons
+// ===============================================
+::ng-deep {
+  // Primary - yellow background
+  .picta-btn-primary {
+    background-color: var(--picta-yellow) !important;
+    color: #0a1126 !important;
+    font-family: var(--picta-font-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    border-radius: 999px !important;
+    min-height: 36px;
+    padding: 0 16px;
+    
+    &:hover:not(:disabled) {
+      background-color: #e8de2c !important;
+    }
+  }
+
+  // Outlined - yellow border
+  .picta-btn-outlined {
+    border: 1px solid var(--picta-yellow-border) !important;
+    color: var(--picta-yellow) !important;
+    background: transparent !important;
+    font-family: var(--picta-font-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    border-radius: 999px !important;
+    min-height: 36px;
+    padding: 0 16px;
+    
+    &:hover:not(:disabled) {
+      background-color: var(--picta-yellow-soft) !important;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  // Danger - coral red
+  .picta-btn-danger {
+    background-color: var(--picta-accent) !important;
+    color: #fff !important;
+    font-family: var(--picta-font-secondary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    border-radius: 8px !important;
+    min-height: 36px;
+    padding: 0 16px;
+    transition: background 160ms ease, transform 160ms ease;
+    
+    &:hover:not(:disabled) {
+      background-color: #d13a26 !important;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.devices-page {
+  .logout-device-btn:focus-visible {
+    outline: 2px solid rgba(232, 70, 46, 0.6);
+    outline-offset: 2px;
+  }
+}

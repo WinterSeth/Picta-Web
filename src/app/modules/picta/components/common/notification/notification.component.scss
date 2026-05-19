@@ -1,0 +1,11 @@
+.notification-container {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.alert-message {
+  font-size: 14px;
+  font-weight: normal;
+}

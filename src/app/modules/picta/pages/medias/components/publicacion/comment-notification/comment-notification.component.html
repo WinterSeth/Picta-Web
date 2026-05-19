@@ -1,0 +1,12 @@
+@if (data) {
+  <div class="flex items-center">
+    <img [ngSrc]="data?.usuario_avatar+ '_48x48'" width="48" height="48" alt="" class="avatar-canal bg-primary mr-3">
+    <div class="mb-0">
+      <strong>{{data?.usuario_username + ' '}}</strong>
+      ha respondido tu comentario en la publicación
+      <strong>
+        {{' ' + data?.publicacion_nombre}}
+      </strong>
+    </div>
+  </div>
+}

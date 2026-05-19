@@ -1,0 +1,11 @@
+
+@switch (ad.type) {
+  @case ('text') {
+    <a [href]="ad.url_website" target="_blank" class="ad-link-text" [innerHTML]="ad.extra_properties.text"></a>
+  }
+  @case ('image') {
+    <a [href]="ad.url_website" target="_blank" class="ad-image-link">
+      <img [src]="ad.extra_properties.source" alt="" class="">
+    </a>
+  }
+}

@@ -1,0 +1,103 @@
+:root {
+  --picta-font-primary: 'Bebas Neue', sans-serif;
+  --picta-font-secondary: 'Abel', sans-serif;
+  --picta-font-body: 'Roboto', sans-serif;
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+}
+
+.profile-card {
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+.profile-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 16px;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 40px;
+}
+
+.profile-loading-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--picta-yellow);
+}
+
+.profile-loading-text {
+  font-family: var(--picta-font-body);
+  font-size: 0.95rem;
+  color: var(--picta-text-muted);
+}
+
+.playlists-page {
+  min-height: 100vh;
+
+  .playlists-page-header {
+    margin-top: 4px;
+  }
+
+  .playlists-page-title {
+    font-family: var(--picta-font-primary);
+    font-size: clamp(1.2rem, 1.9vw, 1.7rem);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    margin: 0;
+  }
+
+  .playlists-page-subtitle {
+    color: var(--picta-text-muted);
+    font-family: var(--picta-font-body);
+    margin: 6px 0 0;
+  }
+
+  .playlist-state {
+    align-items: center;
+    color: var(--picta-text-muted);
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    min-height: 96px;
+  }
+}
+
+@media (max-width: 767px) {
+  .profile-loading {
+    padding: 20px;
+    min-height: 150px;
+  }
+}

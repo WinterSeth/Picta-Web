@@ -1,0 +1,11 @@
+<mat-dialog-content class="embed-dialog-content">
+  @if (!embed) {
+    <button type="button" class="embed-close-btn" mat-icon-button aria-label="Cerrar trailer" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+  <div id="videoContainer" [ngClass]="embed ? 'h-[100vh]' : 'h-auto'" #videoContainer class="embed-video-container flex bg-black">
+    <video #videoEmbed id="videoEmbed" controls></video>
+  </div>
+</mat-dialog-content>
+

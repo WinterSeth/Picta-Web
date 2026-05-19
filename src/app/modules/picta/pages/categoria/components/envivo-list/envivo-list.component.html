@@ -1,0 +1,22 @@
+@if (mode() === 'card') {
+  <div class="cards-grid-container">
+    @for (movie of movies(); track movie.id) {
+      <app-live-card [live]="movie"></app-live-card>
+    }
+  </div>
+}
+
+@if (mode() === 'list') {
+  <div class="container">
+    <mat-nav-list>
+      @for (movie of movies(); track movie) {
+        <a mat-list-item [routerLink]="['/medias', movie.slug_url]">
+          <img [ngSrc]="movie.url_imagen + '_80x80'" alt="" class="avatar-list" height="80" loading="lazy" matListAvatar width="80" />
+          <h5 matLine>{{ movie.nombre }}</h5>
+          <span matLine style="color: #ccc">{{ movie.canal?.nombre }}</span>
+          <mat-icon color="primary">play_circle_outline</mat-icon>
+        </a>
+      }
+    </mat-nav-list>
+  </div>
+}

@@ -1,0 +1,51 @@
+<div class="perfil-form-dialog">
+  <!-- Header con gradiente y glow -->
+  <div class="dialog-header">
+    <div class="header-glow"></div>
+    <div class="header-content">
+      <mat-icon class="header-icon">{{ initial ? 'edit' : 'person_add' }}</mat-icon>
+      <h2 class="dialog-title">{{ initial ? 'Actualizar perfil' : 'Crear perfil' }}</h2>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dialog-body">
+    <mat-form-field appearance="fill" class="w-full mb-4">
+      <mat-label>Nombre del perfil</mat-label>
+      <input matInput formControlName="nombre" placeholder="Ej: Mi perfil" />
+      @if (form.get('nombre')?.hasError('required')) {
+        <mat-error>El nombre es requerido</mat-error>
+      }
+      @if (form.get('nombre')?.hasError('maxlength')) {
+        <mat-error>Máximo 50 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="tipo-section">
+      <label class="tipo-label">Tipo de perfil</label>
+      <mat-radio-group formControlName="tipo" class="tipo-options">
+        <mat-radio-button value="ADULTO" class="tipo-option">
+          <div class="option-content">
+            <mat-icon class="option-icon">person</mat-icon>
+            <span>Adulto</span>
+          </div>
+        </mat-radio-button>
+        <mat-radio-button value="INFANTIL" class="tipo-option">
+          <div class="option-content">
+            <mat-icon class="option-icon option-icon-child">child_care</mat-icon>
+            <span>Infantil</span>
+          </div>
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="dialog-actions">
+      <button mat-stroked-button type="button" class="picta-btn-outlined" (click)="onCancel()">
+        Cancelar
+      </button>
+      <button mat-flat-button type="submit" class="picta-btn-primary" [disabled]="form.invalid">
+        <mat-icon class="btn-icon">{{ initial ? 'check' : 'add' }}</mat-icon>
+        {{ initial ? 'Guardar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

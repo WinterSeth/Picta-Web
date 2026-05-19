@@ -1,0 +1,43 @@
+<div class="movie-dialog-wrap" [style.background-image]="'url(' + data.imagen + '_800x300)'">
+  <div class="movie-dialog-gradient"></div>
+
+  <button
+    mat-icon-button
+    class="movie-dialog-close"
+    mat-dialog-close
+    aria-label="Cerrar">
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <div class="movie-dialog-content">
+    <div class="movie-dialog-info">
+      <h1 class="movie-dialog-title">{{ data.titulo }}</h1>
+
+      <div class="movie-dialog-meta" role="list" aria-label="Movie details">
+        <span class="movie-meta-tag">{{ data.ano }}</span>
+        @for (item of data.generos; track $index) {
+          <span class="movie-meta-tag">{{ item }}</span>
+        }
+      </div>
+
+      <p class="movie-dialog-desc">{{ data.descripcion }}</p>
+
+      <div class="movie-dialog-actions">
+        <a
+          routerLink="/usuario/registro"
+          class="movie-dialog-cta-primary"
+          mat-dialog-close>
+          <mat-icon>person_add</mat-icon>
+          REGISTRARME
+        </a>
+        <a
+          routerLink="/usuario/acceder"
+          class="movie-dialog-cta-secondary"
+          mat-dialog-close>
+          <mat-icon>login</mat-icon>
+          INICIAR SESIÓN
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

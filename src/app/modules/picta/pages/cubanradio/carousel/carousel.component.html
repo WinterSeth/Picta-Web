@@ -1,0 +1,55 @@
+<div class="relative w-full mx-auto overflow-hidden rounded-2xl shadow-lg h-64 sm:h-80 md:h-96">
+<div
+      class="flex h-full"
+      [class.transition-transform]="transitioning()"
+      [style.transform]="'translateX(-' + (currentIndex() * 100) + '%)'"
+      (transitionend)="onTransitionEnd()"
+    >
+      
+      @for (img of images; track $index) {
+        <img
+          [src]="getImageUrl(img)"
+          alt="Carousel image"
+          class="min-w-full h-full object-cover"
+        />
+      }
+  
+      <!-- Duplicado de la primera imagen para hacer la transición infinita -->
+      @if (images.length > 0) {
+        <img
+          [src]="getImageUrl(images[0])"
+          alt="Carousel first clone"
+          class="min-w-full h-full object-cover"
+        />
+      }
+    </div>
+
+    <!-- Botón Anterior -->
+    <button
+      mat-icon-button
+      (click)="prevImage()"
+      class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/30 text-white hover:bg-black/50 !rounded-full"
+      >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <!-- Botón Siguiente -->
+    <button
+      mat-icon-button
+      (click)="nextImage()"
+      class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/30 text-white hover:bg-black/50 !rounded-full"
+      >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <!-- Indicadores -->
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+      @for (img of images; track img; let i = $index) {
+        <div
+          class="w-3 h-3 !rounded-full"
+          [class.bg-white]="currentIndex() % images.length === i"
+          [class.bg-gray-400]="currentIndex() % images.length !== i"
+        ></div>
+      }
+    </div>
+  </div>

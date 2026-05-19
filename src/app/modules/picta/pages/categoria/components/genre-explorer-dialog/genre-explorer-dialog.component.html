@@ -1,0 +1,64 @@
+<div class="genre-explorer-header">
+  <h2 mat-dialog-title class="genre-explorer-title">{{ data.title }}</h2>
+  <button
+    mat-icon-button
+    type="button"
+    class="genre-explorer-close"
+    aria-label="Cerrar modal"
+    (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="genre-explorer-content">
+  @if (data.subtitle) {
+    <p class="genre-explorer-subtitle">{{ data.subtitle }}</p>
+  }
+
+  <mat-form-field appearance="fill" class="genre-explorer-search">
+    <mat-label>Buscar género</mat-label>
+    <input
+      matInput
+      type="text"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="onSearchChange($event)"
+      placeholder="Escribe para buscar..." />
+    <mat-icon matPrefix>search</mat-icon>
+    @if (searchTerm()) {
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="clearSearch()"
+        aria-label="Limpiar búsqueda">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+
+  <div class="genre-explorer-grid" role="list" [attr.aria-label]="data.title">
+    @for (tag of filteredTags(); track tag.trackBy) {
+      <div role="listitem" class="genre-explorer-grid-item modal-animated-item">
+        <app-genre-tag-card
+          [id]="tag.id"
+          [label]="tag.label"
+          [value]="tag.value"
+          [active]="data.selectedValue === tag.value"
+          [favoriteEnabled]="tag.showFavorite"
+          [favoriteActive]="tag.isFavorite"
+          [favoriteOnly]="tag.favoriteOnly"
+          [emphasizeFavorite]="true"
+          [favoriteAriaAdd]="data.favoriteAriaAdd"
+          [favoriteAriaRemove]="data.favoriteAriaRemove"
+          (selected)="onSelect($event)"
+          (favoriteToggled)="onFavoriteToggled($event)" />
+      </div>
+    }
+  </div>
+
+  @if (filteredTags().length === 0) {
+    <div class="genre-explorer-empty">
+      <mat-icon>search_off</mat-icon>
+      <p>No se encontraron géneros</p>
+    </div>
+  }
+</mat-dialog-content>

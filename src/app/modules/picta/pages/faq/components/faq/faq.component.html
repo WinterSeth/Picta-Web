@@ -1,0 +1,25 @@
+<div class="faq-page">
+  <div class="max-w-screen-xl mx-auto">
+    @if (showHeader()) {
+      <header class="faq-header">
+        <h1 class="faq-header-title">Preguntas frecuentes</h1>
+        <p class="faq-header-subtitle">Resuelve tus dudas sobre Picta y nuestro servicio.</p>
+      </header>
+    }
+
+    <mat-accordion class="accordion-faq" [multi]="true">
+      @for (q of qs|async; track q; let i = $index) {
+        <mat-expansion-panel [expanded]="i === 0" class="faq-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <span class="q-title">{{i + 1}}. {{q.titulo}}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-panel-description>
+            <p class="faq-answer">{{q.texto}}</p>
+          </mat-panel-description>
+        </mat-expansion-panel>
+      }
+    </mat-accordion>
+  </div>
+</div>

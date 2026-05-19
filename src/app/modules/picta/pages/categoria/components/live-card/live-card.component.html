@@ -1,0 +1,132 @@
+<mat-card class="live-card">
+  <div class="live-card-media">
+    <a
+      [routerLink]="['/medias', live().slug_url]"
+      class="live-card-media-link"
+      [attr.aria-label]="'Abrir transmisión ' + live().nombre"
+    >
+      <img
+        mat-card-image
+        [ngSrc]="live().url_imagen + '_350x200'"
+        width="350"
+        height="200"
+        [alt]="'Portada de ' + live().nombre"
+        class="live-card-image"
+        loading="lazy"
+        decoding="async"
+      />
+    </a>
+
+    <div class="live-card-media-overlay"></div>
+
+    <div class="live-card-topline">
+      @if (isOnAir()) {
+        <span class="live-chip" matTooltip="La emisión está activa ahora mismo" matTooltipPosition="above">
+          <mat-icon class="live-chip-icon">sensors</mat-icon>
+          EN VIVO
+        </span>
+      } @else {
+        <span class="live-chip live-chip--offline" matTooltip="La emisión no está activa" matTooltipPosition="above">
+          <mat-icon class="live-chip-icon">wifi_tethering_off</mat-icon>
+          FINALIZADO
+        </span>
+      }
+
+      <span class="live-card-badge" matTooltip="Duración / estado de la transmisión" matTooltipPosition="above">
+        <mat-icon>schedule</mat-icon>
+        {{ duration() }}
+      </span>
+    </div>
+
+    @if (live().precios?.length) {
+      <div class="live-card-price-stack">
+        @for (p of live().precios; track p.tipo) {
+          @if (p.tipo == 'reproduccion') {
+            <span class="price-chip" title="Compra por reproducción">
+              <mat-icon class="price-chip-icon">play_arrow</mat-icon>
+              <span>Compra · {{ p.valor }} CUP</span>
+            </span>
+          } @else if (p.tipo == 'renta') {
+            <span class="price-chip" title="Renta temporal">
+              <mat-icon class="price-chip-icon">schedule</mat-icon>
+              <span>Renta · {{ p.valor }} CUP</span>
+            </span>
+          }
+        }
+      </div>
+    }
+  </div>
+
+  <div class="live-card-body">
+    <div class="live-card-heading">
+      <div class="live-card-title-block">
+        <a
+          [routerLink]="['/medias', live().slug_url]"
+          class="live-card-title-link"
+          [matTooltip]="live().nombre"
+          matTooltipPosition="above"
+          matTooltipShowDelay="180"
+          [attr.aria-label]="'Ver emisión ' + live().nombre"
+        >
+          <h3 class="live-card-title">{{ live().nombre }}</h3>
+        </a>
+
+        <p class="live-card-subtitle">{{ channelName() }}</p>
+      </div>
+
+      @if (live().canal?.alias) {
+        <a
+          [routerLink]="['/canal', live().canal.alias]"
+          class="live-card-channel"
+          [attr.aria-label]="'Ver canal ' + live().canal.nombre"
+        >
+          <img
+            [ngSrc]="live().canal.url_avatar + '_48x48'"
+            width="40"
+            height="40"
+            [alt]="'Avatar de ' + live().canal.nombre"
+            class="live-card-channel-avatar"
+          />
+          <span>{{ live().canal.nombre }}</span>
+        </a>
+      }
+    </div>
+
+    <p
+      class="live-card-description"
+      [matTooltip]="description() || 'Sin descripción disponible'"
+      matTooltipPosition="below"
+      matTooltipShowDelay="180"
+    >
+      {{ description() || 'Sin descripción disponible' }}
+    </p>
+
+    <div class="live-card-meta">
+      @if (viewersNow() > 0) {
+        <span class="live-meta-pill" matTooltip="Espectadores conectados ahora" matTooltipPosition="above">
+          <mat-icon class="live-meta-icon">visibility</mat-icon>
+          <span>{{ viewersNow() }}</span>
+        </span>
+      }
+
+      @if (showChat()) {
+        <span class="live-meta-pill" matTooltip="Disponibilidad del chat en esta emisión" matTooltipPosition="above">
+          <mat-icon class="live-meta-icon">chat</mat-icon>
+          <span>Chat activo</span>
+        </span>
+      }
+    </div>
+
+    <div class="live-card-actions">
+      <a [routerLink]="['/medias', live().slug_url]" class="live-action-link live-action-link--primary" aria-label="Ver emisión en vivo">
+        <mat-icon>play_circle</mat-icon>
+        <span>Ver emisión</span>
+      </a>
+
+      <a [routerLink]="['/canal', live().canal?.alias]" class="live-action-link live-action-link--secondary" aria-label="Ver canal">
+        <mat-icon>info</mat-icon>
+        <span>Canal</span>
+      </a>
+    </div>
+  </div>
+</mat-card>

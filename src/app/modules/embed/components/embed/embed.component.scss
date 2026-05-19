@@ -1,0 +1,30 @@
+video {
+  width: 100vw;
+  //height: fit-content;
+  margin: 0 auto;
+}
+
+.embed-dialog-content {
+  position: relative;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden;
+}
+
+.embed-video-container {
+  background: #000;
+}
+
+.embed-close-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 20;
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.embed-close-btn:hover {
+  background: rgba(0, 0, 0, 0.62);
+}

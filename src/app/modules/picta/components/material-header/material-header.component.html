@@ -1,0 +1,613 @@
+<mat-toolbar class="">
+  <div class="header-toolbar-shell">
+    <div class="header-toolbar-left">
+      <button
+        mat-icon-button
+        aria-label="Menu icon"
+        class="toolbar-menu-btn"
+        (click)="toggleMenu()">
+        <mat-icon class="material-symbols-outlined" fontIcon="menu"></mat-icon>
+      </button>
+
+      <!-- Mobile logo (visible on small screens) -->
+      <a
+        routerLink="/"
+        class="mobile-logo-link lg:hidden flex items-center"
+        aria-label="Picta inicio">
+        <img
+          alt="logo"
+          priority
+          class="h-full"
+          width="80"
+          height="80"
+          ngSrc="img/logo.svg" />
+      </a>
+
+      <nav
+        class="header-desktop-nav hidden lg:flex"
+        aria-label="Navegación principal">
+<!--         <a
+          class="header-desktop-link"
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          >Inicio</a
+        > -->
+        <a
+          routerLink="/"
+          class="title-font font-medium items-center md:mb-0 sm:flex">
+          <img
+            alt="logo"
+            priority
+            class="h-full"
+            width="80"
+            height="80"
+ngSrc="img/logo.svg" />
+        </a>
+        <a
+          class="header-desktop-link"
+          routerLink="/categoria/Película"
+          routerLinkActive="active"
+          >Películas</a>
+        <a
+          class="header-desktop-link"
+          routerLink="/categoria/Serie"
+          routerLinkActive="active"
+          >Series</a>
+        <a
+          class="header-desktop-link"
+          routerLink="/categoria/Video Musical"
+          routerLinkActive="active"
+          >Musicales</a>
+        <a
+          class="header-desktop-link"
+          routerLink="/categoria/Documental"
+          routerLinkActive="active"
+          >Documentales</a>
+        <a
+          class="header-desktop-link"
+          routerLink="/videojuegos"
+          routerLinkActive="active"
+          >Videojuegos</a>
+        <a
+          class="header-desktop-link"
+          routerLink="/categoria/Live"
+          routerLinkActive="active"
+          >En Vivo</a>
+        <a
+          class="header-desktop-link"
+          routerLink="/radioenvivo"
+          routerLinkActive="active"
+          >Radio</a>
+        <button
+          class="header-desktop-link header-desktop-dropdown-btn"
+          [matMenuTriggerFor]="masNavMenu"
+          (menuOpened)="onMasMenuOpened()"
+          (menuClosed)="onMasMenuClosed()"
+          aria-label="Más opciones"
+          type="button">
+          Más
+          <mat-icon class="dropdown-arrow" [class.rotated]="masMenuOpened">expand_more</mat-icon>
+        </button>
+<mat-menu
+          #masNavMenu="matMenu"
+          class="header-menu-panel">
+          <a mat-menu-item routerLink="/shorts" routerLinkActive="active">
+            <mat-icon>smart_display</mat-icon>
+            Shorts
+          </a>
+          <a mat-menu-item routerLink="/infantiles" routerLinkActive="active">
+            <mat-icon>child_care</mat-icon>
+            Infantiles
+          </a>
+          <a mat-menu-item routerLink="/shows" routerLinkActive="active">
+            <mat-icon>groups</mat-icon>
+            Realities
+          </a>
+          <a mat-menu-item routerLink="/novelas" routerLinkActive="active">
+            <mat-icon>auto_stories</mat-icon>
+            Novelas
+          </a>
+          <a mat-menu-item routerLink="/animes" routerLinkActive="active">
+            <mat-icon>movie</mat-icon>
+            Animes
+          </a>
+          <a mat-menu-item routerLink="/doramas" routerLinkActive="active">
+            <mat-icon>live_tv</mat-icon>
+            Doramas
+          </a>
+          <a mat-menu-item routerLink="/canal-list" routerLinkActive="active">
+            <mat-icon>video_label</mat-icon>
+            Canales
+          </a>
+          <a mat-menu-item routerLink="/deportes" routerLinkActive="active">
+            <mat-icon>sports_basketball</mat-icon>
+            Deportes
+          </a>
+        </mat-menu>
+      </nav>
+    </div>
+
+    <div class="header-toolbar-center">
+      <div class="flex items-center">
+        <!-- Desktop only: always show search form -->
+        <div class="hidden lg:block">
+          <app-search-form></app-search-form>
+        </div>
+
+        <!-- Mobile inline search panel (always in DOM so we can animate) -->
+        <div
+          class="mobile-search-panel lg:hidden flex items-center"
+          [class.open]="searchOpen"
+          [attr.aria-hidden]="!searchOpen">
+          <app-search-form></app-search-form>
+          <button
+            mat-icon-button
+            aria-label="cerrar búsqueda"
+            (click)="searchOpen = false">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-toolbar-right">
+      <div class="header-right-actions">
+        <button
+          mat-icon-button
+          aria-label="abrir búsqueda"
+          class="toolbar-action-btn search-toggle-btn lg:hidden"
+          (click)="searchOpen = !searchOpen">
+          <mat-icon>search</mat-icon>
+        </button>
+
+        <!-- <mat-menu #tvMenu="matMenu" xPosition="before">
+        <a *ngFor="let canal of canalesTv | async" [routerLink]="['/medias', canal.slug_url]" mat-menu-item>{{ canal.nombre }}</a>
+      </mat-menu>
+
+      <button [matMenuTriggerFor]="tvMenu" aria-label="tv-button" class="tv-button" mat-icon-button matTooltip="Tv en vivo">
+        <mat-icon> live_tv</mat-icon>
+      </button> -->
+
+        <button
+          [matMenuTriggerFor]="download"
+          aria-label="socials-button"
+          title="Aplicaciones"
+          mat-icon-button
+          class="toolbar-action-btn">
+          <mat-icon> get_app</mat-icon>
+        </button>
+        <!-- Botón de prueba de notificaciones eliminado -->
+        <mat-menu
+          #download="matMenu"
+          class="publication-actions-menu"
+          xPosition="before">
+          <a
+            mat-menu-item
+            href="https://www.apklis.cu/application/cu.picta.tv"
+            target="_blank"
+            rel="noopener noreferrer">
+            <mat-icon> tv</mat-icon> Android TV
+          </a>
+          <a
+            mat-menu-item
+            href="https://www.apklis.cu/application/cu.picta.android"
+            target="_blank"
+            rel="noopener noreferrer">
+            <mat-icon> android</mat-icon> Android APP
+          </a>
+        </mat-menu>
+
+        @if (!isMobile()) {
+        <button
+          [matMenuTriggerFor]="socialMenu"
+          aria-label="socials-button"
+          title="Redes Sociales"
+          mat-icon-button
+          class="toolbar-action-btn">
+          <mat-icon> share</mat-icon>
+        </button>
+        }
+        <mat-menu
+          #socialMenu="matMenu"
+          class="publication-actions-menu"
+          xPosition="before">
+          <a
+            mat-menu-item
+            href="https://www.facebook.com/share/18barwpBz7/"
+            target="_blank">
+            <mat-icon>
+              <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+                <path
+                  fill="white"
+                  d="M12 2.04C6.5 2.04 2 6.53 2 12.06C2 17.06 5.66 21.21 10.44 21.96V14.96H7.9V12.06H10.44V9.85C10.44 7.34 11.93 5.96 14.22 5.96C15.31 5.96 16.45 6.15 16.45 6.15V8.62H15.19C13.95 8.62 13.56 9.39 13.56 10.18V12.06H16.34L15.89 14.96H13.56V21.96A10 10 0 0 0 22 12.06C22 6.53 17.5 2.04 12 2.04Z" />
+              </svg>
+            </mat-icon>
+            /pictaCuba
+          </a>
+
+          <a mat-menu-item href="https://twitter.com/pictacuba" target="_blank">
+            <mat-icon>
+              <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+                <path
+                  fill="white"
+                  color="white"
+                  d="M22.46,6C21.69,6.35 20.86,6.58 20,6.69C20.88,6.16 21.56,5.32 21.88,4.31C21.05,4.81 20.13,5.16 19.16,5.36C18.37,4.5 17.26,4 16,4C13.65,4 11.73,5.92 11.73,8.29C11.73,8.63 11.77,8.96 11.84,9.27C8.28,9.09 5.11,7.38 3,4.79C2.63,5.42 2.42,6.16 2.42,6.94C2.42,8.43 3.17,9.75 4.33,10.5C3.62,10.5 2.96,10.3 2.38,10C2.38,10 2.38,10 2.38,10.03C2.38,12.11 3.86,13.85 5.82,14.24C5.46,14.34 5.08,14.39 4.69,14.39C4.42,14.39 4.15,14.36 3.89,14.31C4.43,16 6,17.26 7.89,17.29C6.43,18.45 4.58,19.13 2.56,19.13C2.22,19.13 1.88,19.11 1.54,19.07C3.44,20.29 5.7,21 8.12,21C16,21 20.33,14.46 20.33,8.79C20.33,8.6 20.33,8.42 20.32,8.23C21.16,7.63 21.88,6.87 22.46,6Z" />
+              </svg>
+            </mat-icon>
+            /pictaCuba
+          </a>
+
+          <a mat-menu-item href="https://t.me/picta_comunidad" target="_blank">
+            <mat-icon>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+                <path
+                  fill="currentColor"
+                  d="M222.51 19.53c-2.674.083-5.354.78-7.783 1.872-4.433 1.702-51.103 19.78-97.79 37.834C93.576 68.27 70.25 77.28 52.292 84.2 34.333 91.12 21.27 96.114 19.98 96.565c-4.28 1.502-10.448 3.905-14.582 8.76-2.066 2.428-3.617 6.794-1.804 10.53 1.812 3.74 5.303 5.804 10.244 7.69l.152.058.156.048c17.998 5.55 45.162 14.065 48.823 15.213.95 3.134 12.412 40.865 18.65 61.285 1.602 4.226 6.357 7.058 10.773 6.46.794.027 2.264.014 3.898-.378 2.383-.57 5.454-1.924 8.374-4.667l.002-.002c4.153-3.9 18.925-18.373 23.332-22.693l48.27 35.643.18.11s4.368 2.894 10.134 3.284c2.883.195 6.406-.33 9.455-2.556 3.05-2.228 5.25-5.91 6.352-10.71 3.764-16.395 29.428-138.487 33.83-158.837 2.742-10.348 1.442-18.38-3.7-22.872-2.59-2.26-5.675-3.275-8.827-3.395-.394-.015-.788-.016-1.183-.004zm.545 10.02c1.254.02 2.26.365 2.886.91 1.252 1.093 2.878 4.386.574 12.944-12.437 55.246-23.276 111.71-33.87 158.994-.73 3.168-1.752 4.323-2.505 4.873-.754.552-1.613.744-2.884.658-2.487-.17-5.36-1.72-5.488-1.79l-78.207-57.745c7.685-7.266 59.17-55.912 87.352-81.63 3.064-2.95.584-8.278-3.53-8.214-5.294 1.07-9.64 4.85-14.437 7.212-34.79 20.36-100.58 60.213-106.402 63.742-3.04-.954-30.89-9.686-49.197-15.332-2.925-1.128-3.962-2.02-4.344-2.36.007-.01.002.004.01-.005 1.362-1.6 6.97-4.646 10.277-5.807 2.503-.878 14.633-5.544 32.6-12.467 17.965-6.922 41.294-15.938 64.653-24.97 32.706-12.647 65.46-25.32 98.137-37.98 1.617-.75 3.12-1.052 4.375-1.032zM100.293 158.41l19.555 14.44c-5.433 5.32-18.327 17.937-21.924 21.322l2.37-35.762z"
+                  color="#fff" />
+              </svg>
+            </mat-icon>
+            /picta_comunidad
+          </a>
+
+          <a mat-menu-item href="https://instagram.com/picta.social" target="_blank">
+            <mat-icon>
+              <svg style="width: 24px; height: 24px" viewBox="0 0 24 24">
+                <path fill="white" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.012-3.584.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.67.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.947.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.947-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.945-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </mat-icon>
+            /picta.social
+          </a>
+        </mat-menu>
+
+        <!-- Live & Radio & Canales Menu - solo mobile -->
+        <button
+          [matMenuTriggerFor]="liveRadioMenu"
+          aria-label="live-radio-button"
+          title="En Vivo, Radio y Canales"
+          mat-icon-button
+          class="toolbar-action-btn hide-on-desktop">
+          <mat-icon>live_tv</mat-icon>
+        </button>
+        <mat-menu
+          #liveRadioMenu="matMenu"
+          class="header-menu-panel"
+          xPosition="before">
+          <a mat-menu-item routerLink="/categoria/Live">
+            <mat-icon>videocam</mat-icon>
+            En Vivo
+          </a>
+          <a mat-menu-item routerLink="/radioenvivo">
+            <mat-icon>radio</mat-icon>
+            Radio
+          </a>
+<a mat-menu-item routerLink="/canal-list">
+            <mat-icon>video_label</mat-icon>
+            Canales
+          </a>
+          <a mat-menu-item routerLink="/deportes">
+            <mat-icon>sports</mat-icon>
+            Deportes
+          </a>
+        </mat-menu>
+      </div>
+      <!--   <div style="align-self: center">
+    <mat-menu #liveMenu="matMenu" xPosition="before">
+      <div class="notifications-panel py-3">
+        <mat-nav-list *ngIf="lives?.length; else noLives" class="notifications-panel__list custom-scrollbar">
+          <a *ngFor="let live of lives" [routerLink]="['/medias', live.slug_url]" mat-list-item>
+
+            <img [src]="live.canal.url_avatar + '_80x80'" alt="" class="mr-3" matListAvatar>
+            <span
+              matLine class="text-wrap"><strong>{{live.canal.nombre}}</strong> {{!live.live.finalizado ? ' está transmitiendo en vivo: ' : ' transmitió en vivo: '}} <span class="font-weight-bold">{{live.nombre}}</span></span>
+
+              <img [src]="live.url_imagen + '_80x80'" alt="" class="ml-3" style="float: right">
+            </a>
+
+          </mat-nav-list>
+          <ng-template #noLives>
+            <mat-list>
+              <mat-list-item>No hay directas</mat-list-item>
+            </mat-list>
+          </ng-template>
+
+        </div>
+      </mat-menu>
+
+      <button [matMenuTriggerFor]="liveMenu" aria-label="tv-button" class="tv-button" mat-icon-button
+        matTooltip="Transmisiones en vivo">
+        <svg height="20pt" viewBox="-16 0 512 512.00113" width="20pt" xmlns="http://www.w3.org/2000/svg">
+          <g fill="#fff">
+            <path
+              d="m262.84375 140.558594c-12.699219 12.671875-33.28125 12.671875-45.980469 0-12.695312-12.671875-12.695312-33.21875 0-45.890625 12.699219-12.671875 33.28125-12.671875 45.980469 0 12.695312 12.671875 12.695312 33.21875 0 45.890625zm0 0"/>
+              <path
+                d="m307.257812 189.726562c-3.960937 0-7.921874-1.511718-10.9375-4.539062-6.03125-6.039062-6.019531-15.824219.019532-21.851562 12.238281-12.214844 18.976562-28.453126 18.976562-45.722657s-6.738281-33.507812-18.976562-45.722656c-6.039063-6.03125-6.050782-15.8125-.019532-21.855469 6.027344-6.039062 15.8125-6.050781 21.851563-.019531 18.089844 18.054687 28.050781 42.058594 28.050781 67.597656 0 25.535157-9.960937 49.542969-28.050781 67.597657-3.015625 3.011718-6.964844 4.515624-10.914063 4.515624zm0 0"/>
+                <path
+                  d="m342.210938 235.222656c-3.960938 0-7.921876-1.511718-10.9375-4.535156-6.03125-6.042969-6.019532-15.824219.019531-21.855469 24.414062-24.367187 37.863281-56.761719 37.863281-91.21875s-13.449219-66.851562-37.863281-91.21875c-6.039063-6.03125-6.050781-15.8125-.019531-21.855469 6.03125-6.039062 15.8125-6.050781 21.851562-.019531 30.265625 30.207031 46.9375 70.371094 46.933594 113.09375 0 42.722657-16.667969 82.890625-46.933594 113.097657-3.015625 3.007812-6.964844 4.511718-10.914062 4.511718zm0 0"/>
+                  <path
+                    d="m172.371094 189.726562c-3.949219 0-7.898438-1.503906-10.917969-4.515624-18.089844-18.054688-28.050781-42.0625-28.050781-67.597657 0-25.539062 9.960937-49.542969 28.050781-67.597656 6.039063-6.03125 15.824219-6.023437 21.851563.019531 6.03125 6.039063 6.019531 15.824219-.019532 21.855469-12.238281 12.214844-18.976562 28.453125-18.976562 45.722656s6.738281 33.507813 18.976562 45.722657c6.039063 6.027343 6.050782 15.8125.019532 21.851562-3.015626 3.023438-6.976563 4.539062-10.933594 4.539062zm0 0"/>
+                    <path
+                      d="m137.417969 235.222656c-3.953125 0-7.902344-1.503906-10.917969-4.515625-30.265625-30.207031-46.933594-70.371093-46.933594-113.09375 0-42.726562 16.667969-82.890625 46.933594-113.097656 6.039062-6.027344 15.824219-6.019531 21.851562.023437 6.03125 6.039063 6.019532 15.820313-.019531 21.851563-24.414062 24.367187-37.863281 56.761719-37.863281 91.21875s13.449219 66.855469 37.863281 91.222656c6.039063 6.03125 6.050781 15.8125.019531 21.855469-3.015624 3.023438-6.976562 4.535156-10.933593 4.535156zm0 0"/>
+                      <path
+                        d="m443.480469 261.9375h-407.332031c-19.964844 0-36.148438 16.183594-36.148438 36.144531v177.769531c0 19.964844 16.183594 36.148438 36.148438 36.148438h407.328124c19.964844 0 36.148438-16.183594 36.148438-36.148438v-177.769531c0-19.960937-16.183594-36.144531-36.144531-36.144531zm-324.609375 203.683594h-56.933594c-8.53125 0-15.449219-6.917969-15.449219-15.453125v-126.398438c0-8.53125 6.917969-15.453125 15.449219-15.453125 8.535156 0 15.453125 6.917969 15.453125 15.453125v110.945313h41.480469c8.535156 0 15.453125 6.917968 15.453125 15.453125 0 8.535156-6.917969 15.453125-15.453125 15.453125zm63.328125-15.453125c0 8.535156-6.917969 15.453125-15.453125 15.453125s-15.453125-6.917969-15.453125-15.453125v-126.398438c0-8.53125 6.917969-15.453125 15.453125-15.453125s15.453125 6.917969 15.453125 15.453125zm130.015625-121.929688-38.160156 126.394531c-.003907.011719-.007813.023438-.011719.035157-4.144531 14.144531-25.273438 13.796875-29.5625 0-.003907-.011719-.007813-.023438-.011719-.035157l-38.160156-126.394531c-2.464844-8.171875 2.15625-16.792969 10.328125-19.261719 8.164062-2.464843 16.792969 2.15625 19.257812 10.328126l23.367188 77.394531 23.367187-77.394531c2.46875-8.171876 11.089844-12.796876 19.261719-10.328126 8.167969 2.46875 12.792969 11.089844 10.324219 19.261719zm95.066406 35.320313c8.535156 0 15.453125 6.917968 15.453125 15.453125 0 8.53125-6.917969 15.453125-15.453125 15.453125h-43.851562v40.25h52.175781c8.535156 0 15.453125 6.917968 15.453125 15.453125 0 8.535156-6.917969 15.453125-15.453125 15.453125h-67.628907c-8.535156 0-15.453124-6.917969-15.453124-15.453125v-126.398438c0-8.53125 6.917968-15.453125 15.453124-15.453125h69.710938c8.53125 0 15.453125 6.917969 15.453125 15.453125 0 8.535157-6.921875 15.453125-15.453125 15.453125h-54.261719v24.335938zm0 0"/>
+                      </g>
+                    </svg>
+
+                  </button>
+
+                </div>-->
+      @if (loginService.isLoggedIn() && user && (notificacionesList || notificationStore.isLoading())) {
+        <div class="noti">
+          <mat-menu
+            #notificationMenu="matMenu"
+            class="wide-menu publication-actions-menu"
+            xPosition="before">
+            <div class="notifications-panel">
+              @if (notificacionesList.length != 0) {
+                <div
+                  class="flex w-100 justify-left items-left border-light font-weight-bold p-1 notifications-panel__header">
+                  <h6 class="m-0 text-white">Notificaciones</h6>
+                </div>
+              }
+              <mat-divider></mat-divider>
+              <div
+                (scroll)="onNotificationsPanelScroll($event)"
+                class="notifications-panel__list custom-scrollbar">
+                @if (notificationStore.isLoading()) {
+                  <!-- Skeleton loading -->
+                  @for (item of [1,2,3,4,5]; track item) {
+                    <div class="notification-skeleton">
+                      <div class="skeleton-avatar"></div>
+                      <div class="skeleton-content">
+                        <div class="skeleton-line line-lg"></div>
+                        <div class="skeleton-line line-sm"></div>
+                      </div>
+                    </div>
+                  }
+                } @else {
+                  @for (notificacion of notificacionesList; track notificacion) {
+                    <app-notificacion-item
+                      [notification]="notificacion"></app-notificacion-item>
+                  }
+                }
+              </div>
+              @if (loadingNotifications) {
+                <div class="flex justify-center items-center mt-3">
+                  <mat-spinner
+                    aria-label="cargando"
+                    [diameter]="30"></mat-spinner>
+                </div>
+              }
+              <mat-divider></mat-divider>
+              @if (notificacionesList.length != 0) {
+                <div
+                  [routerLink]="['/notifications']"
+                  class="flex justify-center items-center p-1 text-white notifications-panel__footer fixed-bottom">
+                  Ver todas
+                </div>
+              }
+              @if (notificacionesList.length == 0) {
+                <div
+                  class="flex justify-center items-center p-3"
+                  style="white-space: nowrap">
+                  No tiene notificaciones.
+                </div>
+              }
+            </div>
+          </mat-menu>
+<button
+            (click)="loadNotifications()"
+            (menuClosed)="markNotificationAsReaded()"
+            [matMenuTriggerFor]="notificationMenu"
+            aria-label="notification-button"
+            class="notification-icon toolbar-action-btn"
+            mat-icon-button>
+            <span class="notification-icon-wrapper">
+              <mat-icon>notifications</mat-icon>
+              @if (unseenNotifications > 0) {
+                <span class="notification-badge">{{ unseenNotifications > 10 ? '10+' : unseenNotifications }}</span>
+              }
+            </span>
+          </button>
+        </div>
+      }
+
+      @if (!loginService.isLoggedIn() && !user) {
+        <div fxHide.lt-md>
+          <mat-menu
+            #helpMenu="matMenu"
+            xPosition="before"
+            panelClass="header-menu-panel">
+            <a mat-menu-item routerLink="/faq">Preguntas frecuentes</a>
+            <a mat-menu-item routerLink="/terms">Términos de uso</a>
+            <a mat-menu-item routerLink="/about">Acerca de Picta</a>
+            <a mat-menu-item routerLink="/ayuda-soporte">Ayuda y soporte</a>
+          </mat-menu>
+          <button
+            [matMenuTriggerFor]="helpMenu"
+            aria-label="help-button"
+            mat-icon-button
+            class="toolbar-action-btn">
+            <mat-icon> help</mat-icon>
+          </button>
+        </div>
+      }
+
+      <!-- <button (click)="showLogin()" *ngIf="!user" aria-label="entrar" class="d-none d-lg-block" mat-button>
+                <mat-icon>face</mat-icon>
+                Entrar
+              </button> -->
+      @if (!user) {
+        <button
+          routerLink="/usuario/acceder"
+          aria-label="Iniciar sesión"
+          mat-stroked-button
+          class="hidden lg:flex items-center gap-2 !rounded-full">
+          <mat-icon>person</mat-icon>
+          <span>Iniciar sesión</span>
+        </button>
+      }
+      <!--       <app-login-dropdown (loggedIn)="dropdownLogin = false" *ngIf="!(isHandset$ | async) && !user" [class.slide]="dropdownLogin"></app-login-dropdown>
+              -->
+      @if (user) {
+        <div class="none md:block z-1">
+          <mat-menu
+            #userMenu="matMenu"
+            class="publication-actions-menu header-menu-panel user-menu-panel"
+            style="width: auto"
+            xPosition="before">
+            <!-- Perfil minimalista -->
+            <div
+              class="user-menu-minimal-profile"
+              aria-label="Datos del usuario">
+              <div class="user-menu-minimal-avatar">
+                @if (user.avatar) {
+                  <img
+                    width="40"
+                    height="40"
+                    alt="Avatar de usuario"
+                    class="user-menu-avatar-img"
+                    loading="lazy"
+                    [ngSrc]="user.avatar + '_80x80'" />
+                } @else {
+                  <div class="user-menu-avatar-fallback">
+                    {{ user.username.charAt(0) | uppercase }}
+                  </div>
+                }
+              </div>
+              <div class="user-menu-minimal-info">
+                <span class="user-menu-minimal-name">
+                  {{
+                    user.first_name || user.last_name
+                      ? (user.first_name + ' ' + user.last_name).trim()
+                      : user.username
+                  }}
+                </span>
+                @if (hasActiveSubscriptionPlan()) {
+                  <div class="user-menu-plan-badge">
+                    <div class="plan-progress-circle" [class]="getPlanProgressClass()">
+                    </div>
+                    <div class="user-menu-badge-info">
+                      <span class="user-menu-minimal-plan">{{ getSubscriptionPlanName() }}</span>
+                      <span class="user-menu-minimal-days">{{ getSubscriptionDaysLabel() }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <!-- Acciones principales -->
+            <a (click)="openProfileSelector()" mat-menu-item>
+              <mat-icon fontIcon="switch_account"></mat-icon>
+              Cambiar perfil
+            </a>
+            <a [routerLink]="['/profile/configuracion']" mat-menu-item>
+              <mat-icon fontIcon="person"></mat-icon>
+              Mi perfil
+            </a>
+            <a [routerLink]="['/profile/playlists']" mat-menu-item>
+              <mat-icon fontIcon="playlist_play"></mat-icon>
+              Mis listas
+            </a>
+            <a [routerLink]="['/historial']" mat-menu-item>
+              <mat-icon fontIcon="history"></mat-icon>
+              Historial
+            </a>
+            <a [routerLink]="['/suscripciones']" mat-menu-item>
+              <mat-icon fontIcon="workspace_premium"></mat-icon>
+              Suscripciones
+            </a>
+            <a [routerLink]="['/profile/mis-pagos']" mat-menu-item>
+              <mat-icon fontIcon="credit_card"></mat-icon>
+              Mis pagos
+            </a>
+            <a [routerLink]="['/profile/devices']" mat-menu-item>
+              <mat-icon fontIcon="devices"></mat-icon>
+              Dispositivos
+            </a>
+            <a [routerLink]="['/profile/solicitudes']" mat-menu-item>
+              <mat-icon fontIcon="inbox"></mat-icon>
+              Solicitudes
+            </a>
+            <mat-divider></mat-divider>
+            <!-- Más opciones -->
+            @if (isAdmin || isJefeCanalWebmaster) {
+              <a href="https://admin.picta.cu/" mat-menu-item target="_blank">
+                <mat-icon fontIcon="settings"></mat-icon>
+                Administrar
+              </a>
+            }
+            <a [routerLink]="['/canal-list']" mat-menu-item>
+              <mat-icon fontIcon="tv"></mat-icon>
+              Canales
+            </a>
+            <mat-divider></mat-divider>
+            <!-- Links de ayuda -->
+            <a routerLink="/ayuda-soporte" mat-menu-item>
+              <mat-icon fontIcon="support_agent"></mat-icon>
+              Ayuda
+            </a>
+            <a routerLink="/faq" mat-menu-item>
+              <mat-icon fontIcon="help_center"></mat-icon>
+              FAQ
+            </a>
+            <a routerLink="/terms" mat-menu-item>
+              <mat-icon fontIcon="description"></mat-icon>
+              Términos
+            </a>
+            <a routerLink="/about" mat-menu-item>
+              <mat-icon fontIcon="info"></mat-icon>
+              Acerca de
+            </a>
+            <mat-divider></mat-divider>
+            <a (click)="logout()" mat-menu-item>
+              <mat-icon fontIcon="logout"></mat-icon>
+              Cerrar sesión
+            </a>
+          </mat-menu>
+          <button
+            [matMenuTriggerFor]="userMenu"
+            aria-label="user-button"
+            mat-icon-button
+            class="toolbar-action-btn toolbar-user-btn">
+            <div class="flex items-center">
+              @if (user.avatar) {
+                <img
+                  width="48"
+                  height="48"
+                  alt="avatar"
+                  class="header-avatar flex justify-center items-center ring-1 ring-white h-6 w-6 !rounded-full font-bold"
+                  loading="lazy"
+                  [ngSrc]="user.avatar + '_48x48'" />
+              } @else {
+                <div
+                  class="header-avatar header-avatar-fallback flex justify-center items-center ring-1 ring-white h-6 w-6 !rounded-full font-bold">
+                  {{ user.username.charAt(0) | uppercase }}
+                </div>
+              }
+              <!-- <span>{{ user.username }}</span> -->
+              <!-- <img alt="down-caret" class="ml-1" loading="lazy" src="assets/img/down-caret.svg" /> -->
+              <span class="cichhW"
+                ><svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  height="20"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill="none" d="M0 0h24v24H0V0z"></path>
+                  <path
+                    d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg
+              ></span>
+            </div>
+          </button>
+        </div>
+      }
+      <!--
+            <button (click)="token()">changetoken</button>
+            -->
+    </div>
+  </div>
+</mat-toolbar>
+<!--<mat-progress-bar *ngIf="loaderService.isLoading|async" class="loader" mode="query" color="accent"></mat-progress-bar>-->

@@ -1,0 +1,47 @@
+<div class="denuncia-form">
+  <div class="denuncia-form-header">
+    <span class="denuncia-form-title">¿Por qué quieres denunciar este video?</span>
+    <p class="denuncia-form-desc">Selecciona el motivo que mejor describa el problema.</p>
+  </div>
+
+  <form (ngSubmit)="denunciar()" [formGroup]="denunciaForm" class="denuncia-form-content">
+    @if (loadingTiposDenuncia) {
+      <div class="denuncia-skeleton">
+        @for (placeholder of [1,2,3,4]; track placeholder) {
+          <div class="skeleton-item"></div>
+        }
+      </div>
+    } @else {
+      <mat-radio-group formControlName="tipo_denuncia" (change)="tipoDenunciaChanged($event)" class="denuncia-options">
+        @for (tipo of tiposDenuncia; track tipo) {
+          <mat-radio-button [value]="tipo.id" color="primary" class="denuncia-option">
+            {{ tipo.tipo }}
+          </mat-radio-button>
+        }
+      </mat-radio-group>
+    }
+
+    @if (denunciaForm.get('tipo_denuncia').value===1 || denunciaForm.get('tipo_denuncia').value===10) {
+      <div class="denuncia-file">
+        <input #inputElement type="file" hidden (change)="handleFileChange($event)">
+        <span class="denuncia-file-name">{{ evidenciaName }}</span>
+        <button mat-stroked-button color="primary" class="!rounded-full" (click)="$event.preventDefault(); inputElement.click()">
+          Adjuntar
+        </button>
+      </div>
+    }
+
+    <p class="denuncia-info">
+      El personal de Picta revisa los videos marcados como inapropiados. Las infracciones graves pueden dar lugar a cancelación de cuenta o borrado del video.
+    </p>
+
+    <div class="denuncia-actions">
+      <button (click)="denuncia.emit()" mat-stroked-button class="picta-ad-secondary-btn">
+        Cancelar
+      </button>
+      <button color="primary" mat-raised-button type="submit" [disabled]="denunciaForm.invalid ? true : null" class="picta-ad-primary-btn">
+        Denunciar
+      </button>
+    </div>
+  </form>
+</div>

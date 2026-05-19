@@ -1,0 +1,21 @@
+.nm-collections-row .nm-collections-row-name {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 27px;
+  margin: 40px 0 0 5px;
+}
+
+.categoria-carousel {
+    //margin: 75px 0px 0px 0px;
+    //padding: 4% 2%;
+    //margin: 25px auto;
+    min-height: 100vh;
+  }
+  
+  @media only screen and (max-width: 599px) {
+    .categoria-carousel {
+      //margin: 75px 0px 0px 0px;
+      //padding: 10% 0%;
+    }
+  }

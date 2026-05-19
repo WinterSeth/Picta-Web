@@ -1,0 +1,482 @@
+:host {
+  --layout-bg-top: #0a0f24;
+  --layout-bg-bottom: #101935;
+  --layout-accent: #e8462e;
+  --layout-accent-soft: rgba(232, 70, 46, 0.2);
+  --layout-text: #eaf0ff;
+  --layout-text-muted: rgba(234, 240, 255, 0.72);
+
+  display: block;
+  min-height: 100vh;
+  background:
+    /* Impeccable: minimize glow for a dark theme — tiny, low-opacity accents */
+    radial-gradient(circle at 50% 10%, rgba(186, 212, 255, 0.06), transparent 8%),
+    radial-gradient(circle at 12% 6%, rgba(115, 148, 255, 0.04), transparent 6%),
+    radial-gradient(circle at 92% 2%, rgba(159, 220, 255, 0.03), transparent 6%),
+    linear-gradient(180deg, var(--layout-bg-top) 0%, var(--layout-bg-bottom) 100%);
+  color: var(--layout-text);
+}
+
+.app-shell {
+  background: transparent;
+  min-height: 100dvh;
+  height: auto;
+}
+
+.app-sidenav-container {
+  background: transparent;
+  min-height: 100dvh;
+  height: auto;
+}
+
+/* Cine Mode - fullwidth, no padding, no header/footer space */
+.cine-mode-active .example-container,
+.cine-mode-active .app-sidenav-container {
+  min-height: 100vh !important;
+  height: 100vh !important;
+  max-width: 100vw;
+  overflow: hidden !important;
+}
+
+.cine-mode-active .app-content {
+  max-width: 100vw !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100vw;
+}
+
+.cine-mode-content {
+  max-width: 100vw !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100vw;
+  min-height: 100vh !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+.app-sidenav {
+  background:
+    linear-gradient(180deg, rgba(13, 18, 30, 0.97) 0%, rgba(8, 12, 22, 0.95) 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 14px 0 38px rgba(0, 0, 0, 0.28);
+}
+
+.app-content {
+  background: transparent;
+  color: var(--layout-text);
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 4.25rem 0.75rem 0;
+  box-sizing: border-box;
+}
+
+.sidenav-scroll {
+  display: flex;
+  flex-direction: column;
+  padding: 0.4rem 0.35rem 0.75rem;
+}
+
+.sidenav-group {
+  padding-bottom: 0.25rem;
+}
+
+.sidenav-subscription-card {
+  margin: 0.25rem 0.65rem 0.8rem;
+  border-radius: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    radial-gradient(circle at 88% 12%, rgba(255, 178, 108, 0.12), transparent 45%),
+    linear-gradient(135deg, rgba(232, 70, 46, 0.2) 0%, rgba(16, 25, 53, 0.92) 68%);
+  box-shadow: 0 12px 24px -20px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidenav-subscription-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 60px;
+  padding: 0.65rem 0.8rem;
+  text-decoration: none;
+  color: var(--layout-text);
+  transition: transform 170ms ease, background-color 170ms ease;
+}
+
+.sidenav-subscription-link:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-1px);
+}
+
+.sidenav-subscription-link:focus-visible {
+  outline: 2px solid rgba(255, 178, 108, 0.85);
+  outline-offset: -2px;
+}
+
+.sidenav-subscription-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(232, 70, 46, 0.22);
+  color: #ffb26c;
+  flex: 0 0 auto;
+}
+
+.sidenav-subscription-copy {
+  display: grid;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.sidenav-subscription-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+}
+
+.sidenav-subscription-subtitle {
+  font-size: 0.72rem;
+  color: rgba(234, 240, 255, 0.78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidenav-subscription-arrow {
+  margin-left: auto;
+  color: rgba(234, 240, 255, 0.7);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.sidenav-group-last {
+  margin-top: auto;
+}
+
+.sidenav-socials {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  margin-top: auto;
+}
+
+.sidenav-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f3e628;
+  transition: background-color 170ms ease, transform 170ms ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+}
+
+.sidenav-social-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.nav-section-title {
+  margin: 0.55rem 0.9rem 0.35rem;
+  font-size: 0.68rem;
+  line-height: 1.2;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--layout-text-muted);
+  font-weight: 700;
+}
+
+.nav-link {
+  height: 2.5rem !important;
+  border-radius: 0.8rem !important;
+}
+
+.nav-link-toggle {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.loader-spinner{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //background-color: rgba(black, .8);
+  z-index: 10001 !important;
+}
+
+.mat-drawer-inner-container {
+    overflow: auto;
+    scrollbar-width: thin !important;
+    color: var(--layout-text);
+}
+
+ mat-nav-list {
+    & a.active {
+      background: linear-gradient(90deg, var(--layout-accent-soft) 0%, rgba(232, 70, 46, 0.08) 100%);
+      border-left: 2px solid var(--layout-accent);
+      backdrop-filter: blur(16px);
+      --webkit-backdrop-filter: blur(16px);
+    }
+}
+
+mat-nav-list {
+  button.active {
+    background: linear-gradient(90deg, var(--layout-accent-soft) 0%, rgba(232, 70, 46, 0.08) 100%);
+    border-left: 2px solid var(--layout-accent);
+  }
+}
+
+.active {
+  .mdc-list-item__primary-text {
+    color: var(--layout-text);
+  }
+
+  .mat-icon {
+    color: #ffb26c;
+  }
+}
+
+.mat-mdc-list-item-icon {
+  color: var(--layout-text-muted);
+}
+
+
+:host ::ng-deep .mdc-list-item__primary-text {
+  color: rgba(234, 240, 255, 0.9) !important;
+}
+
+:host ::ng-deep .mat-drawer-container {
+  background: transparent !important;
+}
+
+// Side mode (desktop): transparent so the host gradient shows behind the sidenav
+:host ::ng-deep .mat-drawer.mat-drawer-side {
+  background: transparent !important;
+}
+
+// Over mode (mobile): must be fully opaque – it floats above content with no background
+:host ::ng-deep .mat-drawer.mat-drawer-over {
+  background: rgba(7, 11, 20, 0.99) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+:host ::ng-deep .mat-divider {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+:host ::ng-deep a[mat-list-item],
+:host ::ng-deep button[mat-list-item] {
+  border-radius: 0.75rem;
+  margin: 2px 6px;
+  transition: background-color 170ms ease, transform 170ms ease, border-color 170ms ease;
+}
+
+:host ::ng-deep a[mat-list-item]:hover,
+:host ::ng-deep button[mat-list-item]:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(2px);
+}
+
+:host ::ng-deep a[mat-list-item]:focus-visible,
+:host ::ng-deep button[mat-list-item]:focus-visible {
+  outline: 2px solid rgba(255, 178, 108, 0.85);
+  outline-offset: 1px;
+}
+
+
+.mdc-list-item:hover::before {
+  background-color: transparent;
+}
+
+.mdc-list-item:focus::before {
+  background-color: unset;
+}
+
+@media (max-width: 768px) {
+  .app-content {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  .sidenav-scroll {
+    padding-top: 0.35rem;
+  }
+
+  .nav-section-title {
+    margin-left: 0.8rem;
+    margin-right: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host ::ng-deep a[mat-list-item],
+  :host ::ng-deep button[mat-list-item] {
+    transition: none;
+  }
+
+  :host ::ng-deep a[mat-list-item]:hover,
+  :host ::ng-deep button[mat-list-item]:hover {
+    transform: none;
+  }
+
+  .sidenav-subscription-link {
+    transition: none;
+  }
+
+  .sidenav-subscription-link:hover {
+    transform: none;
+  }
+}
+
+/* Backdrop blur when sidenav is in over mode */
+:host ::ng-deep .app-sidenav-container.sidenav-over .mat-drawer-backdrop,
+:host ::ng-deep .app-sidenav-container.sidenav-over .cdk-overlay-backdrop {
+  background: rgba(0,0,0,0.35) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+// Footer
+.app-footer {
+  background: linear-gradient(180deg, rgba(13, 18, 30, 0.78) 0%, rgba(8, 12, 22, 0.82) 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 4.75rem 2rem 4.25rem;
+  margin-top: auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.25rem;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+  }
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  @media (max-width: 600px) {
+    align-items: center;
+  }
+
+  &.footer-col-brand {
+    gap: 0.8rem;
+  }
+}
+
+.footer-logo-link {
+  display: inline-block;
+  width: 88px;
+}
+
+.footer-logo {
+  width: 100%;
+  height: auto;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.footer-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f3e628;
+  transition: background-color 170ms ease, transform 170ms ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+  }
+}
+
+.footer-social-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.footer-email {
+  font-size: 0.8rem;
+  color: rgba(234, 240, 255, 0.72);
+  text-decoration: none;
+  transition: color 170ms ease;
+
+  &:hover {
+    color: #eaf0ff;
+  }
+}
+
+.footer-heading {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(234, 240, 255, 0.56);
+  margin: 0 0 0.25rem;
+}
+
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.footer-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: rgba(234, 240, 255, 0.82);
+  text-decoration: none;
+  transition: color 170ms ease;
+  padding: 0.15rem 0;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: rgba(234, 240, 255, 0.6);
+  }
+
+  &:hover {
+    color: #eaf0ff;
+  }
+}

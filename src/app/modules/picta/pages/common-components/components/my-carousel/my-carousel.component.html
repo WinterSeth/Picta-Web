@@ -1,0 +1,111 @@
+<div [@.disabled]="!horizontalState()" (mousedown)="mouseDown(carousel, $event)" (mouseleave)="mouseLeave(carousel)" (mousemove)="mouseMove(carousel, $event)" (mouseup)="mouseUp(carousel)"
+  [class.p-0]="noPadding()" class="video-list-container">
+
+  <div class="header justify-between items-center">
+    <div [class.align-items-center]="mode()==='list'" class="flex flex-col" style="width: 100%;">
+      <h3 (click)="navigate()" [ngClass]="{link:canal() || temporada()}" style="margin-bottom: 0;">{{title()}}</h3>
+      @if (subtitle()) {
+        <h6 class="">{{subtitle()}}</h6>
+      }
+      @if (controls()) {
+        <div class="orientation-controls">
+          <button (click)="horizontalState.set(false)" aria-label="Vertical view" mat-icon-button title="Vertical">
+            <mat-icon>panorama_vertical</mat-icon>
+          </button>
+          <button (click)="horizontalState.set(true)" aria-label="Horizontal view" mat-icon-button title="Horizontal">
+            <mat-icon>panorama_horizontal</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+@if (canal()) {
+      <div class="buttons">
+        @if (!(isHandset$|async)) {
+          <button (click)="authService.isLoggedIn()? handleSubscribe() : null"
+            [title]="authService.isLoggedIn()?(subscribed ? 'Dejar de seguir' : 'Seguir' ):'Debes estar autenticado para seguir'"
+            [ngStyle]="{ width: '130px'}"
+            class="subscribe-btn"
+            [class.subscribed]="subscribed"
+            [disabled]="subscribing || !authService.isLoggedIn()"
+            mat-stroked-button
+            >
+            @if (subscribing) {
+              <mat-icon class="animate-spin">sync</mat-icon>
+            } @else if (subscribed) {
+              <mat-icon>notifications_active</mat-icon>
+            }
+          {{subscribing ? '...' : (subscribed ? 'Siguiendo' : 'Seguir')}}</button>
+        }
+        @if (isHandset$|async) {
+          <button #tooltip="matTooltip" (click)="authService.isLoggedIn()? handleSubscribe() : tooltip.toggle()"
+            [matTooltip]="authService.isLoggedIn()?(subscribed ? 'Dejar de seguir' : 'Seguir' ):'Debes estar autenticado para seguir'"
+            [ngStyle]="{}"
+            mat-icon-button
+            >
+            <mat-icon>{{subscribed ? 'notifications_active' : 'notifications_off' }}</mat-icon>
+          </button>
+          <!-- <button (click)="authService.isLoggedIn()? handleSubscribe() : null"
+          [matTooltip]="authService.isLoggedIn()?(subscribed ? 'Cancelar suscripción' : 'Suscribirse' ):'Debes estar autenticado para suscribirte'"
+          [ngStyle]="{'color': subscribed ? '#f44336' :'#4CAF50'}"
+        mat-stroked-button>{{subscribed ? 'Suscrito' : 'Suscribirse'}}</button>-->
+      }
+    </div>
+  }
+</div>
+
+<div class="video-list-wrapper">
+  @if (showSideOverlays()) {
+    @if (horizontal() && showLeftArrow) {
+      <div class="overlay-left"></div>
+    }
+    @if (horizontal() && showRigthArrow) {
+      <div class="overlay-right"></div>
+    }
+  }
+
+  @if (horizontal() && showLeftArrow) {
+    <button (click)="scrollCarousel(carousel,'left')" class="left" mat-icon-button>
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+  }
+
+  @if (horizontal() && showRigthArrow) {
+    <button (click)="scrollCarousel(carousel,'right')" class="right" mat-icon-button>
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  }
+  <div #carousel [@photosAnimation]="videos().length" [class.horizontal]="horizontal()" [class.list]="mode()==='list'" class="video-list pt-2">
+
+    @if (mode()==='card') {
+      @for (video of videos(); track video) {
+        <app-my-video-card (activeVideo)="showDetails($event)" (mouseover)="showDetailsOnHover(video)" [mode]="mode()"[showDetails]="shwDtail()" [video]="video">
+        </app-my-video-card>
+      }
+    }
+
+    @if (mode()==='list') {
+      <div class="container p-0">
+        <mat-nav-list>
+          @for (video of videos(); track video) {
+            <app-my-video-card (activeVideo)="showDetails($event)" (mouseover)="showDetailsOnHover(video)" [mode]="mode()" [showDetails]="shwDtail()" [video]="video">
+            </app-my-video-card>
+          }
+        </mat-nav-list>
+      </div>
+    }
+  </div>
+</div>
+
+@if (!horizontal() && hasNext()) {
+  <button (click)="load.emit()" class="more-button mt-5" mat-button>
+    <mat-icon>add</mat-icon>
+    Más videos
+  </button>
+}
+
+</div>
+@if (activeVideo) {
+  <app-my-video-details (closePanel)="closePanel()" [isLoggedIn]="authService.isLoggedIn()" @detailsAnimation [video]="activeVideo" />
+}
+

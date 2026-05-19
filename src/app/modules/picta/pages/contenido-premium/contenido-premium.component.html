@@ -1,0 +1,75 @@
+<div>
+  <header class="categoria-header">
+    <div class="categoria-header__content">
+      <h1 class="categoria-header__title">Contenido Premium</h1>
+      <p class="categoria-header__description">
+        Las películas de pago más recientes, más vistas, más votadas y más comentadas
+      </p>
+    </div>
+  </header>
+
+  @if (loadingLatest()) {
+    <app-carousel-skeleton></app-carousel-skeleton>
+  } @else if (latestPremium().length) {
+    <div class="categoria-carousel-section">
+      <app-my-carousel-o
+        [topRanked]="true"
+        [carouselOptions]="carouselOptions"
+        title="Recién añadidas"
+        [videos]="latestPremium()"
+        [hasMore]="false"></app-my-carousel-o>
+    </div>
+
+    <div class="section-divider"></div>
+  }
+
+  @if (loadingViewed()) {
+    <app-carousel-skeleton></app-carousel-skeleton>
+  } @else if (mostViewed().length) {
+    <div class="categoria-carousel-section">
+      <app-my-carousel-o
+        [topRanked]="true"
+        [carouselOptions]="carouselOptions"
+        title="Más vistas"
+        [videos]="mostViewed()"
+        [hasMore]="false"></app-my-carousel-o>
+    </div>
+
+    <div class="section-divider"></div>
+  }
+
+  @if (loadingLiked()) {
+    <app-carousel-skeleton></app-carousel-skeleton>
+  } @else if (mostLiked().length) {
+    <div class="categoria-carousel-section">
+      <app-my-carousel-o
+        [topRanked]="true"
+        [carouselOptions]="carouselOptions"
+        title="Más votadas"
+        [videos]="mostLiked()"
+        [hasMore]="false"></app-my-carousel-o>
+    </div>
+
+    <div class="section-divider"></div>
+  }
+
+  @if (loadingCommented()) {
+    <app-carousel-skeleton></app-carousel-skeleton>
+  } @else if (mostCommented().length) {
+    <div class="categoria-carousel-section">
+      <app-my-carousel-o
+        [topRanked]="true"
+        [carouselOptions]="carouselOptions"
+        title="Más comentadas"
+        [videos]="mostCommented()"
+        [hasMore]="false"></app-my-carousel-o>
+    </div>
+  }
+
+  @if (!latestPremium().length && !mostViewed().length && !mostLiked().length && !mostCommented().length && !loadingLatest() && !loadingViewed() && !loadingLiked() && !loadingCommented()) {
+    <div class="flex flex-col items-center justify-center py-16 text-center">
+      <mat-icon class="text-4xl opacity-40 mb-4">movie_filter</mat-icon>
+      <p class="text-lg opacity-70">No hay contenido premium disponible.</p>
+    </div>
+  }
+</div>

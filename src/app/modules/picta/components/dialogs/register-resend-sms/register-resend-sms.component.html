@@ -1,0 +1,17 @@
+<h5 mat-dialog-title>Código de verificación</h5>
+<mat-dialog-content>
+  <p>Por favor, introduzca el código enviado en el SMS.</p>
+  @if (errorMsg) {
+    <div class="mat-error error" role="alert">
+      <h6>{{errorMsg}}</h6>
+    </div>
+  }
+  <mat-form-field appearance="fill" floatLabel="auto" style="color: #ffffff;">
+    <mat-label>Código</mat-label>
+    <input [formControl]="codigo" [max]="6" [min]="6" matInput pattern="^\d+$" type="text">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button (click)="dialogRef.close()" mat-button>Cancelar</button>
+  <button (click)="verifySmsCode()" mat-button>Verificar</button>
+</mat-dialog-actions>

@@ -1,0 +1,99 @@
+:host {
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+  --picta-bg-card: rgba(16, 25, 53, 0.96);
+  --picta-bg-deep: rgba(10, 17, 38, 0.96);
+
+  ::ng-deep {
+    .mat-mdc-dialog-surface {
+      border-radius: 20px;
+      background: radial-gradient(
+        circle at top right,
+        var(--picta-yellow-softer),
+        transparent 34%
+      ) padding-box,
+      linear-gradient(
+        180deg,
+        var(--picta-bg-deep) 0%,
+        var(--picta-bg-card) 100%
+      );
+      border: 1px solid var(--picta-yellow-border);
+      backdrop-filter: blur(16px);
+    }
+
+    .mat-mdc-dialog-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #f4f7fb;
+      padding: 24px 24px 0 24px;
+    }
+
+    .mat-mdc-dialog-content {
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.9rem;
+      color: var(--picta-text-muted);
+      line-height: 1.6;
+      max-height: 60vh;
+      overflow-y: auto;
+      padding: 16px 24px;
+
+      .tittle_term {
+        font-family: 'Abel', sans-serif;
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        color: var(--picta-yellow);
+        display: block;
+        margin: 12px 0 4px 0;
+      }
+
+      p {
+        font-size: 0.9rem;
+        color: var(--picta-text-muted);
+        margin: 0 0 8px 0;
+      }
+    }
+
+    .mat-mdc-dialog-actions {
+      padding: 0 24px 24px 24px;
+      justify-content: flex-end;
+      gap: 12px;
+
+      .mat-mdc-button {
+        font-family: 'Abel', sans-serif;
+        font-size: 0.9rem;
+        letter-spacing: 0.04em;
+        border-radius: 999px;
+        padding: 0 20px;
+        min-height: 40px;
+        transition: color 160ms ease, background 160ms ease;
+
+        &.mat-primary {
+          background: var(--picta-yellow);
+          color: #0a1126;
+
+          &:hover {
+            background: #e8de2c;
+          }
+        }
+
+        &.mat-warn {
+          background: transparent;
+          color: var(--picta-text-muted);
+          border: 1px solid var(--picta-yellow-border);
+
+          &:hover {
+            color: #f4f7fb;
+            background: rgba(255, 255, 255, 0.06);
+          }
+        }
+      }
+    }
+  }
+}

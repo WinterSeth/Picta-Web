@@ -1,0 +1,11 @@
+<h5 mat-dialog-title>Recuperación de contraseña</h5>
+<mat-dialog-content>
+  <p>
+    ¿Está seguro que desea cambiar su contraseña?
+    Se le enviará un código de confirmación a su teléfono
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button (click)="dialogRef.close(false)" mat-button>No</button>
+  <button (click)="dialogRef.close(true)" mat-button>Sí</button>
+</mat-dialog-actions>

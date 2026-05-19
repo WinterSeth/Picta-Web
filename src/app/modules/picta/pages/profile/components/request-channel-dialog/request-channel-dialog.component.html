@@ -1,0 +1,152 @@
+<div class="container m-auto p-3">
+  <div class="pb-4">
+    <div class="uppercase text-2xl text-white font-bold py-6">Solicitar Canal</div>
+    <div mat-dialog-content>
+      <form (ngSubmit)="save()" [formGroup]="form">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12 col-md-6 flex flex-col">
+              <mat-form-field appearance="fill" floatLabel="auto">
+                <mat-label>Nombre del canal</mat-label>
+                <input formControlName="nombre" matInput required type="text">
+                @if (form.get('nombre').hasError('required')) {
+                  <mat-error>El nombre es requerido</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field appearance="fill" floatLabel="auto">
+                <mat-label>Alias del canal</mat-label>
+                <input formControlName="alias" matInput required type="text">
+                @if (form.get('alias').hasError('required')) {
+                  <mat-error>El alias es requerido</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field appearance="fill" floatLabel="auto">
+                <mat-label>Correo de notificación</mat-label>
+                <input formControlName="email_notification" matInput required type="text">
+                @if (form.get('email_notification').hasError('required')) {
+                  <mat-error>El correo es requerido
+                  </mat-error>
+                }
+                @if (form.get('email_notification').hasError('email')) {
+                  <mat-error>Formato de correo incorrecto
+                  </mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="fill" floatLabel="auto">
+                <mat-label>Descripción</mat-label>
+                <textarea formControlName="descripcion" matInput required rows="8"></textarea>
+                @if (form.get('descripcion').hasError('required')) {
+                  <mat-error>La descripción es requerida</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field appearance="fill">
+                <mat-label>Palabras Claves</mat-label>
+                <mat-chip-grid #chipList required>
+                  @for (palabra of this.selectedPalabras; track palabra) {
+                    <mat-chip (removed)="remove(palabra)" [removable]="true">
+                      {{palabra}}
+                      <mat-icon matChipRemove>cancel</mat-icon>
+                    </mat-chip>
+                  }
+                  <input #palabrasInput (matChipInputTokenEnd)="add($event)" [formControl]="palabrasCtrl" [matAutocomplete]="auto" [matChipInputAddOnBlur]="false" [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                  </mat-chip-grid>
+                  @if (chipList.errorState) {
+                    <mat-error>Debe seleccionar al menos una palabra clave.</mat-error>
+                  }
+                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                    @for (palabra of palabrasFiltradas |async; track palabra) {
+                      <mat-option [value]="palabra">
+                        {{palabra.palabra}}
+                      </mat-option>
+                    }
+                  </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" floatLabel="always">
+                  <mat-label>Publicado</mat-label>
+                  <mat-slide-toggle color="primary" formControlName="publicado">
+                  </mat-slide-toggle>
+                  <textarea hidden matInput></textarea>
+                </mat-form-field>
+              </div>
+              <div class="col-12 col-md-6 flex flex-col">
+                <mat-form-field appearance="fill" floatLabel="always">
+                  <mat-label>Imagen de portada</mat-label>
+                  <div class="flex flex-col">
+                    <div hidden>
+                      <label for="imagenPortada">Imagen portada: </label>
+                      <input #portada (change)="selectPortada(portada)" accept="image/*" id="imagenPortada" type="file">
+                      <input #dummy formControlName="urlimagen" matInput type="text">
+                    </div>
+
+                    @if (!selectedPortada) {
+                      <img alt="Imagen de portada del canal" height="180" src="img/previewimage.webp" width="320">
+                    }
+                    @if (selectedPortada) {
+                      <img [src]="selectedPortada" alt="Imagen de portada del canal" height="180" width="320">
+                    }
+                    <button (click)="selectImagenPortadaDialog($event, portada)" class="mt-3 self-start" color="primary" mat-raised-button>
+                      Seleccionar portada
+                    </button>
+
+                  </div>
+                  @if (form.get('urlimagen').hasError('required')) {
+                    <mat-error>La portada es requerida</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" floatLabel="always">
+                  <mat-label>Imagen de avatar</mat-label>
+                  <div class="flex flex-row items-center justify-start">
+                    <div hidden>
+                      <input #avatar (change)="selectAvatar(avatar)" accept="image/*" type="file">
+                      <input #dummy formControlName="urlavatar" matInput type="text">
+                    </div>
+
+                    <button (click)="selectImagenAvatarDialog($event, avatar)" color="primary" mat-raised-button>
+                      Seleccionar avatar
+                    </button>
+                    @if (!selectedAvatar) {
+                      <img alt="Avatar preview del canal"
+                        class="w-20 h-20 !rounded-full avatar-img ml-3 object-cover"
+                        height="48" src="img/previewimage.webp" width="48">
+                      }
+                      @if (selectedAvatar) {
+                        <img [src]="selectedAvatar" alt="Avatar del canal"
+                          class="w-20 h-20 !rounded-full object-cover avatar-img ml-3"
+                          height="48"
+                          width="48">
+                      }
+
+                    </div>
+                    @if (form.get('urlavatar').hasError('required')) {
+                      <mat-error>El avatar es requerido</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <mat-checkbox #checkBoxTerms labelPosition="after">
+                    He leído y acepto los <a (click)="openTCU($event, checkBoxTerms)" style="color: #2d8cf0">términos y
+                    condiciones de
+                  uso</a>.
+                </mat-checkbox>
+              </div>
+            </div>
+            <div class="row">
+              <div class="responsive-section flex space-x-4 self-end md:col-span-2">
+                <button mat-raised-button color="primary" type="submit" class="" [disabled]="invalid || !checkBoxTerms.checked">Enviar
+                  <mat-icon class="ml-1">send</mat-icon>
+                </button>
+                <button color="warn" mat-flat-button routerLink="/profile/solicitudes">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+

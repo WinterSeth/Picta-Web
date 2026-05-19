@@ -1,0 +1,150 @@
+.menu-user {
+  border-radius: 10px;
+}
+
+#sidebar {
+  overflow: auto;
+  position: relative;
+
+  & .close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+  }
+
+  &.active {
+    margin-left: 0;
+    box-shadow: #bbbbbb;
+
+    & .close-button {
+      animation: scalebutton .3s ease-in alternate;
+
+    }
+  }
+
+  & a.mat-list-item {
+    &.active {
+      border-left: 4px solid #1565C0;
+      color: #1565C0;
+      transition: .3s ease-in;
+    }
+  }
+
+}
+
+@keyframes scalebutton {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  90% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  95% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.wrapper {
+  display: block;
+}
+
+/*
+#sidebar {
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1031;
+  background: #05071F;
+  color: #fff;
+  transition: all 0.3s;
+}*/
+
+.nav-link {
+  color: #F9F9FB;
+  padding: 15px;
+}
+
+.nav-link.active,
+.nav-link:hover {
+  color: #FFFFFF;
+  font-weight: bolder;
+}
+
+
+#dismiss {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  /* top right corner of the sidebar */
+  top: 10px;
+  right: 10px;
+  z-index: 9999;
+
+  &:hover {
+    opacity: 0.7;
+
+  }
+}
+
+.user-section {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 2rem;
+
+  & img {
+    border-radius: 50%;
+    border: 2px green solid;
+    padding: 2px;
+  }
+
+  & span {
+    margin-top: 1rem;
+  }
+}
+@supports ( backdrop-filter: blur(50px)) {
+  #sidebar {
+    background: rgba(0, 0, 0, .3);
+    backdrop-filter: blur(30px);
+    --webkit-backdrop-filter: blur(30px);
+  }
+}
+
+.sidebar-socials {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem 1rem;
+  margin-top: auto;
+}
+
+.sidebar-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background-color 170ms ease, transform 170ms ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+}
+
+.sidebar-social-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}

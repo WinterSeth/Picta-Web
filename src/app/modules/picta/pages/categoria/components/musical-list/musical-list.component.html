@@ -1,0 +1,24 @@
+@if (mode() === 'card') {
+  <div class="cards-grid-container">
+    @for (video of videoclips(); track video.id) {
+      <app-musical-card [videoclip]="video"></app-musical-card>
+    }
+  </div>
+}
+
+@if (mode() === 'list') {
+  <div class="container">
+    <mat-nav-list>
+      @for (video of videoclips(); track video) {
+        <a mat-list-item [routerLink]="['/musical', video.slug_url]">
+          <img [ngSrc]="video.url_imagen + '_80x80'" alt="" class="avatar-list" height="70" loading="lazy" matListItemAvatar width="100" />
+          <h5 matListItemTitle >{{ video.nombre }}</h5>
+          <span matListItemLine style="color: #ccc">
+            {{ video.duracion }}
+          </span>
+          <mat-icon matListItemIcon color="primary"> play_circle_outline</mat-icon>
+        </a>
+      }
+    </mat-nav-list>
+  </div>
+}

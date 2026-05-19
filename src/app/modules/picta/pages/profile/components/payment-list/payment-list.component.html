@@ -1,0 +1,21 @@
+<div>
+
+  <h2 mat-dialog-title>Lista de pagos - {{data.user}}</h2>
+  <mat-dialog-content>
+    <cdk-virtual-scroll-viewport [itemSize]="data.payments.length" class="list">
+      <div *cdkVirtualFor="let item of data.payments;templateCacheSize: 10" class="item">
+        <div class="flex flex-column">
+          <h6>{{item.date|date: 'dd/MM/yyyy'}}</h6>
+          <p>
+            {{item.description}} - {{item.amount}} - {{item.currency}}
+          </p>
+        </div>
+      </div>
+    </cdk-virtual-scroll-viewport>
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cerrar</button>
+    <button mat-button color="primary" style="pointer-events: none;margin-left: auto;">Total: {{data.payments.length}}</button>
+  </mat-dialog-actions>
+</div>

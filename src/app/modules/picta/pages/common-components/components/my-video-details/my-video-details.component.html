@@ -1,0 +1,59 @@
+<div class="details-container">
+  <div (click)="close()" class="close-boton">
+    <button (click)="close()" aria-label="Close" mat-icon-button tabindex="0">
+      <img alt="close-button" src="img/close.svg">
+    </button>
+
+  </div>
+  <div class="back">
+    <div class="fill"></div>
+    <div class="details-background">
+      <img [ngSrc]="this.video().url_imagen + '_720x480'" width="720" height="480" alt="" class="bg-img">
+      <div class="overlay-bg">
+      </div>
+    </div>
+  </div>
+
+
+  <mat-tab-group headerPosition="below" mat-align-tabs="center">
+    <mat-tab label="Resumen">
+      <ng-template matTabContent>
+        <div class="presentacion-text py-3">
+          <h2>{{video().nombre}}</h2>
+          <h4>{{video().descripcion}}</h4>
+          <h4><strong>Duración: </strong>{{video().duracion}}</h4>
+          <a [routerLink]="['/medias', video().slug_url]" mat-raised-button>
+            <mat-icon>
+              play_arrow
+            </mat-icon>
+            {{playText()}}
+          </a>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Detalles">
+      <ng-template matTabContent>
+        <div class="presentacion-text py-3">
+          <h2>Detalles</h2>
+          <h4>{{video().descripcion}}</h4>
+          <h4><strong>Duración: </strong>{{video().duracion}}</h4>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Más">
+      <ng-template matTabContent>
+        <div class="related-videos py-3 flex align-items-center">
+          <app-my-carousel [controls]="false" [horizontal]="true" [videos]="related"
+                           title="Videos relacionados"></app-my-carousel>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!--<div class="details-tabs">
+    <button (click)="selectTab(0)" [ngClass]="{active: selectedTab == 0}" class="tab-button">Resumen</button>
+    <button (click)="selectTab(1)" [ngClass]="{active: selectedTab == 1}" class="tab-button">Detalles</button>
+    <button (click)="selectTab(2)" [ngClass]="{active: selectedTab == 2}" class="tab-button">Más</button>
+  </div>-->
+
+</div>

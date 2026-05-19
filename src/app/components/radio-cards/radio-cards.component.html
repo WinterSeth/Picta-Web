@@ -1,0 +1,89 @@
+<div class="radio-cards-shell" [class.radio-cards-shell--compact]="compact" role="list">
+  @if (compact) {
+    <div class="radio-favorites-strip" role="list">
+      @for (st of stationsSignal(); track trackById($index, st)) {
+        <mat-card
+          class="radio-favorite-card"
+          role="listitem"
+          [attr.aria-checked]="selectedId() === st.id"
+          tabindex="0"
+          (click)="onSelect(st)"
+          (keydown.enter)="onSelect(st)"
+        >
+          <button
+            mat-icon-button
+            type="button"
+            class="radio-favorite-card__heart"
+            [attr.aria-pressed]="appRadio.isFavorite(st) ? 'true' : 'false'"
+            [attr.aria-label]="appRadio.isFavorite(st) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+            (click)="onToggleFavorite(st, $event)"
+            (keydown.enter)="onToggleFavorite(st, $event)"
+            (keydown.space)="onToggleFavorite(st, $event)"
+          >
+            <mat-icon>{{ appRadio.isFavorite(st) ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+
+          <div class="radio-favorite-card__media">
+            <img [src]="getImageSrc(st)" [alt]="st.name" (error)="onImgError($event)" />
+          </div>
+
+          <div class="radio-favorite-card__content">
+            <p class="radio-favorite-card__name" [title]="formatStationName(st)">{{ formatStationName(st) }}</p>
+            <p class="radio-favorite-card__meta">{{ st.frequency || 'En vivo' }}</p>
+          </div>
+        </mat-card>
+      }
+    </div>
+  } @else {
+    <div class="radio-card-grid" role="list">
+      @for (st of stationsSignal(); track trackById($index, st)) {
+        <mat-card
+          class="radio-card"
+          role="listitem"
+          [attr.aria-checked]="selectedId() === st.id"
+          tabindex="0"
+          (click)="onSelect(st)"
+          (keydown.enter)="onSelect(st)"
+        >
+          <div class="radio-card__media">
+            <img [src]="getImageSrc(st)" [alt]="st.name" (error)="onImgError($event)" />
+
+            <div class="radio-card__badges">
+              @if (st.frequency) {
+                <span class="radio-chip radio-chip--freq">{{ st.frequency }}</span>
+              }
+              <button
+                mat-icon-button
+                type="button"
+                class="radio-card__heart"
+                [attr.aria-pressed]="appRadio.isFavorite(st) ? 'true' : 'false'"
+                [attr.aria-label]="appRadio.isFavorite(st) ? 'Quitar de favoritos' : 'Agregar a favoritos'"
+                (click)="onToggleFavorite(st, $event)"
+                (keydown.enter)="onToggleFavorite(st, $event)"
+                (keydown.space)="onToggleFavorite(st, $event)"
+              >
+                <mat-icon>{{ appRadio.isFavorite(st) ? 'favorite' : 'favorite_border' }}</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <mat-card-content class="radio-card__content">
+            <div class="radio-card__head">
+              <h3 class="radio-card__title" [title]="formatStationName(st)">{{ formatStationName(st) }}</h3>
+              <span class="radio-card__state" [class.radio-card__state--live]="selectedId() === st.id">{{ selectedId() === st.id ? 'Sintonizada' : 'Disponible' }}</span>
+            </div>
+
+            <div class="radio-card__meta">
+              <span class="radio-card__listeners">{{ formatListeners(st.listeners) }}</span>
+              <mat-icon class="radio-card__listeners-icon" aria-label="Oyentes">headset</mat-icon>
+            </div>
+
+            @if (st.description && !st.description.toLowerCase().includes('unspecified')) {
+              <p class="radio-card__description">{{ st.description }}</p>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

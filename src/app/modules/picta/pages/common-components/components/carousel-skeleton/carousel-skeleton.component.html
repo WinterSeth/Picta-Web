@@ -1,0 +1,22 @@
+<div class="carousel-skeleton">
+  @if (title()) {
+    <div class="carousel-skeleton-header">
+      <div class="carousel-skeleton-title"></div>
+    </div>
+  }
+
+  <div class="carousel-skeleton-track">
+    @for (item of [].constructor(itemCount()); track item) {
+      <div class="carousel-skeleton-card">
+        <div class="carousel-skeleton-thumb"></div>
+        <div class="carousel-skeleton-body">
+          <div class="carousel-skeleton-avatar"></div>
+          <div class="carousel-skeleton-meta">
+            <div class="carousel-skeleton-line carousel-skeleton-line-title"></div>
+            <div class="carousel-skeleton-line carousel-skeleton-line-meta"></div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,63 @@
+:root {
+  --picta-font-primary: 'Bebas Neue', sans-serif;
+  --picta-font-secondary: 'Abel', sans-serif;
+  --picta-font-body: 'Roboto', sans-serif;
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-bg-mid: rgba(16, 25, 53);
+}
+
+.subscription-container {
+  padding: 0 16px 32px;
+}
+
+.subscription-header {
+  border-radius: 16px;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  border: 1px solid var(--picta-yellow-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.subscription-empty {
+  color: var(--picta-text-muted);
+  padding: 22px 12px;
+  text-align: center;
+}
+
+.post-list {
+  max-height: 100%;
+}
+
+mat-nav-list {
+  & a button {
+    display: none;
+  }
+
+  & a:hover {
+    background-color: var(--picta-bg-mid) !important;
+
+    & button {
+      display: block;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .subscription-container {
+    padding: 0 6px 22px;
+  }
+}

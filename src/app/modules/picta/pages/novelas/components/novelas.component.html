@@ -1,0 +1,104 @@
+<div>
+  <app-section-header
+    title="Novelas"
+    description="Telenovelas cubanas y más"
+    [image]="'/img/novelas_header.webp'">
+  </app-section-header>
+  
+  @if (loadingCarousel()) {
+    <app-carousel-skeleton></app-carousel-skeleton>
+  } @else if (latestUpdatedNovels().length) {
+    <div class="categoria-carousel-section container-wide">
+      <app-my-carousel-o
+        [series]="true"
+        title="Novelas actualizadas"
+        [videos]="latestUpdatedNovels()"
+        [hasMore]="true"
+        [showMoreRoute]="['/novelas/recientes']"></app-my-carousel-o>
+    </div>
+  }
+
+  <div class="categoria-toolbar">
+    <div class="categoria-filters">
+      <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
+        <mat-label>Buscar Novelas...</mat-label>
+        <input [formControl]="searchControl" matInput type="text" />
+        <button
+          type="button"
+          mat-icon-button
+          matSuffix
+          (click)="clearSearch()"
+          *ngIf="searchControl.value"
+          aria-label="Limpiar búsqueda">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
+        <mat-label>País</mat-label>
+        <mat-select [formControl]="paisControl">
+          <mat-option [value]="''">Todos</mat-option>
+          @for (pais of paises; track pais) {
+            <mat-option [value]="pais">{{ pais }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
+        <mat-label>Año</mat-label>
+        <mat-select [formControl]="anoControl">
+          <mat-option [value]="''">Todos</mat-option>
+          @for (ano of anos; track ano) {
+            <mat-option [value]="ano">{{ ano }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="flex justify-center items-center">
+      <mat-button-toggle-group
+        [formControl]="viewModeControl"
+        aria-label="list view">
+        <mat-button-toggle matTooltip="Tarjetas" value="card">
+          <mat-icon>view_module</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle matTooltip="Lista" value="list">
+          <mat-icon>list</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+
+  @if (shows?.length) {
+    <div class="peliculas-list container-wide">
+      <app-serie-list
+        [mode]="viewModeControl.value"
+        [series]="shows"
+        [baseRoute]="'/novelas'"></app-serie-list>
+      @if (loadMore) {
+        <app-categoria-loading-state
+          tone="serie"
+          label="Cargando más novelas..."
+          ariaLabel="Cargando más novelas" />
+      }
+    </div>
+  } @else if (!loading) {
+    <div
+      class="flex mx-auto justify-center items-top h-screen mt-5 px-4 categoria-empty-state">
+      <mat-icon class="mr-3 categoria-empty-icon">search_off</mat-icon>
+      <h1 class="mb-0 categoria-empty-title">No se encontraron resultados</h1>
+    </div>
+  }
+
+  @if (loading) {
+    <!-- Estado de carga -->
+    <div
+      class="inset-0 flex flex-col items-center justify-center h-screen z-50">
+      <div class="p-4 !rounded-lg flex flex-col items-center">
+        <mat-spinner
+          aria-label="cargando"
+          [diameter]="50"
+          color="warn"></mat-spinner>
+        <p class="mt-4">Cargando...</p>
+      </div>
+    </div>
+  }
+</div>

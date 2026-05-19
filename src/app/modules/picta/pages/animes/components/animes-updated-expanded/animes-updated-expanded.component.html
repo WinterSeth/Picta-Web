@@ -1,0 +1,38 @@
+<section class="series-updated-expanded" aria-live="polite">
+  <header class="series-updated-expanded-header">
+    <div>
+      <h1 class="series-updated-expanded-title">Animes actualizados</h1>
+      <p class="series-updated-expanded-subtitle">
+        Listado de los 20 animes más recientemente actualizados.
+      </p>
+    </div>
+
+    <a
+      mat-stroked-button
+      [routerLink]="['/animes']"
+      class="series-updated-expanded-back"
+      aria-label="Volver a Animes">
+      <mat-icon>arrow_back</mat-icon>
+      Volver a Animes
+    </a>
+  </header>
+
+  @if (loading()) {
+    <div class="series-updated-expanded-skeleton" aria-hidden="true">
+      @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) {
+        <div class="series-updated-expanded-skeleton-card"></div>
+      }
+    </div>
+  } @else if (!animes().length) {
+    <div class="series-updated-expanded-empty">
+      <mat-icon>search_off</mat-icon>
+      <p>No hay animes actualizados para mostrar.</p>
+    </div>
+  } @else {
+    <div class="series-updated-expanded-grid">
+      @for (anime of animes(); track trackAnime($index, anime)) {
+        <app-serie-card [serie]="anime"></app-serie-card>
+      }
+    </div>
+  }
+</section>

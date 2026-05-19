@@ -1,0 +1,86 @@
+<div 
+  [class.playing]="isPlaying()" 
+  [id]="'pl-' + publicacion().id" 
+  class="playlist-item"
+>
+  <div class="px-1 py-2 flex items-center justify-between">
+    <!-- Contenedor principal -->
+    <div (click)="playVideo()" class="listview flex items-center w-full" title="Reproducir">
+      <!-- Índice o icono de reproducción -->
+      <div class="item-index">
+        @if (isPlaying()) {
+          <mat-icon class="play-icon">play_arrow</mat-icon>
+        }
+        @if (!isPlaying()) {
+          <span>{{playlist() + 1}}</span>
+        }
+      </div>
+
+      <!-- Miniatura -->
+      <div class="thumbnail-container">
+        <img
+          [ngSrc]="publicacion().url_imagen + '_80x45'"
+          width="80" height="45"
+          alt="Miniatura del video"
+          loading="lazy"
+        >
+        <span class="duration-badge">{{publicacion().duracion}}</span>
+      </div>
+
+      <!-- Título -->
+      <div class="video-info">
+        <span class="video-title">{{publicacion().nombre}}</span>
+      </div>
+    </div>
+
+    <!-- Botón de descarga -->
+    @if (publicacion().descargable && publicacion().descarga && publicacion().tipo != 'live') {
+      <button 
+        #tooltip3="matTooltip" 
+        (click)="openDownload()" 
+        [matTooltip]="user ? (listas === 'Si' ? 'Descargar video' : 'Descargar con plan premium') : 'Debes estar autenticado'"
+        mat-icon-button
+        class="download-btn flex items-center justify-center"
+      >
+        @if (precioDescarga && !video.pd) {
+          <mat-icon matBadge="$" matBadgeColor="primary" class="premium-badge">get_app</mat-icon>
+        }
+        @if (!precioDescarga || video.pd) {
+          <mat-icon>get_app</mat-icon>
+        }
+      </button>
+    }
+  </div>
+</div>
+
+<!-- Modal upgrade -->
+@if (showDownloadUpgradeModal()) {
+  <div class="picta-modal-overlay">
+    <section class="picta-ad-modal">
+      <button (click)="closeDownloadUpgradeModal()" aria-label="Cerrar" class="picta-ad-close flex! justify-center!" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+
+      <header class="picta-ad-header">
+        <p class="picta-ad-kicker">Picta</p>
+        <h2 class="picta-ad-title">Descargar desde listas</h2>
+        <p class="picta-ad-subtitle">
+          Para descargar videos desde tus listas, adquiere una suscripción.
+        </p>
+      </header>
+
+      <section class="picta-ad-note">
+        <p>Con un plan activo descargas videos y más beneficios premium.</p>
+      </section>
+
+      <div class="picta-ad-actions">
+        <button (click)="closeDownloadUpgradeModal()" mat-stroked-button class="picta-ad-secondary-btn">
+          Cancelar
+        </button>
+        <button (click)="navigateToSubscriptions()" mat-raised-button class="picta-ad-primary-btn">
+          Ver planes
+        </button>
+      </div>
+    </section>
+  </div>
+}

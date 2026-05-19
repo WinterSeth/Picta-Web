@@ -1,0 +1,57 @@
+<div class="flex">
+  @if (playlists()) {
+    <div class="container6">
+      <mat-accordion>
+        @for (playlist of playlists(); track playlist) {
+          <mat-expansion-panel #matExpansionPanel [class.opened]="matExpansionPanel.expanded" togglePosition="before">
+            <mat-expansion-panel-header (click)=" matExpansionPanel.expanded ? matExpansionPanel.close() : matExpansionPanel.open()" class="p-3 flex">
+              <div class="flex items-center flex-grow-1">
+                <mat-icon class="mr-3">playlist_play</mat-icon>
+                <div class="flex flex-col">
+                  <div>{{playlist.nombre}}</div>
+                  <div> {{playlist.publicacion.length}} videos</div>
+                </div>
+                @if (matExpansionPanel.expanded) {
+                  <mat-icon class="none md:block ml-3">edit</mat-icon>
+                }
+                <span class="none md:block mx-auto" style="font-weight: bold">Creada el {{playlist.fecha | date:'short'}}</span>
+                <div class="buttons ml-auto block md:none">
+                  <a (click)="$event.stopPropagation(); matExpansionPanel.expanded ? matExpansionPanel.close() : matExpansionPanel.open()" class="" color="accent" mat-icon-button title="Editar lista">
+                    <mat-icon>{{matExpansionPanel.expanded ? 'save' : 'edit'}}</mat-icon>
+                  </a>
+                  <button (click)="delete(playlist)" class="" color="accent" mat-icon-button title="Eliminar lista">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                  <a (click)="$event.stopPropagation();goToPlaylist(playlist)" class="" color="accent" mat-icon-button title="Reproducir lista">
+                    <mat-icon>play_arrow</mat-icon>
+                  </a>
+                </div>
+                <div class="buttons-md ml-auto none md:block">
+                  <a (click)="$event.stopPropagation(); matExpansionPanel.expanded ? matExpansionPanel.close() : matExpansionPanel.open()" class="mr-2" color="accent" mat-raised-button title="Editar lista">
+                    <mat-icon>{{matExpansionPanel.expanded ? 'save' : 'edit'}}</mat-icon>
+                    {{matExpansionPanel.expanded ? 'Guardar' : 'Editar'}}
+                  </a>
+                  <button (click)="delete(playlist)" class="mr-2" color="accent" mat-raised-button title="Eliminar lista">
+                    <mat-icon>delete</mat-icon>
+                    Eliminar
+                  </button>
+                  <a (click)="$event.stopPropagation();goToPlaylist(playlist)" class="" color="accent" mat-icon-button title="Reproducir lista">
+                    <mat-icon>play_arrow</mat-icon>
+                  </a>
+                </div>
+              </div>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <app-playlist-edit [playlist]="playlist"></app-playlist-edit>
+            </ng-template>
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+    </div>
+  } @else {
+    <div class="flex">
+      <mat-spinner aria-label="cargando" [diameter]="30"></mat-spinner>
+      <span class="ml-3">Cargando</span>
+    </div>
+  }
+</div>

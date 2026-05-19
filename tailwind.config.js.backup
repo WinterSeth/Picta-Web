@@ -1,0 +1,22 @@
+module.exports = {
+  /*mode: 'jit',*/
+  purge: {
+    enabled: false,
+    content: ['./src/**/*.{html,ts}'],
+  },
+  darkMode: 'class', // or 'media' or 'class'
+  theme: {
+    extend: {
+      colors: {
+        'picta-bg-blue': '#05071F',
+        'picta-secondary-bg-blue': '#001d3d',
+        'picta-terciary-bg-blue': '#003566',
+      },
+    },
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+  important: true,
+};

@@ -1,0 +1,31 @@
+<div
+  class="categoria-tag-item"
+  [class.categoria-tag-item-favorite]="favoriteOnly()"
+  [@favoriteRemovalCard]="isRemoving ? 'removing' : 'idle'"
+>
+  <button
+    mat-stroked-button
+    type="button"
+    class="categoria-tag"
+    [class.categoria-tag-favorite]="favoriteOnly()"
+    [class.categoria-tag-favorited]="emphasizeFavorite() && (favoriteActive() || favoriteOnly())"
+    [class.categoria-tag-with-favorite]="favoriteEnabled() && id()"
+    [class.categoria-tag-active]="active()"
+    [attr.aria-pressed]="active()"
+    (click)="onSelect()"
+  >
+    <span class="categoria-tag-label">{{ label() }}</span>
+  </button>
+
+  @if (favoriteEnabled() && id()) {
+    <button
+      mat-icon-button
+      type="button"
+      class="categoria-favorite-btn"
+      [attr.aria-label]="favoriteAriaLabel()"
+      (click)="onToggleFavorite($event)"
+    >
+      <mat-icon>{{ favoriteIcon() }}</mat-icon>
+    </button>
+  }
+</div>

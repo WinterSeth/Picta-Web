@@ -1,0 +1,38 @@
+@if (mode() === 'card') {
+  <div class="cards-grid-container" [@modalScaleIn]>
+    @for (serie of series(); track serie.pelser_id) {
+      <div class="modal-animated-item">
+        <app-serie-card
+          [serie]="serie"
+          [baseRoute]="baseRoute()"></app-serie-card>
+      </div>
+    }
+  </div>
+} @else {
+  @if (mode() === 'list') {
+    <div class="container">
+      <mat-nav-list>
+        @for (serie of series(); track serie) {
+          <a mat-list-item [routerLink]="['/serie', serie.nombre]">
+            <img
+              [ngSrc]="serie.imagen_secundaria + '_80x80'"
+              alt=""
+              class="avatar-list"
+              height="80"
+              loading="lazy"
+              matListItemAvatar
+              width="80" />
+            <h5 matListItemTitle class="text-white ml-2">{{ serie.nombre }}</h5>
+            <span matListItemLine style="color: #ccc">
+              {{ serie.cantidad_temporadas }}
+              {{ serie.cantidad_temporadas > 1 ? 'temporadas' : 'temporada' }}
+            </span>
+            <mat-icon matListItemIcon color="primary">
+              play_circle_outline</mat-icon
+            >
+          </a>
+        }
+      </mat-nav-list>
+    </div>
+  }
+}

@@ -1,0 +1,123 @@
+/* Follow button styles for shorts */
+.follow-btn {
+  border-color: rgba(232, 70, 46, 0.55) !important;
+  color: #1a1a2e !important;
+  font-weight: 600;
+  min-height: 32px;
+  transition: transform 170ms ease, background-color 170ms ease;
+  background: #ffffff !important; /* Fondo blanco cuando NO sigue */
+}
+
+.follow-btn.subscribed {
+  background: rgba(41, 44, 72, 0.88) !important; /* Fondo oscuro cuando sigue */
+  color: #f4f7fb !important;
+}
+
+.follow-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-1px);
+}
+
+.follow-btn[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #f0f0f0 !important;
+}
+
+.follow-btn .animate-spin {
+  animation: spin 1s linear infinite;
+  color: #1a1a2e !important;
+}
+
+.follow-btn mat-icon {
+  color: #1a1a2e !important;
+}
+
+.follow-btn.subscribed mat-icon {
+  color: #f4f7fb !important;
+}
+
+.follow-btn:hover {
+  &:not(.subscribed) .mat-icon {
+    color: #1a1a2e !important;
+  }
+  
+  &.subscribed .mat-icon {
+    color: #f4f7fb !important;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Follow menu styles */
+:host ::ng-deep .header-menu-panel {
+  .mat-mdc-menu-item {
+    min-height: 42px;
+    border-radius: 12px;
+    padding: 0 16px;
+    color: #1a1a2e;
+    
+    .mat-icon {
+      margin-right: 12px;
+      color: #1a1a2e;
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    &.mat-mdc-menu-item-highlighted {
+      background: rgba(232, 70, 46, 0.12) !important;
+    }
+    
+    &.active {
+      background: rgba(232, 70, 46, 0.15) !important;
+    }
+  }
+}
+
+/* Channel follow button parity with canal/publicacion */
+.channel-follow-button {
+  background-color: rgba(255,255,255,0.65) !important;
+  color: #111 !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  min-height: 38px;
+  font-weight: 600;
+  position: relative;
+  padding-left: 12px;
+  padding-right: 12px;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.channel-follow-button .channel-follow-label {
+  color: #111 !important;
+}
+
+.channel-follow-button.subscribed {
+  background-color: rgba(243,230,40,0.85) !important;
+  color: #111 !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.channel-follow-button.subscribed mat-icon {
+  color: #111 !important;
+}
+
+:host ::ng-deep .channel-follow-button:not(.subscribed):hover {
+  background: #ffffff !important;
+}
+
+:host ::ng-deep .channel-follow-button .subscribe-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}

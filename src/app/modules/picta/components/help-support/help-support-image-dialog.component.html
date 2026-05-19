@@ -1,0 +1,9 @@
+<div class="image-dialog">
+  <div class="title">{{ data.title || 'Vista previa' }}</div>
+  <mat-dialog-content>
+    <img [src]="data.imageUrl" alt="imagen ampliada" />
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cerrar</button>
+  </mat-dialog-actions>
+</div>

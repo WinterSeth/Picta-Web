@@ -1,0 +1,19 @@
+.contextmenu {
+  background-color: #223054;
+  opacity: 0.8;
+  position: absolute;
+  z-index: 2;
+
+
+  & button {
+    background-color: #223054;
+
+    color: #bbbbbb;
+
+    &:hover {
+      color: white;
+      opacity: 1;
+    }
+  }
+}
+

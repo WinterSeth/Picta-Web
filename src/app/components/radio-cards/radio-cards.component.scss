@@ -1,0 +1,479 @@
+:host {
+  display: block;
+}
+
+.radio-cards-shell {
+  display: grid;
+  gap: 18px;
+}
+
+.radio-favorites-strip {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(210px, 1fr);
+  gap: 14px;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  scroll-snap-type: x proximity;
+}
+
+.radio-favorite-card {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  min-width: 210px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(232, 70, 46, 0.12),
+      transparent 40%
+    ),
+    linear-gradient(180deg, rgba(20, 26, 56, 0.98), rgba(13, 18, 40, 0.98));
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.radio-favorite-card:hover,
+.radio-favorite-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(247, 173, 154, 0.3);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.28);
+  outline: none;
+}
+
+.radio-favorite-card__heart,
+.radio-card__heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.9),
+    rgba(2, 6, 23, 0.92)
+  );
+  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.45);
+  backdrop-filter: blur(8px);
+}
+
+.radio-favorite-card__heart mat-icon,
+.radio-card__heart mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.radio-favorite-card__heart[aria-pressed='true'] mat-icon,
+.radio-card__heart[aria-pressed='true'] mat-icon {
+  color: #f87171;
+}
+
+.radio-favorite-card__heart[aria-pressed='false'] mat-icon,
+.radio-card__heart[aria-pressed='false'] mat-icon {
+  color: #f8fafc;
+}
+
+.radio-favorite-card__heart:hover,
+.radio-card__heart:hover {
+  border-color: rgba(248, 113, 113, 0.7);
+  transform: translateY(-1px);
+}
+
+.radio-favorite-card__heart:focus-visible,
+.radio-card__heart:focus-visible {
+  outline: 2px solid rgba(248, 113, 113, 0.85);
+  outline-offset: 2px;
+}
+
+.radio-favorite-card__media,
+.radio-card__media {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 14px 0 0;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.radio-favorite-card__media {
+  aspect-ratio: 16 / 9;
+}
+
+.radio-card-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 640px) {
+  .radio-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .radio-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .radio-card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 400px) {
+  .radio-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.radio-card {
+  position: relative;
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(232, 70, 46, 0.14),
+      transparent 40%
+    ),
+    linear-gradient(180deg, rgba(20, 26, 56, 0.98), rgba(13, 18, 40, 0.98));
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.22);
+  color: #f4f7fb;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.radio-card:hover,
+.radio-card:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(247, 173, 154, 0.28);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28);
+  outline: none;
+}
+
+.radio-card__media {
+  aspect-ratio: 16 / 9;
+}
+
+.radio-favorite-card__media img,
+.radio-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.radio-card__badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.radio-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.radio-card__content,
+.radio-favorite-card__content {
+  padding: 14px 14px 16px;
+}
+
+.radio-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.radio-card__title,
+.radio-favorite-card__name {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1rem;
+  line-height: 1.2;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif !important;
+  letter-spacing: 0.01em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.radio-favorite-card__name {
+  font-size: 0.96rem;
+}
+
+.radio-card__state {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(236, 240, 250, 0.8);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.radio-card__state--live {
+  color: #fff;
+  background: rgba(232, 70, 46, 0.18);
+  border: 1px solid rgba(232, 70, 46, 0.26);
+}
+
+.radio-card__meta,
+.radio-favorite-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  color: rgba(236, 240, 250, 0.76);
+}
+
+.radio-card__listeners,
+.radio-favorite-card__meta {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.92rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.radio-card__listeners-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.95rem;
+  height: 0.95rem;
+  font-size: 0.95rem;
+  line-height: 0.95rem;
+  margin-top: 0;
+  color: rgba(236, 240, 250, 0.62);
+}
+
+.radio-card__description {
+  margin: 10px 0 0;
+  color: rgba(236, 240, 250, 0.78);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.radio-favorites-strip::-webkit-scrollbar {
+  height: 8px;
+}
+
+.radio-favorites-strip::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+}
+:host {
+  display: block;
+}
+
+.cards-grid {
+  display: grid;
+  gap: 1rem;
+  /* Responsive columns using auto-fit with a min width of 280px so we get up to 4 cols */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  justify-content: center; /* center grid tracks when there's extra space */
+  /* Limit visual width to the space occupied by 4 columns plus gaps so fewer items center */
+  max-width: calc((320px * 4) + (1.75rem * 3));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* When grid has fewer columns than container, limit max-width so cards appear centered */
+:host {
+  display: block;
+}
+
+/* keep previous fallback but rely on explicit calc above */
+
+@media (min-width: 600px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .cards-grid {
+    /* Up to 4 columns but allow centering when fewer items are present */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+.radio-card {
+  background: linear-gradient(
+    180deg,
+    var(--picta-card-bg-start),
+    var(--picta-card-bg-end)
+  );
+  border: 1px solid var(--picta-card-border, rgba(255, 255, 255, 0.06));
+  color: var(--picta-card-text, #f4f7fb);
+  border-radius: 12px;
+  overflow: hidden;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+.radio-card:focus-visible,
+.radio-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--picta-card-shadow, 0 18px 40px rgba(0, 0, 0, 0.48));
+  outline: none;
+}
+
+.card-media {
+  position: relative;
+  overflow: hidden;
+  /* Use modern aspect-ratio when available to keep 16:9 thumbnails */
+  aspect-ratio: 16 / 9;
+  /* larger min-height fallback to preserve 16:9 at min-width 280px: 280*(9/16)=157.5 */
+  min-height: 157px; /* fallback minimum to approximate 16:9 */
+}
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.overlay {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+/* Ensure the favorite button is accessible: visible focus, larger hit target */
+.overlay button[mat-icon-button] {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay button[mat-icon-button]:focus-visible {
+  outline: 2px solid rgba(243, 230, 40, 0.28);
+  outline-offset: 2px;
+}
+
+.sub-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  color: rgba(244, 247, 251, 0.9);
+}
+.sub-meta .mount {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.sub-meta .listeners {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.sub-meta .icon-user {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
+.sub-meta .count {
+  font-size: 0.9rem;
+}
+
+.card-content {
+  padding: 1rem 1.25rem 1.25rem 1.25rem;
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.title {
+  font-family: 'Roboto', sans-serif !important;
+  font-weight: 600;
+  color: #f4f7fb;
+  letter-spacing: 0.04em;
+  /* clamp to 2 lines with ellipsis */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.freq {
+  font-family: 'Abel', sans-serif;
+  color: rgba(244, 247, 251, 0.62);
+  font-size: 0.9rem;
+}
+.desc {
+  margin-top: 0.5rem;
+  font-family: 'Roboto', sans-serif;
+  color: rgba(244, 247, 251, 0.76);
+  font-size: 0.95rem;
+  min-height: 2.4rem;
+}
+
+/* Minor accessibility tweak: ensure focus ring uses theme token */
+.radio-card:focus-visible {
+  box-shadow: 0 8px 24px rgba(243, 230, 40, 0.14);
+  outline: 2px solid rgba(243, 230, 40, 0.28);
+  outline-offset: 2px;
+}

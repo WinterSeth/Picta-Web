@@ -1,0 +1,45 @@
+/* Notification toast styles */
+:host { display: block; }
+
+.islaplay-toast {
+  position: relative;
+}
+
+.toast-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: 100%;
+  overflow: hidden;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.toast-progress > .bar {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  animation-name: shrink;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes shrink {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* color variants */
+.toast-progress.type-ok .bar {
+  /* accent.500 -> #f3e628 (amarillo de acento) */
+  background: linear-gradient(90deg, rgba(243,230,40,0.95), rgba(243,230,40,0.8));
+}
+.toast-progress.type-error .bar {
+  /* secondary.500 -> #e8462e (rojo/anaranjado) */
+  background: linear-gradient(90deg, rgba(232,70,46,0.95), rgba(232,70,46,0.8));
+}
+.toast-progress.type-notification .bar {
+  /* primary.500 -> #292c48 (azul oscuro) */
+  background: linear-gradient(90deg, rgba(41,44,72,0.95), rgba(41,44,72,0.8));
+}

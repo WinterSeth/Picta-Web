@@ -1,0 +1,164 @@
+<div class="container p-4">
+  <div class="uppercase text-2xl text-white font-bold py-6">Solicitud de vendedor</div>
+  <form (ngSubmit)="save()" [formGroup]="form" class="grid grid-cols-none md:grid-cols-2 gap-6">
+    <div class="justify-center items-center my-4 md:col-span-2">
+      <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label>Tipo</mat-label>
+        <input type="text" matInput hidden />
+        <mat-button-toggle-group formControlName="type">
+          <mat-button-toggle value="NATURAL">Natural</mat-button-toggle>
+          <mat-button-toggle value="LEGAL">Jurídico</mat-button-toggle>
+        </mat-button-toggle-group>
+      </mat-form-field>
+      <div>
+        <p>{{ type === 'NATURAL' ? 'Una Persona Natural actúa a título personal. Así puedes ser el conductor de tu propio negocio y el responsable por el mismo.' : 'Como Persona Jurídica no actúas tú a título personal, sino como una entidad (empresa) que como tal tiene derechos y obligaciones.' }}</p>
+      </div>
+    </div>
+
+    @if (type === 'LEGAL') {
+      <mat-radio-group formControlName="codeType" name="codigo" aria-label="Select an option">
+        <mat-radio-button value="REUUP">Código REUUP</mat-radio-button>
+        <mat-radio-button value="NIT">Código NIT</mat-radio-button>
+      </mat-radio-group>
+    }
+
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>{{ type === 'NATURAL' ? 'Nombre(s) y Apellidos' : 'Nombre de la Empresa' }}</mat-label>
+      <input formControlName="name" matInput required type="text" placeholder="{{ type === 'NATURAL' ? 'Juan Perez Perez' : 'Empresa SA' }}"/>
+      @if (form.get('name').touched && form.get('name').hasError('required')) {
+        <mat-error>{{ type === 'NATURAL' ? 'Nombre(s) y Apellidos' : 'Nombre de la Empresa' }} es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    @if (type === 'LEGAL') {
+      <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label>Código REUUP</mat-label>
+        <input formControlName="reuup" matInput required type="text" placeholder="000.0.00000"/>
+        @if (form.get('reuup').touched && form.get('reuup').hasError('required')) {
+          <mat-error>El Código REUUP es obligatorio</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label> {{ type === 'NATURAL' ? 'Carne de identidad' : 'Carnet de identidad del representante legal' }}</mat-label>
+      <input formControlName="ci" placeHolderCharacter="0" mask="00000000000" matInput required type="text" />
+      @if (form.get('ci').hasError('required') && form.get('ci').touched) {
+        <mat-error>El carne de identidad es obligatorio</mat-error>
+      }
+      @if (form.get('ci').touched && (form.get('ci').hasError('minlength') || form.get('ci').hasError('maxlength'))) {
+        <mat-error>El carne de identidad debe tener 11 dígitos</mat-error>
+      }
+      @if (form.get('ci').touched && form.get('ci').hasError('pattern')) {
+        <mat-error>El carne solo debe contener números.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (type === 'LEGAL') {
+      <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label>Código NIT</mat-label>
+        <input formControlName="nit" matInput required type="text" placeholder="000" />
+        @if (form.get('nit').touched && form.get('nit').hasError('required')) {
+          <mat-error>El Código NIT es obligatorio</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>Correo</mat-label>
+      <input formControlName="email" matInput required type="email" placeholder="correo@dominio.cu" />
+      @if (form.get('email').touched && form.get('email').hasError('required')) {
+        <mat-error>El correo es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>{{ type === 'NATURAL' ? 'Dirección' : 'Domicilio Legal' }}</mat-label>
+      <input formControlName="address" matInput required type="text" placeholder="Calle A entre B y C, #1" />
+      @if (form.get('address').touched && form.get('address').hasError('required')) {
+        <mat-error>La dirección es obligatorio</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>Provincia</mat-label>
+      <mat-select formControlName="province" (selectionChange)="selectProvince($event)" placeholder="Provincia">
+        @for (province of provinces$ | async; track province) {
+          <mat-option [value]="province.id">{{ province.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (type === 'NATURAL') {
+      <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label>Tarjeta Bancaria</mat-label>
+        <input formControlName="bank_card" [showMaskTyped]="true" placeHolderCharacter="0" mask="0000 - 0000 - 0000 - 0000" matInput required type="text" />
+        @if (form.get('bank_card').touched && form.get('bank_card').hasError('required')) {
+          <mat-error>La Tarjeta Bancaria es obligatoria</mat-error>
+        }
+        @if (form.get('bank_card').touched && (form.get('bank_card').hasError('minlength') || form.get('bank_card').hasError('maxlength'))) {
+          <mat-error>La Tarjeta Bancaria debe tener 16 dígitos</mat-error>
+        }
+        @if (form.get('bank_card').touched && form.get('bank_card').hasError('pattern')) {
+          <mat-error>Solo debe contener números.</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>Cuenta Bancaria</mat-label>
+      <input formControlName="account" placeHolderCharacter="0" [showMaskTyped]="true" mask="0000 - 0000 - 0000 - 0000" matInput required type="text" />
+      @if (form.get('account').touched && (form.get('account').hasError('minlength') || form.get('account').hasError('maxlength'))) {
+        <mat-error>La Cuenta Bancaria debe tener 16 dígitos</mat-error>
+      }
+      @if (form.get('account').touched && form.get('account').hasError('pattern')) {
+        <mat-error>Solo debe contener números.</mat-error>
+      }
+      @if (form.get('account').touched && form.get('account').hasError('required')) {
+        <mat-error>La cuenta es obligatoria</mat-error>
+      }
+    </mat-form-field>
+
+    @if (type === 'NATURAL') {
+      <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label>Código NIT</mat-label>
+        <input formControlName="nit" matInput type="text" placeholder="000"/>
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>Municipio</mat-label>
+      <mat-select formControlName="municipality" placeholder="Municipio">
+        @for (municipe of municipalities$ | async; track municipe) {
+          <mat-option [value]="municipe.id">{{ municipe.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (type === 'NATURAL') {
+      <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label>Número de licencia CP</mat-label>
+        <input formControlName="license" matInput type="text" placeholder="12345"/>
+        @if (form.get('license').touched && form.get('license').hasError('pattern')) {
+          <mat-error>Solo debe contener números.</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>Sucursal bancaria</mat-label>
+      <input formControlName="bank_branch" mask="9999999999999999" placeholder="000" matInput required type="text" />
+      @if (form.get('bank_branch').touched && form.get('bank_branch').hasError('required')) {
+        <mat-error>La sucursal bancaria es obligatoria</mat-error>
+      }
+      @if (form.get('bank_branch').touched && form.get('bank_branch').hasError('pattern')) {
+        <mat-error>Solo debe contener números.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="responsive-section space-x-4 self-end md:col-span-2">
+      <button color="warn" mat-flat-button routerLink="/profile/solicitudes">Cancelar</button>
+      <button color="primary" mat-flat-button type="submit">Guardar</button>
+    </div>
+  </form>
+</div>

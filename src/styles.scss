@@ -1,0 +1,1977 @@
+@use '@angular/material' as mat;
+@use 'sass:map';
+
+@use 'tailwindcss';
+
+@import 'animate.css';
+
+a,
+button,
+img,
+div {
+  outline: 0 !important;
+}
+
+button#owl-prev,
+button#owl-next {
+  display: none !important;
+}
+
+.text-wrap {
+  white-space: normal !important;
+}
+
+.tile {
+  box-shadow: none !important;
+}
+
+html {
+  min-height: 100vh;
+  max-width: 100vw;
+  scroll-behavior: smooth;
+}
+
+body {
+  //height: calc(100vh - 64px);
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
+  //font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Roboto', sans-serif;
+  //background-color: #05071F;
+  //color: white;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+:root {
+  --picta-font-primary: 'Bebas Neue', sans-serif;
+  --picta-font-secondary: 'Abel', sans-serif;
+  --picta-font-body: 'Roboto', sans-serif;
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+}
+
+.mat-drawer {
+  border-right: none !important; /* Elimina borde */
+  box-shadow: none !important; /* Elimina sombra (opcional) */
+}
+
+// Tipografias globales:
+// - Principal: Bebas Neue (titulares)
+// - Complementaria: Abel (etiquetas y controles)
+// - Lectura: Roboto (parrafos y contenido)
+
+.font-primary {
+  font-family: var(--picta-font-primary);
+}
+
+.font-secondary {
+  font-family: var(--picta-font-secondary);
+}
+
+.font-body {
+  font-family: var(--picta-font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.mat-headline-1,
+.mat-headline-2,
+.mat-headline-3,
+.mat-headline-4,
+.mat-headline-5,
+.mat-headline-6 {
+  font-family: var(--picta-font-primary);
+  letter-spacing: 0.03em;
+}
+
+.mat-mdc-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-raised-button,
+.mat-mdc-menu-item,
+.mat-mdc-option,
+.mat-mdc-select,
+.mat-button-toggle,
+.mat-button-toggle-group,
+.mat-mdc-tab,
+.mat-mdc-list-item,
+.mat-toolbar,
+.mat-mdc-snack-bar-container,
+.mat-mdc-dialog-title,
+.mat-mdc-dialog-content,
+.mat-mdc-floating-label {
+  font-family: var(--picta-font-secondary);
+}
+
+$custom-typography: mat.m2-define-typography-config(
+  $font-family: 'Roboto, sans-serif',
+  $headline-1: mat.m2-define-typography-level(
+      112px,
+      112px,
+      300,
+      'Bebas Neue',
+      -0.0134em
+    ),
+  $headline-2: mat.m2-define-typography-level(
+      56px,
+      56px,
+      400,
+      'Bebas Neue',
+      -0.0089em
+    ),
+  $headline-3: mat.m2-define-typography-level(
+      45px,
+      48px,
+      400,
+      'Bebas Neue',
+      0em
+    ),
+  $headline-4: mat.m2-define-typography-level(
+      34px,
+      40px,
+      400,
+      'Bebas Neue',
+      0.0074em
+    ),
+  $headline-5: mat.m2-define-typography-level(
+      24px,
+      32px,
+      400,
+      'Bebas Neue',
+      0em
+    ),
+  $headline-6: mat.m2-define-typography-level(
+      20px,
+      32px,
+      500,
+      'Bebas Neue',
+      0.0075em
+    ),
+  $subtitle-1: mat.m2-define-typography-level(16px, 28px, 400, 'Abel', 0.0094em),
+  $subtitle-2: mat.m2-define-typography-level(14px, 24px, 500, 'Abel', 0.0071em),
+  $body-1: mat.m2-define-typography-level(16px, 24px, 400, 'Roboto', 0.0094em),
+  $body-2: mat.m2-define-typography-level(14px, 20px, 400, 'Roboto', 0.0107em),
+  $caption: mat.m2-define-typography-level(12px, 20px, 400, 'Roboto', 0.0333em),
+  $button: mat.m2-define-typography-level(14px, 14px, 500, 'Abel', 0.0893em),
+  $overline: mat.m2-define-typography-level(10px, 32px, 500, 'Abel', 0.1667em),
+);
+
+// Definir las paletas de colores
+$custom-primary: mat.m2-define-palette(
+  (
+    50: #e8eaf6,
+    100: #c5cae9,
+    200: #9fa8da,
+    300: #7986cb,
+    400: #5c6bc0,
+    500: #292c48,
+    // Color base
+    600: #3949ab,
+    700: #303f9f,
+    800: #283593,
+    900: #1a237e,
+    A100: #8c9eff,
+    A200: #536dfe,
+    A400: #3d5afe,
+    A700: #304ffe,
+    contrast: (
+      50: rgba(black, 0.87),
+      100: rgba(black, 0.87),
+      200: rgba(black, 0.87),
+      300: white,
+      400: white,
+      500: white,
+      600: white,
+      700: white,
+      800: white,
+      900: white,
+      A100: rgba(black, 0.87),
+      A200: white,
+      A400: white,
+      A700: white,
+    ),
+  )
+);
+
+$custom-accent: mat.m2-define-palette(
+  (
+    50: #fbe9e7,
+    100: #ffccbc,
+    200: #ffab91,
+    300: #ff8a65,
+    400: #ff7043,
+    500: #e8462e,
+    // Color base
+    600: #f4511e,
+    700: #e64a19,
+    800: #d84315,
+    900: #bf360c,
+    A100: #ff9e80,
+    A200: #ff6e40,
+    A400: #ff3d00,
+    A700: #dd2c00,
+    contrast: (
+      50: rgba(black, 0.87),
+      100: rgba(black, 0.87),
+      200: rgba(black, 0.87),
+      300: white,
+      400: white,
+      500: white,
+      600: white,
+      700: white,
+      800: white,
+      900: white,
+      A100: rgba(black, 0.87),
+      A200: white,
+      A400: white,
+      A700: white,
+    ),
+  )
+);
+
+$custom-warn: mat.m2-define-palette(
+  (
+    50: #fffde7,
+    100: #fff9c4,
+    200: #fff59d,
+    300: #fff176,
+    400: #ffee58,
+    500: #f3e628,
+    // Color base
+    600: #fdd835,
+    700: #fbc02d,
+    800: #f9a825,
+    900: #f57f17,
+    A100: #ffff8d,
+    A200: #ffff00,
+    A400: #ffea00,
+    A700: #ffd600,
+    contrast: (
+      50: rgba(black, 0.87),
+      100: rgba(black, 0.87),
+      200: rgba(black, 0.87),
+      300: white,
+      400: white,
+      500: white,
+      600: white,
+      700: white,
+      800: white,
+      900: white,
+      A100: rgba(black, 0.87),
+      A200: white,
+      A400: white,
+      A700: white,
+    ),
+  )
+);
+
+/* Estilo forzado para enlaces Markdown */
+.markdown a {
+  color: hsl(
+    207.7,
+    100%,
+    62.2%
+  ) !important; /* Naranja (cambia al color que prefieras) */
+  text-decoration: underline !important;
+}
+
+.markdown a:hover {
+  color: hsl(207.7, 100%, 62.2%) !important;
+}
+
+// Crear el tema personalizado
+$custom-theme: mat.m2-define-dark-theme(
+  (
+    color: (
+      primary: $custom-primary,
+      accent: $custom-accent,
+      warn: $custom-warn,
+    ),
+    typography: mat.m2-define-typography-config(),
+    // Tipografía por defecto
+    density: -1,
+    // Densidad por defecto
+  )
+);
+
+// Aplicar el tema a los componentes
+@include mat.elevation-classes();
+@include mat.app-background();
+@include mat.all-component-themes($custom-theme);
+
+/* ── Picta form-field + select + button-toggle global tokens ───────────────
+   Overrides applied globally so every mat-form-field, mat-select and
+   mat-button-toggle-group in the app inherits the Picta dark look instead
+   of the raw Angular-Material dark defaults.
+   ─────────────────────────────────────────────────────────────────────── */
+:root {
+  // Filled text-field ────────────────────────────────────────────────────
+  --mat-form-field-filled-container-color: rgba(255, 255, 255, 0.06);
+  --mat-form-field-filled-hover-container-color: rgba(255, 255, 255, 0.09);
+  --mat-form-field-filled-label-text-color: rgba(244, 247, 251, 0.6);
+  --mat-form-field-filled-hover-label-text-color: rgba(244, 247, 251, 0.8);
+  --mat-form-field-filled-focus-label-text-color: var(--picta-yellow);
+  --mat-form-field-filled-input-text-color: #f4f7fb;
+  --mat-form-field-filled-active-indicator-color: rgba(255, 255, 255, 0.28);
+  --mat-form-field-filled-hover-active-indicator-color: rgba(
+    255,
+    255,
+    255,
+    0.46
+  );
+  --mat-form-field-filled-focus-active-indicator-color: var(--picta-yellow);
+  --mat-form-field-filled-caret-color: var(--picta-yellow);
+  --mat-form-field-filled-disabled-container-color: rgba(255, 255, 255, 0.03);
+  --mat-form-field-filled-disabled-label-text-color: rgba(244, 247, 251, 0.36);
+  --mat-form-field-filled-disabled-input-text-color: rgba(244, 247, 251, 0.36);
+
+  // Select ───────────────────────────────────────────────────────────────
+  --mat-select-trigger-text-color: #f4f7fb;
+  --mat-select-enabled-arrow-color: rgba(244, 247, 251, 0.6);
+  --mat-select-focused-arrow-color: var(--picta-yellow);
+  --mat-select-panel-background-color: rgba(13, 20, 46, 0.98);
+  --mat-option-label-text-color: #f4f7fb;
+  --mat-option-hover-state-layer-color: var(--picta-yellow-softer);
+  --mat-option-selected-state-layer-color: var(--picta-yellow-soft);
+  --mat-option-selected-state-label-text-color: var(--picta-yellow);
+
+  // Button-toggle group ──────────────────────────────────────────────────
+  --mat-button-toggle-background-color: rgba(255, 255, 255, 0.05);
+  --mat-button-toggle-selected-state-background-color: var(--picta-yellow-soft);
+  --mat-button-toggle-text-color: rgba(244, 247, 251, 0.75);
+  --mat-button-toggle-selected-state-text-color: #f4f7fb;
+  --mat-button-toggle-divider-color: rgba(255, 255, 255, 0.12);
+  --mat-button-toggle-state-layer-color: rgba(244, 247, 251, 0.08);
+}
+
+/* MDC element-level overrides (needed because some MDC tokens are applied via
+   JS or shadow DOM rather than CSS variables on :root). */
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 8px 8px 0 0;
+}
+.mdc-text-field--filled:not(.mdc-text-field--disabled):hover {
+  background-color: rgba(255, 255, 255, 0.09) !important;
+}
+.mdc-text-field__input {
+  color: #f4f7fb !important;
+  caret-color: #e8462e !important;
+}
+.mdc-floating-label,
+.mat-mdc-floating-label {
+  color: rgba(244, 247, 251, 0.62) !important;
+}
+.mdc-floating-label--float-above,
+.mat-mdc-floating-label.mdc-floating-label--float-above {
+  color: var(--picta-yellow) !important;
+}
+.mdc-line-ripple::before {
+  border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+}
+.mdc-line-ripple::after {
+  border-bottom-color: var(--picta-yellow) !important;
+}
+
+/* Button-toggle group border + selected indicator */
+.mat-button-toggle-group {
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+}
+.mat-button-toggle {
+  color: rgba(244, 247, 251, 0.75);
+  background: transparent;
+}
+.mat-button-toggle-checked {
+  background: var(--picta-yellow-soft) !important;
+  color: #f4f7fb !important;
+}
+
+.mat-stepper-horizontal-line {
+  display: none !important;
+}
+
+.cdk-overlay-container {
+  z-index: 10000 !important;
+}
+
+hr {
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+h1,
+.h1 {
+  font-size: 2.5rem;
+}
+
+h2,
+.h2 {
+  font-size: 2rem;
+}
+
+h3,
+.h3 {
+  font-size: 1.75rem;
+}
+
+h4,
+.h4 {
+  font-size: 1.5rem;
+}
+
+h5,
+.h5 {
+  font-size: 1.25rem;
+}
+
+h6,
+.h6 {
+  font-size: 1rem;
+}
+
+.notifications-panel {
+  max-width: 100vw !important;
+  position: relative;
+  min-height: 360px;
+
+  &__header {
+    //border-bottom: 1px solid rgb(56, 56, 56);
+    //background-color: #212233;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  &__list {
+    max-height: 60vh;
+    min-height: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+  }
+
+  &__footer {
+    //border-top: 1px solid rgb(56, 56, 56);
+    //background-color: #212233;
+    cursor: pointer;
+  }
+}
+
+/* Estilo para el panel del menú */
+#mat-menu-panel-3 {
+  min-width: 300px !important; /* Ancho mínimo */
+  max-width: 500px !important; /* Ancho máximo */
+  width: 100%;
+
+  /* Opcional: estilos adicionales */
+  border-radius: 8px;
+  padding: 8px 0;
+}
+
+@media (max-width: 568px) {
+  .notifications-panel {
+    width: 100vw;
+  }
+}
+
+#player {
+  & [data-player] {
+    & .play-wrapper {
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+#player:not(.embed-player) {
+  // position: relative;
+  width: 100%;
+  padding-top: 56.25%;
+  z-index: 5;
+
+  @media (max-width: 570px) {
+    & #subtitle {
+      font-size: 14px;
+    }
+  }
+
+  & [data-player] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    & .play-wrapper {
+      display: none !important;
+    }
+  }
+}
+.bottomSheet {
+  background-color: #2b2c41;
+  max-height: 90vh;
+  border-radius: 15px 15px 0 0;
+}
+
+/* .mat-dialog-container {
+  background-color: rgba(#2b2c41, .97);
+} */
+
+@media screen and (max-width: 570px) {
+  .media-control[data-media-control]
+    .media-control-layer[data-controls]
+    button.media-control-button[data-hd-indicator].enabled {
+    display: none !important;
+    opacity: 1 !important;
+  }
+  .media-control[data-media-control]
+    .media-control-layer[data-controls]
+    button.media-control-button {
+    margin: 0 !important;
+  }
+  .media-control[data-media-control]
+    .media-control-layer[data-controls]
+    .media-control-indicator[data-position] {
+    margin: 0 6px 0 0 !important;
+  }
+}
+
+.playlistPane .pane {
+  max-width: 100% !important;
+  background-color: #2b2c41;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  background-color: inherit;
+  scrollbar-width: thin;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #2b2c41;
+  overflow-x: auto;
+}
+
+.mat-expansion-panel-body {
+  padding: 0 !important;
+}
+
+/*
+* {
+  scrollbar-width: thin;
+  scrollbar-color: blue orange;
+}
+
+!* Works on Chrome/Edge/Safari *!
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: orange;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: blue;
+  border-radius: 20px;
+  border: 3px solid orange;
+}
+*/
+mat-horizontal-stepper {
+  background: none !important;
+
+  &.portada-stepper .mat-horizontal-content-container {
+    padding: 0 !important;
+  }
+
+  &.portada-stepper .mat-horizontal-stepper-header,
+  &.paymentStepper .mat-horizontal-stepper-header-container {
+    display: none !important;
+  }
+}
+
+.mat-tab-label {
+  opacity: 1 !important;
+  font-weight: bold;
+}
+
+.video-list-item {
+  & .mat-list-item-content {
+    padding: 0 !important;
+  }
+}
+
+.mat-autocomplete-panel {
+  min-width: 320px !important;
+}
+
+.paymentDialog {
+  & mat-dialog-container {
+    padding: 8px;
+    width: 300px !important;
+  }
+}
+
+/* @supports ( backdrop-filter: blur(50px)) {
+  .bottomSheet {
+    background: rgba(255, 255, 255, .1);
+    backdrop-filter: blur(30px);
+    --webkit-backdrop-filter: blur(30px);
+  }
+  .mat-dialog-container {
+    background: rgba(0, 0, 0, .3);
+    backdrop-filter: blur(50px);
+    --webkit-backdrop-filter: blur(50px);
+    box-shadow: 0 0 2px 2px rgba(white, .1);
+  }
+  .mat-menu-panel {
+    background: rgba(0, 0, 0, .3);
+    backdrop-filter: blur(50px);
+    --webkit-backdrop-filter: blur(50px);
+  }
+  .mat-tooltip {
+    background: rgba(255, 255, 255, .1);
+    backdrop-filter: blur(50px);
+    --webkit-backdrop-filter: blur(50px);
+  }
+} */
+
+.denunciaEvidence .mat-form-field-infix {
+  padding: 0 1em 0.5em 1em !important;
+}
+
+/*img {
+  max-width: none;
+  width: 100%;
+}*/
+
+.owl-nav {
+  display: none !important;
+}
+
+.radio-favorites-carousel .owl-nav {
+  display: flex !important;
+}
+
+.radio-favorites-carousel .owl-nav button.owl-prev,
+.radio-favorites-carousel .owl-nav button.owl-next {
+  display: inline-flex !important;
+}
+
+#mat-menu-panel-4 {
+  max-width: none !important;
+}
+
+.shaka-spinner {
+  padding: calc(10.6% / 2) !important;
+}
+
+.offline-snackbar {
+  background-color: #d32f2f; /* Rojo */
+  color: white;
+}
+
+.online-snackbar {
+  background-color: #388e3c; /* Verde */
+  color: white;
+}
+
+.material-svg-icon {
+  width: 2em !important;
+}
+
+.shaka-overflow-menu {
+  border-radius: 12px !important;
+  background: rgba(7, 11, 20, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+.shaka-overflow-menu .shaka-overflow-item {
+  border-radius: 8px !important;
+  margin: 2px 6px !important;
+  transition: background-color 170ms ease, transform 170ms ease !important;
+  color: var(--picta-text) !important;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    transform: translateX(2px) !important;
+  }
+  
+  &.shaka-chosen-item {
+    background: linear-gradient(90deg, var(--picta-yellow-soft) 0%, rgba(232, 70, 46, 0.08) 100%) !important;
+    border-left: 2px solid var(--picta-yellow) !important;
+  }
+}
+
+.shaka-overflow-menu .shaka-overflow-item-button {
+  color: var(--picta-text) !important;
+}
+
+.shaka-overflow-menu .shaka-overflow-item-button .shaka-label {
+  color: rgba(234, 240, 255, 0.9) !important;
+}
+
+.shaka-overflow-menu .shaka-overflow-item-button:hover .shaka-label {
+  color: var(--picta-text) !important;
+}
+
+/* ===========================================
+   SHAKA PLAYER - TEMA PICTA
+   =========================================== */
+
+// Panel de botones de control
+.shaka-controls-button-panel {
+  background-color: transparent !important;
+}
+
+// Estilos para botones de control (sin afectar el overflow menu)
+.shaka-controls-button-panel > button:not(.shaka-overflow-button):not(.shaka-overflow-menu-button):not(.shaka-settings-button) {
+  color: var(--picta-text) !important;
+  transition: all 0.2s ease;
+  border-radius: 50% !important;
+  
+  &:hover {
+    color: var(--picta-yellow) !important;
+    background-color: var(--picta-yellow-soft) !important;
+  }
+  
+  &:focus {
+    outline: none !important;
+  }
+}
+
+// ========== ICONOS DE CONTROLES ==========
+
+// Play/Pause button
+.shaka-play-button .shaka-icon {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+// Mute button
+.shaka-mute-button .shaka-icon {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+// Fullscreen button
+.shaka-fullscreen-button .shaka-icon {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+// Picture in picture button
+.shaka-picture-in-picture-button .shaka-icon {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+// Settings button
+.shaka-settings-button .shaka-icon {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+// ========== BOTONES SKIP NEXT/PREVIOUS ==========
+
+.shaka-skip-button {
+  background-color: transparent !important;
+  border: none !important;
+  color: var(--picta-text) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  opacity: 0.85;
+  
+  svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  
+  &:hover {
+    background-color: var(--picta-yellow-soft) !important;
+    color: var(--picta-yellow) !important;
+    opacity: 1;
+  }
+  
+  &:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px var(--picta-yellow) !important;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.shaka-skip-previous-button {
+  margin-right: 4px;
+}
+
+.shaka-skip-next-button {
+  margin-left: 4px;
+}
+
+// ========== BOTÓN DE PLAY CENTRAL (OVERLAY) ==========
+
+// Botón grande central (overlay) - shaka-big-buttons-container
+.shaka-big-buttons-container button,
+.shaka-big-buttons-container .shaka-play-button {
+  background-color: rgba(10, 17, 38, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border-radius: 50% !important;
+  width: 80px !important;
+  height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 2px solid var(--picta-yellow) !important;
+  box-shadow: 0 0 30px rgba(243, 230, 40, 0.3) !important;
+  transition: all 0.3s ease !important;
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(243, 230, 40, 0.5) !important;
+    background-color: rgba(243, 230, 40, 0.2) !important;
+  }
+  
+  .shaka-icon {
+    color: var(--picta-yellow) !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+}
+
+// ========== LOADING SPINNER ==========
+
+.shaka-spinner {
+  color: var(--picta-yellow) !important;
+}
+
+.shaka-spinner-path {
+  stroke: var(--picta-yellow) !important;
+}
+
+// Overlay de buffering
+.shaka-buffering-overlay {
+  background-color: rgba(10, 17, 38, 0.7) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+/* Header menus render in overlay container, so theme them globally */
+.cdk-overlay-pane.header-menu-panel,
+.cdk-overlay-container .mat-mdc-menu-panel.header-menu-panel {
+  --mat-menu-container-color: rgba(16, 25, 53, 0.96);
+  --mat-menu-container-color: rgba(16, 25, 53, 0.96);
+  --mat-menu-item-label-text-color: rgba(244, 247, 251, 0.94);
+  --mat-menu-item-icon-color: rgba(244, 247, 251, 0.86);
+}
+
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-panel,
+.cdk-overlay-container .mat-mdc-menu-panel.header-menu-panel,
+.cdk-overlay-pane.header-menu-panel .mdc-menu-surface.mat-mdc-menu-panel,
+.cdk-overlay-container .mdc-menu-surface.mat-mdc-menu-panel.header-menu-panel {
+  border-radius: 16px !important;
+  overflow: hidden;
+  border: 1px solid var(--picta-yellow-border) !important;
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34) !important;
+  background:
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    ) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-content,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-content {
+  background: transparent !important;
+  color: rgba(244, 247, 251, 0.94) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.4rem;
+}
+
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-item {
+  min-height: 42px;
+  border-radius: 12px;
+  color: rgba(244, 247, 251, 0.94) !important;
+}
+
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item .mat-icon,
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item .mat-mdc-menu-item-text,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-item
+  .mat-icon,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-item
+  .mat-mdc-menu-item-text {
+  color: inherit !important;
+}
+
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item .mat-icon,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-item
+  .mat-icon {
+  margin-right: 0.75rem;
+}
+
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item:hover,
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item.cdk-keyboard-focused,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-item:hover,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-item.cdk-keyboard-focused {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item.mat-mdc-menu-item-highlighted,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-item.mat-mdc-menu-item-highlighted {
+  background: rgba(232, 70, 46, 0.12) !important;
+}
+
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item.active,
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item.active:hover,
+.cdk-overlay-pane.header-menu-panel .mat-mdc-menu-item.active.cdk-keyboard-focused,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-item.active,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .mat-mdc-menu-item.active:hover {
+  background: rgba(232, 70, 46, 0.15) !important;
+}
+
+.cdk-overlay-pane.header-menu-panel .mat-divider,
+.cdk-overlay-pane.header-menu-panel hr,
+.cdk-overlay-container .mat-mdc-menu-panel.header-menu-panel .mat-divider,
+.cdk-overlay-container .mat-mdc-menu-panel.header-menu-panel hr {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.cdk-overlay-pane.header-menu-panel .notifications-panel__header,
+.cdk-overlay-pane.header-menu-panel .notifications-panel__footer,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .notifications-panel__header,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.header-menu-panel
+  .notifications-panel__footer {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.cdk-overlay-pane.publication-actions-menu,
+.cdk-overlay-container .mat-mdc-menu-panel.publication-actions-menu {
+  --mat-menu-container-color: rgba(16, 25, 53, 0.96);
+  --mat-menu-container-color: rgba(16, 25, 53, 0.96);
+  --mat-menu-item-label-text-color: rgba(244, 247, 251, 0.94);
+  --mat-menu-item-icon-color: rgba(244, 247, 251, 0.86);
+}
+
+.cdk-overlay-pane.publication-actions-menu .mat-mdc-menu-panel,
+.cdk-overlay-container .mat-mdc-menu-panel.publication-actions-menu,
+.cdk-overlay-pane.publication-actions-menu .mdc-menu-surface.mat-mdc-menu-panel,
+.cdk-overlay-container
+  .mdc-menu-surface.mat-mdc-menu-panel.publication-actions-menu {
+  min-width: 220px;
+  border-radius: 16px !important;
+  overflow: hidden;
+  border: 1px solid var(--picta-yellow-border) !important;
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34) !important;
+  background:
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    ) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.cdk-overlay-pane.publication-actions-menu .mat-mdc-menu-content,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.publication-actions-menu
+  .mat-mdc-menu-content {
+  padding: 0.4rem;
+  background: transparent !important;
+}
+
+.cdk-overlay-pane.publication-actions-menu .mat-mdc-menu-item,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.publication-actions-menu
+  .mat-mdc-menu-item {
+  min-height: 42px;
+  border-radius: 12px;
+  color: rgba(244, 247, 251, 0.94) !important;
+}
+
+.cdk-overlay-pane.publication-actions-menu .mat-mdc-menu-item .mat-icon,
+.cdk-overlay-pane.publication-actions-menu
+  .mat-mdc-menu-item
+  .mat-mdc-menu-item-text,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.publication-actions-menu
+  .mat-mdc-menu-item
+  .mat-icon,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.publication-actions-menu
+  .mat-mdc-menu-item
+  .mat-mdc-menu-item-text {
+  color: inherit !important;
+}
+
+.cdk-overlay-pane.publication-actions-menu .mat-mdc-menu-item .mat-icon,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.publication-actions-menu
+  .mat-mdc-menu-item
+  .mat-icon {
+  margin-right: 0.75rem;
+}
+
+.cdk-overlay-pane.publication-actions-menu .mat-mdc-menu-item:hover,
+.cdk-overlay-pane.publication-actions-menu
+  .mat-mdc-menu-item.cdk-keyboard-focused,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.publication-actions-menu
+  .mat-mdc-menu-item:hover,
+.cdk-overlay-container
+  .mat-mdc-menu-panel.publication-actions-menu
+  .mat-mdc-menu-item.cdk-keyboard-focused {
+  background: rgba(232, 70, 46, 0.12) !important;
+}
+
+// ── Help & Support page – global overrides (beats M2 dark theme specificity) ──
+app-help-support .mat-mdc-card {
+  background: rgba(15, 22, 48, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.32) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+app-help-support .mat-mdc-card-title {
+  color: #f4f7fb !important;
+}
+app-help-support .mat-mdc-card-subtitle {
+  color: rgba(244, 247, 251, 0.72) !important;
+}
+app-help-support .mat-mdc-card-content {
+  color: rgba(244, 247, 251, 0.88) !important;
+}
+
+/* Genre explorer modal: blurred backdrop + branded dark surface */
+.cdk-overlay-backdrop.genre-explorer-backdrop {
+  background: rgba(5, 8, 20, 0.64) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.cdk-overlay-pane.genre-explorer-panel .mat-mdc-dialog-surface,
+.genre-explorer-panel .mat-mdc-dialog-surface {
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(243, 230, 40, 0.14),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(8, 14, 32, 0.98) 0%,
+      rgba(12, 19, 42, 0.98) 100%
+    ) !important;
+  border: 1px solid rgba(243, 230, 40, 0.22) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.6) !important;
+  color: #f4f7fb !important;
+  overflow: hidden;
+}
+
+.cdk-overlay-pane.genre-explorer-panel .mat-mdc-dialog-title,
+.genre-explorer-panel .mat-mdc-dialog-title,
+.cdk-overlay-pane.genre-explorer-panel .mat-mdc-dialog-content,
+.genre-explorer-panel .mat-mdc-dialog-content,
+.cdk-overlay-pane.genre-explorer-panel .mat-mdc-dialog-actions,
+.genre-explorer-panel .mat-mdc-dialog-actions {
+  color: inherit !important;
+}
+
+app-help-support .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 8px 8px 0 0;
+}
+app-help-support .mdc-text-field--filled:not(.mdc-text-field--disabled):hover {
+  background-color: rgba(255, 255, 255, 0.09) !important;
+}
+
+app-help-support .mdc-text-field__input {
+  color: #f4f7fb !important;
+  caret-color: #7c6cff !important;
+}
+
+app-help-support .mdc-floating-label,
+app-help-support .mat-mdc-floating-label {
+  color: rgba(244, 247, 251, 0.62) !important;
+}
+
+app-help-support .mdc-floating-label--float-above,
+app-help-support .mat-mdc-floating-label.mdc-floating-label--float-above {
+  color: #9e8fff !important;
+}
+
+app-help-support .mdc-line-ripple::before {
+  border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+}
+app-help-support .mdc-line-ripple::after {
+  border-bottom-color: #7c6cff !important;
+}
+
+app-help-support .mdc-notched-outline__leading,
+app-help-support .mdc-notched-outline__notch,
+app-help-support .mdc-notched-outline__trailing {
+  border-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+app-help-support .mat-mdc-select-value,
+app-help-support .mat-mdc-select-trigger {
+  color: #f4f7fb !important;
+}
+app-help-support .mat-mdc-select-arrow {
+  color: rgba(244, 247, 251, 0.6) !important;
+}
+
+app-help-support .mat-divider {
+  border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+// ── Picta dark dialog (conversation dialog, etc.) ─────────────────────────
+.cdk-overlay-pane.picta-dark-dialog .mat-mdc-dialog-surface,
+.picta-dark-dialog .mat-mdc-dialog-surface {
+  background:
+    radial-gradient(circle at top right, rgba(243, 230, 40, 0.08), transparent 34%),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    ) !important;
+  border: 1px solid rgba(243, 230, 40, 0.28) !important;
+  border-radius: 20px !important;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 80px rgba(243, 230, 40, 0.04) !important;
+  color: #f4f7fb !important;
+  position: relative;
+  overflow: visible !important;
+  animation: picta-dialog-scale-in 340ms cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+// Animación de entrada más suave para diálogos
+@keyframes picta-dialog-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// ── Perfil Form Dialog - border-radius específico ─────────────────────────
+app-perfil-form-dialog {
+  display: block;
+  width: 100%;
+}
+
+.cdk-overlay-pane.picta-dark-dialog app-perfil-form-dialog .perfil-form-dialog,
+.picta-dark-dialog app-perfil-form-dialog .perfil-form-dialog {
+  border-radius: 16px !important;
+}
+
+.cdk-overlay-pane.picta-dark-dialog .mat-mdc-dialog-title,
+.picta-dark-dialog .mat-mdc-dialog-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #f4f7fb !important;
+}
+
+.cdk-overlay-pane.picta-dark-dialog .mat-mdc-dialog-content,
+.picta-dark-dialog .mat-mdc-dialog-content {
+  color: rgba(244, 247, 251, 0.88) !important;
+}
+
+.cdk-overlay-pane.picta-dark-dialog .mat-mdc-dialog-actions,
+.picta-dark-dialog .mat-mdc-dialog-actions {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.cdk-overlay-pane.picta-dark-dialog
+  .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 8px 8px 0 0;
+}
+.cdk-overlay-pane.picta-dark-dialog .mdc-text-field__input {
+  color: #f4f7fb !important;
+  caret-color: #f3e628 !important;
+}
+.cdk-overlay-pane.picta-dark-dialog .mdc-floating-label {
+  color: rgba(244, 247, 251, 0.62) !important;
+}
+.cdk-overlay-pane.picta-dark-dialog .mdc-floating-label--float-above {
+  color: #f3e628 !important;
+}
+.cdk-overlay-pane.picta-dark-dialog .mdc-line-ripple::before {
+  border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+}
+.cdk-overlay-pane.picta-dark-dialog .mdc-line-ripple::after {
+  border-bottom-color: #f3e628 !important;
+}
+
+/* Pay modal theme + blurred backdrop */
+.cdk-overlay-backdrop.picta-pay-backdrop {
+  background: rgba(5, 8, 20, 0.58) !important;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+/* Backdrop for channel dialog: subtle dark overlay + blur */
+.cdk-overlay-backdrop.picta-dialog-backdrop {
+  background: rgba(5, 8, 20, 0.6) !important;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.cdk-overlay-pane.picta-dark-dialog .channel-dialog__close {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  z-index: 10002;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+}
+
+/* Improve close icon appearance when positioned outside */
+.cdk-overlay-pane.picta-dark-dialog
+  .mat-mdc-dialog-surface
+  .channel-dialog__close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Style the follow/subscribe button inside the dialog to match Impeccable: subtle accent */
+.picta-dark-dialog .channel-dialog__actions .mat-stroked-button {
+  border-color: var(--picta-yellow-border) !important;
+  color: #ffffff !important;
+  background: transparent !important;
+  font-weight: 600;
+}
+.picta-dark-dialog .channel-dialog__actions .mat-stroked-button:hover {
+  background: var(--picta-yellow-softer) !important;
+}
+
+/* Impeccable: polished follow button inside channel dialog */
+.picta-dark-dialog .channel-follow-btn {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--picta-yellow-border) !important;
+  color: #ffffff !important;
+  background: transparent !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  transition:
+    background-color 160ms ease,
+    transform 120ms ease,
+    box-shadow 160ms ease;
+}
+.picta-dark-dialog .channel-follow-btn:hover {
+  background: var(--picta-yellow-softer) !important;
+  transform: translateY(-1px);
+}
+.picta-dark-dialog .channel-follow-btn:focus-visible {
+  outline: 2px solid rgba(232, 70, 46, 0.6) !important;
+  outline-offset: 2px !important;
+}
+
+/* Subscribed state: subtle filled accent */
+.picta-dark-dialog .channel-follow-btn.subscribed {
+  background: linear-gradient(
+    90deg,
+    rgba(232, 70, 46, 0.95),
+    rgba(255, 178, 108, 0.95)
+  ) !important;
+  border-color: transparent !important;
+  color: #111 !important;
+  box-shadow: 0 8px 20px rgba(232, 70, 46, 0.12) !important;
+}
+.picta-dark-dialog .channel-follow-btn.subscribed .channel-follow-icon {
+  color: #111 !important;
+}
+
+/* ensure icon sizing */
+.picta-dark-dialog .channel-follow-btn .channel-follow-icon {
+  font-size: 1.1rem !important;
+}
+
+/* Position the close icon outside the dialog surface */
+.cdk-overlay-pane.picta-dark-dialog .channel-dialog__close {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  z-index: 10002;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+}
+
+.cdk-overlay-pane.picta-pay-dialog .mat-mdc-dialog-surface,
+.picta-pay-dialog .mat-mdc-dialog-surface {
+  background:
+    radial-gradient(ellipse at top, rgba(97, 87, 255, 0.15), transparent 55%),
+    linear-gradient(
+      180deg,
+      rgba(10, 15, 36, 0.98) 0%,
+      rgba(13, 20, 46, 0.98) 100%
+    ) !important;
+  border: 1px solid rgba(124, 108, 255, 0.3) !important;
+  border-radius: 18px !important;
+  color: #f4f7fb !important;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.5) !important;
+}
+
+.cdk-overlay-pane.picta-pay-dialog .mat-mdc-dialog-content,
+.picta-pay-dialog .mat-mdc-dialog-content {
+  color: #f4f7fb !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Trailer modal theme + stronger blurred backdrop */
+.cdk-overlay-backdrop.picta-trailer-backdrop {
+  background: rgba(5, 8, 20, 0.48) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.cdk-overlay-pane.picta-trailer-dialog .mat-mdc-dialog-surface,
+.picta-trailer-dialog .mat-mdc-dialog-surface {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+.cdk-overlay-pane.picta-trailer-dialog .mat-mdc-dialog-content,
+.picta-trailer-dialog .mat-mdc-dialog-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  color: inherit !important;
+}
+
+/* Picta component tokens (fallbacks to support RadioCards styles) */
+:root {
+  --picta-card-bg-start: rgba(10, 15, 36, 0.7);
+  --picta-card-bg-end: rgba(16, 25, 53, 0.7);
+  --picta-card-border: rgba(255, 255, 255, 0.06);
+  --picta-card-text: #f4f7fb;
+  --picta-card-shadow: 0 18px 40px rgba(0, 0, 0, 0.48);
+}
+
+/* User menu - wider panel */
+.user-menu-panel.mat-mdc-menu-panel,
+.cdk-overlay-pane.user-menu-panel .mat-mdc-menu-panel {
+  min-width: 320px !important;
+  max-width: 340px !important;
+}
+
+/* Menu animation - use !important to ensure it applies */
+.cdk-overlay-pane .mat-mdc-menu-panel,
+.cdk-overlay-pane .mdc-menu-surface {
+  animation: menuZoom 180ms cubic-bezier(0.35, 0, 0.25, 1) !important;
+}
+
+.cdk-overlay-backdrop {
+  animation: menuBackdrop 180ms ease-out !important;
+}
+
+@keyframes menuZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes menuBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Menu animations - scale and fade */
+.mdc-menu-surface.mat-mdc-menu-panel,
+.mat-mdc-menu-panel {
+  transition:
+    transform 180ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 180ms ease-out !important;
+  transform-origin: top !important;
+}
+
+.mat-mdc-menu-panel {
+  opacity: 1 !important;
+}
+
+/* Material menu animations via CSS custom properties */
+:root {
+  --mat-menu-container-transition: 200ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+/* Alternative animation via animation property */
+.mat-mdc-menu-panel {
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out;
+}
+
+/* Menu open animation - target the backdrop and panel */
+.cdk-overlay-backdrop {
+  animation: backdropFade 180ms ease-out;
+}
+
+.cdk-overlay-pane .mat-mdc-menu-panel {
+  animation: panelSlideIn 180ms ease-out;
+  transform-origin: top center;
+  min-width: 240px !important;
+}
+
+@keyframes backdropFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panelSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* User menu items with icons */
+.user-menu-panel .mat-mdc-menu-item,
+.cdk-overlay-pane.user-menu-panel .mat-mdc-menu-item {
+  min-height: 38px !important;
+  padding: 0.4rem 0.6rem !important;
+}
+
+.user-menu-panel .mat-mdc-menu-item .mat-icon,
+.cdk-overlay-pane.user-menu-panel .mat-mdc-menu-item .mat-icon {
+  width: 22px !important;
+  height: 22px !important;
+  font-size: 22px !important;
+  margin-right: 0.5rem !important;
+  color: rgba(243, 230, 40, 0.8) !important;
+}
+
+.user-menu-panel .mat-mdc-menu-item:hover .mat-icon,
+.cdk-overlay-pane.user-menu-panel .mat-mdc-menu-item:hover .mat-icon {
+  color: rgba(243, 230, 40, 1) !important;
+}
+
+/* User menu profile card */
+.user-menu-profile-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.4rem 0.45rem;
+  margin: 0.15rem;
+  width: calc(100% - 0.3rem);
+  border-radius: 10px;
+  border: 1px solid rgba(243, 230, 40, 0.2);
+  background: linear-gradient(
+    135deg,
+    rgba(33, 44, 86, 0.68) 0%,
+    rgba(19, 29, 58, 0.72) 100%
+  );
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.user-menu-profile-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 12px 0 0 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(243, 230, 40, 0.9) 0%,
+    rgba(232, 70, 46, 0.72) 100%
+  );
+}
+
+/* Profile avatar - match quick link icon style */
+.user-menu-profile-avatar-wrap {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 6px;
+  background: rgba(243, 230, 40, 0.12);
+  overflow: hidden;
+}
+
+.user-menu-profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.user-menu-profile-avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 6px;
+  font-family: 'Abel', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(243, 230, 40, 0.95);
+  background: rgba(243, 230, 40, 0.15);
+}
+
+.user-menu-profile-content {
+  min-width: 0;
+}
+
+.user-menu-profile-name {
+  margin: 0;
+  font-family: 'Abel', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-menu-profile-username {
+  margin: 0.02rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(244, 247, 251, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-menu-profile-detail {
+  margin: 0.15rem 0 0;
+  font-size: 0.7rem;
+  color: rgba(244, 247, 251, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-menu-plan-row {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.user-menu-plan-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  font-family: 'Abel', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.user-menu-plan-chip--active {
+  color: #271f00;
+  background: linear-gradient(180deg, #f3e628, #e8d928);
+}
+
+.user-menu-plan-chip--inactive {
+  color: rgba(244, 247, 251, 0.85);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.user-menu-plan-days {
+  font-family: 'Abel', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(243, 230, 40, 0.95);
+  letter-spacing: 0.02em;
+}
+
+/* User menu quick links - 2x2 grid */
+.user-menu-quick-links {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  grid-template-rows: repeat(2, auto) !important;
+  gap: 0.4rem 0.5rem !important;
+  padding: 0.35rem 0.5rem 0.4rem !important;
+  width: calc(100% - 1rem) !important;
+  box-sizing: border-box !important;
+  margin: 0 auto !important;
+  justify-content: center !important;
+}
+
+.user-menu-quick-links .mat-mdc-menu-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.25rem !important;
+  min-height: 52px !important;
+  padding: 0.35rem 0.3rem !important;
+  border-radius: 8px !important;
+  text-decoration: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+}
+
+.user-menu-quick-links .mat-mdc-menu-item:hover {
+  border-color: rgba(243, 230, 40, 0.28) !important;
+  background: rgba(243, 230, 40, 0.05) !important;
+}
+
+.user-menu-quick-links .mat-mdc-menu-item .mat-icon {
+  width: 20px !important;
+  height: 20px !important;
+  font-size: 20px !important;
+  color: rgba(243, 230, 40, 0.85) !important;
+  margin: 0 !important;
+}
+
+.user-menu-quick-links .mat-mdc-menu-item span {
+  font-family: 'Abel', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: rgba(244, 247, 251, 0.92);
+}
+
+.user-menu-quick-link-icon-wrap {
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  border-radius: 6px !important;
+  background: rgba(243, 230, 40, 0.1) !important;
+}
+
+.user-menu-quick-link-icon-wrap .mat-icon {
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 16px !important;
+  line-height: 1 !important;
+  color: rgba(243, 230, 40, 0.85) !important;
+}
+
+.user-menu-quick-link-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.01rem !important;
+  min-width: 0 !important;
+  text-align: center !important;
+}
+
+.user-menu-quick-link-title {
+  font-family: 'Abel', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: rgba(244, 247, 251, 0.92);
+}
+
+.user-menu-quick-link-desc {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.56rem;
+  letter-spacing: 0.005em;
+  color: rgba(244, 247, 251, 0.5);
+}
+
+/* User menu minimalista */
+.user-menu-minimal-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+.user-menu-minimal-avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(243, 230, 40, 0.15);
+}
+
+.user-menu-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-menu-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  color: #f3e628;
+}
+
+.user-menu-minimal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.user-menu-minimal-name {
+  font-family: 'Abel', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-menu-minimal-plan {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.7rem;
+  color: #f3e628;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Reparto Explorer Dialog */
+.cdk-overlay-pane.picta-reparto-dialog .mat-mdc-dialog-surface,
+.picta-reparto-dialog .mat-mdc-dialog-surface {
+  background:
+    radial-gradient(ellipse at top, rgba(97, 87, 255, 0.12), transparent 55%),
+    linear-gradient(
+      180deg,
+      rgba(10, 15, 36, 0.99) 0%,
+      rgba(13, 20, 46, 0.99) 100%
+    ) !important;
+  border: 1px solid rgba(124, 108, 255, 0.28) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.52) !important;
+  color: #f4f7fb !important;
+  overflow: visible !important;
+}
+
+.cdk-overlay-backdrop.picta-reparto-backdrop {
+  background: rgba(5, 7, 31, 0.75) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: menuBackdrop 180ms ease-out !important;
+}
+
+/* Descripcion Dialog backdrop */
+.cdk-overlay-backdrop.picta-descripcion-backdrop {
+  background: rgba(5, 7, 31, 0.75) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: menuBackdrop 180ms ease-out !important;
+}
+
+app-reparto-explorer-dialog {
+  display: block;
+}
+
+/* Descripcion Dialog - same as reparto */
+app-descripcion-dialog {
+  display: block;
+}
+
+app-descripcion-dialog .descripcion-dialog-close {
+  position: absolute !important;
+  top: -12px !important;
+  right: -12px !important;
+  z-index: 10002 !important;
+  background: rgba(0, 0, 0, 0.45) !important;
+  color: #fff !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+}
+
+app-descripcion-dialog .descripcion-dialog-close:hover {
+  background: rgba(0, 0, 0, 0.65) !important;
+}
+
+app-descripcion-dialog .descripcion-dialog-close mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
+// Estilos para el diálogo de información de video
+.video-info-dialog-panel {
+  .mat-dialog-container {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+}
+
+// Forzar border-radius en el overlay pane también
+.cdk-overlay-pane.video-info-dialog-panel,
+.video-info-dialog-panel {
+  .mat-mdc-dialog-surface,
+  .mdc-dialog__surface {
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    background: var(--picta-bg-deep) !important;
+  }
+}
+
+// Estilos globales para video-info-dialog
+video-info-dialog {
+  display: block;
+  background: var(--picta-bg-deep);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+::ng-deep .video-info-dialog-panel .mat-mdc-dialog-surface {
+  border-radius: 18px !important;
+  overflow: hidden !important;
+}

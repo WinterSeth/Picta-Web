@@ -1,0 +1,134 @@
+<main class="profile-config px-6 md:px-12 py-10 flex flex-col justify-center items-center">
+  <div class="w-full max-w-5xl">
+    <header class="profile-page-header mb-5">
+      <h1 class="font-primary profile-page-title">Configuración de cuenta</h1>
+      <p class="profile-page-subtitle">Gestiona tu información personal y tus preferencias de reproducción.</p>
+    </header>
+
+    @if (profileForm) {
+      <!-- Avatar Section -->
+      <div class="card-profile p-6 md:p-10 mb-8">
+        <h2 class="font-secondary text-lg mb-6">Foto de perfil</h2>
+        <div class="flex flex-col md:flex-row items-center gap-6">
+          <div class="flex-shrink-0">
+            @if (!selectedImagen) {
+              @if (user?.avatar) {
+                <img [src]="user?.avatar + '_200x200'" alt="" class="w-32 h-32 !rounded-full object-cover" loading="lazy" />
+              } @else {
+                <div class="flex justify-center items-center w-32 h-32 !rounded-full ring-2 ring-white font-bold text-4xl bg-primary-600">
+                  {{ user.username.charAt(0) | uppercase }}
+                </div>
+              }
+            }
+            @if (selectedImagen) {
+              <img [src]="selectedImagen" alt="" class="w-32 h-32 !rounded-full object-cover" loading="lazy" />
+            }
+          </div>
+          <div class="flex-grow">
+            <p class="text-gray-400 mb-4">Elige una nueva foto de perfil. La imagen debe ser cuadrada y no mayor a 5MB.</p>
+            <input #avatarInput (change)="selectAvatar(avatarInput)" accept="image/*" hidden type="file" />
+            <button (click)="clickAvatar()" type="button" class="profile-primary-btn flex items-center">
+              <mat-icon class="mr-2">photo_camera</mat-icon>
+              Cambiar foto
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal Info Section -->
+      <div class="card-profile p-6 md:p-10 mb-8">
+        <h2 class="font-secondary text-lg mb-6">Información personal</h2>
+        <form (ngSubmit)="updateUser()" [formGroup]="profileForm" class="flex flex-col gap-4">
+          <mat-form-field appearance="fill" color="accent" floatLabel="auto" class="w-full">
+            <mat-label>Nombre</mat-label>
+            <input formControlName="first_name" matInput type="text" />
+          </mat-form-field>
+          <mat-form-field appearance="fill" color="accent" floatLabel="auto" class="w-full">
+            <mat-label>Apellidos</mat-label>
+            <input formControlName="last_name" matInput type="text" />
+          </mat-form-field>
+          <mat-form-field appearance="fill" floatLabel="auto" class="w-full">
+            <mat-label>Fecha de nacimiento</mat-label>
+            <input (dateInput)="addEvent($event)" [matDatepicker]="picker" [max]="maxDate" [min]="minDate" formControlName="fecha_nacimiento" matInput />
+            <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="fill" color="accent" floatLabel="auto" class="w-full">
+            <mat-label>Teléfono</mat-label>
+            <input [showMaskTyped]="true" formControlName="phone_number" mask="0 0000000" matInput prefix="+53 " type="text" />
+          </mat-form-field>
+          <mat-form-field appearance="fill" color="accent" floatLabel="auto" class="w-full">
+            <mat-label>Correo</mat-label>
+            <input formControlName="email" matInput type="text" />
+            @if (profileForm.get('email').hasError('required')) {
+              <mat-error>El correo es obligatorio.</mat-error>
+            }
+            @if (emailInUse) {
+              <mat-error>El correo especificado ya está en uso.</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="flex flex-col md:flex-row gap-3 pt-4">
+            <button (click)="openRecoveryModal()" type="button" class="profile-action-btn" mat-stroked-button>
+              <mat-icon class="mr-2">lock</mat-icon>
+              Cambiar contraseña
+            </button>
+            <button (click)="removeAccount()" type="button" class="profile-action-btn outline-accent" mat-stroked-button color="warn">
+              <mat-icon class="mr-2">delete_outline</mat-icon>
+              Eliminar cuenta
+            </button>
+            <button type="submit" class="profile-primary-btn flex items-center justify-center ml-auto">
+              <mat-icon class="mr-2">save</mat-icon>
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Player Settings -->
+      <div class="card-profile p-6 md:p-10 mb-8">
+        <h2 class="font-secondary text-lg mb-6">Ajustes del reproductor</h2>
+        <div class="flex flex-col gap-4">
+          <mat-form-field appearance="fill" floatLabel="auto" class="w-full">
+            <mat-label>Resolución por defecto de reproducción:</mat-label>
+            <mat-select (selectionChange)="selectQuality($event)" [value]="savedQuality">
+              <mat-option value="auto">Auto</mat-option>
+              <mat-option value="720">720p</mat-option>
+              <mat-option value="480">480p</mat-option>
+              <mat-option value="360">360p</mat-option>
+              <mat-option value="240">240p</mat-option>
+              <mat-option value="144">144p</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-slide-toggle (change)="setAutoPlay($event)" [checked]="autoPlay" color="primary" labelPosition="before">
+            Iniciar reproducción automáticamente
+          </mat-slide-toggle>
+        </div>
+      </div>
+
+      <!-- Language & Subtitle Settings -->
+      <div class="card-profile p-6 md:p-10">
+        <h2 class="font-secondary text-lg mb-6">Ajustes de idioma y subtítulos</h2>
+        <div class="flex flex-col gap-4">
+          <mat-form-field appearance="fill" floatLabel="auto" class="w-full">
+            <mat-label>Idioma por defecto de reproducción:</mat-label>
+            <mat-select (selectionChange)="selectLanguage($event)" [value]="savedLanguage">
+              <mat-option value="auto">Auto</mat-option>
+              <mat-option value="spa">Español</mat-option>
+              <mat-option value="eng">Inglés</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-slide-toggle (change)="setSubtitle($event)" [checked]="autoSubtitle" color="primary" labelPosition="before">
+            Mostrar siempre subtítulos
+          </mat-slide-toggle>
+        </div>
+      </div>
+    }
+  </div>
+</main>
+
+@if (loading) {
+  <div class="loading">
+    <mat-spinner aria-label="cargando" diameter="50" color="accent"></mat-spinner>
+  </div>
+}

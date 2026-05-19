@@ -1,0 +1,159 @@
+:host {
+  display: block;
+  color: #f4f7fb;
+
+  // ── Picta design tokens ────────────────────────────────────────────────
+  --picta-yellow: #f3e628;
+  --picta-yellow-soft: rgba(243, 230, 40, 0.16);
+  --picta-yellow-softer: rgba(243, 230, 40, 0.08);
+  --picta-yellow-border: rgba(243, 230, 40, 0.28);
+  --picta-text-muted: rgba(244, 247, 251, 0.6);
+  --picta-accent: #e8462e;
+}
+
+// ── Page wrapper ────────────────────────────────────────────────────────────
+.about-page {
+  min-height: 100vh;
+  padding: 24px 0;
+}
+
+// ── Header ──────────────────────────────────────────────────────────────
+.about-header {
+  margin: 0 16px 28px;
+  padding: 16px 20px;
+  border: 1px solid var(--picta-yellow-border);
+  border-radius: 16px;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.34);
+}
+
+.about-header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin: 0;
+  color: #f4f7fb;
+}
+
+.about-header-subtitle {
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.95rem;
+  color: var(--picta-text-muted);
+  margin: 6px 0 0;
+}
+
+// ── Section title ────────────────────────────────────────────────────
+.tittle-term {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--picta-yellow);
+  margin-bottom: 10px;
+  letter-spacing: 0.01em;
+}
+
+// ── Body text ────────────────────────────────────────────────────────────
+.about-text {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: rgba(244, 247, 251, 0.82);
+  white-space: pre-line;
+}
+
+// ── Links ─────────────────────────────────────────────────────────────
+a, a:hover, a:focus {
+  color: var(--picta-yellow);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 160ms ease;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+// ── Social links ────────────────────────────────────────────────────
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 0.9rem;
+    color: rgba(244, 247, 251, 0.75);
+    transition: all 160ms ease;
+    text-decoration: none;
+
+    &:hover {
+      background: var(--picta-yellow-softer);
+      border-color: var(--picta-yellow-border);
+      color: var(--picta-yellow);
+    }
+  }
+}
+
+.logo-icon {
+  width: 28px;
+  height: auto;
+}
+
+// ── Content ────────────────────────────────────────────────────────────────
+.about-content {
+  margin: 0 16px;
+}
+
+.about-section {
+  margin-bottom: 28px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: 
+    radial-gradient(
+      circle at top right,
+      var(--picta-yellow-softer),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(10, 17, 38, 0.98) 0%,
+      rgba(16, 25, 53, 0.98) 100%
+    );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+// ── Responsive ────────────────────────────────────────────────────
+@media (max-width: 600px) {
+  .about-header {
+    margin: 0 8px 20px;
+    padding: 14px;
+  }
+
+  .socials a {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .logo-icon {
+    width: 22px;
+  }
+}

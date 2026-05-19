@@ -1,0 +1,87 @@
+<div
+  class="categoria-tags-shell"
+  [class.categoria-tags-shell-explorer]="showExplorerHeader()"
+  [class.categoria-tags-shell-explorer-favorites]="showExplorerHeader() && favoriteTrack()"
+>
+  @if (showExplorerHeader()) {
+    <div class="rich-shelf-header categoria-tags-shell-header">
+      <div class="style-scope ytd-rich-shelf-renderer carousel-header">
+        <h3 class="carousel-title">{{ explorerTitle() }}</h3>
+      </div>
+
+      <button
+        mat-stroked-button
+        type="button"
+        class="categoria-tags-shell-action"
+        [disabled]="explorerLoading"
+        [attr.aria-busy]="explorerLoading"
+        (click)="openExplorer()"
+      >
+        <mat-icon [class.categoria-spin]="explorerLoading">{{ explorerLoading ? 'autorenew' : 'grid_view' }}</mat-icon>
+        <span>{{ explorerLoading ? 'Cargando géneros...' : explorerButtonLabel() }}</span>
+      </button>
+    </div>
+  }
+
+  @if (tags().length) {
+    <div class="categoria-tags-carousel" role="group" [attr.aria-label]="groupAriaLabel()">
+      <button
+        mat-icon-button
+        type="button"
+        class="categoria-tags-nav"
+        [attr.aria-label]="prevAriaLabel()"
+        [disabled]="prevDisabled()"
+        (click)="onPrevClick(genreCarousel)"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <div
+        class="categoria-tags-track"
+        [class.categoria-tags-track-favorites]="favoriteTrack()"
+        role="tablist"
+        [attr.aria-label]="trackAriaLabel()"
+      >
+        <owl-carousel-o
+          [options]="options()"
+          (translated)="onTranslated($event)"
+          #genreCarousel
+        >
+          @for (tag of tags(); track tag.trackBy) {
+            <ng-template carouselSlide>
+              <app-genre-tag-card
+                [id]="tag.id"
+                [label]="tag.label"
+                [value]="tag.value"
+                [active]="selectedValue() === tag.value"
+                [favoriteEnabled]="tag.showFavorite"
+                [favoriteActive]="tag.isFavorite"
+                [favoriteOnly]="tag.favoriteOnly"
+                [favoriteAriaAdd]="favoriteAriaAdd()"
+                [favoriteAriaRemove]="favoriteAriaRemove()"
+                (selected)="onTagSelected($event)"
+                (favoriteToggled)="onFavoriteToggled($event)"
+              />
+            </ng-template>
+          }
+        </owl-carousel-o>
+      </div>
+
+      <button
+        mat-icon-button
+        type="button"
+        class="categoria-tags-nav"
+        [attr.aria-label]="nextAriaLabel()"
+        [disabled]="nextDisabled()"
+        [attr.aria-busy]="loading()"
+        (click)="onNextClick(genreCarousel)"
+      >
+        @if (loading()) {
+          <mat-icon class="categoria-spin">autorenew</mat-icon>
+        } @else {
+          <mat-icon>chevron_right</mat-icon>
+        }
+      </button>
+    </div>
+  }
+</div>

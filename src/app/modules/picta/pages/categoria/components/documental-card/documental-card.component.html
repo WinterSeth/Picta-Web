@@ -1,0 +1,117 @@
+<mat-card class="documental-card">
+  <div class="documental-card-media">
+    <a
+      [routerLink]="['/documental', documental().slug_url]"
+      class="documental-card-media-link"
+      [attr.aria-label]="'Ver documental ' + documental().nombre"
+    >
+      <img
+        mat-card-image
+        [ngSrc]="documental().url_imagen + '_350x200'"
+        width="350"
+        height="200"
+        [alt]="'Poster de ' + documental().nombre"
+        class="documental-card-image"
+        loading="lazy"
+        decoding="async"
+      />
+    </a>
+
+    <div class="documental-card-media-overlay"></div>
+
+    <div class="documental-card-topline">
+      @if (year()) {
+        <span class="documental-card-badge documental-card-badge--soft" matTooltip="Año" matTooltipPosition="above">
+          <mat-icon>calendar_month</mat-icon>
+          {{ year() }}
+        </span>
+      }
+
+      <span class="documental-card-badge" matTooltip="Duración" matTooltipPosition="above">
+        <mat-icon>schedule</mat-icon>
+        {{ duration() }}
+      </span>
+    </div>
+
+    @if (documental().precios?.length) {
+      <div class="documental-card-price-stack">
+        @for (p of documental().precios; track p.tipo) {
+          @if (p.tipo == 'reproduccion') {
+            <span class="price-chip" title="Compra por reproducción">
+              <mat-icon class="price-chip-icon">play_arrow</mat-icon>
+              <span>Compra · {{ p.valor }} CUP</span>
+            </span>
+          } @else if (p.tipo == 'renta') {
+            <span class="price-chip" title="Renta temporal">
+              <mat-icon class="price-chip-icon">schedule</mat-icon>
+              <span>Renta · {{ p.valor }} CUP</span>
+            </span>
+          }
+        }
+      </div>
+    }
+  </div>
+
+  <div class="documental-card-body">
+    <div class="documental-card-heading">
+      <div class="documental-card-title-block">
+        <a
+          [routerLink]="['/documental', documental().slug_url]"
+          class="documental-card-title-link"
+          [matTooltip]="documental().nombre"
+          matTooltipPosition="above"
+          matTooltipShowDelay="180"
+          [attr.aria-label]="'Abrir documental ' + documental().nombre"
+        >
+          <h3 class="documental-card-title">{{ documental().nombre }}</h3>
+        </a>
+
+        <p class="documental-card-subtitle">
+          @if (country()) {
+            <span class="documental-card-country">{{ country() }}</span>
+          } @else {
+            <span>País no definido</span>
+          }
+        </p>
+      </div>
+
+      @if (documental().canal?.alias) {
+        <a
+          [routerLink]="['/canal', documental().canal.alias]"
+          class="documental-card-channel"
+          [attr.aria-label]="'Ver canal ' + documental().canal.nombre"
+        >
+          <img
+            [ngSrc]="documental().canal.url_avatar + '_48x48'"
+            width="40"
+            height="40"
+            [alt]="'Avatar de ' + documental().canal.nombre"
+            class="documental-card-channel-avatar"
+          />
+          <span>{{ documental().canal.nombre }}</span>
+        </a>
+      }
+    </div>
+
+    <p
+      class="documental-card-description"
+      [matTooltip]="description() || 'Sin descripción disponible'"
+      matTooltipPosition="below"
+      matTooltipShowDelay="180"
+    >
+      {{ description() || 'Sin descripción disponible' }}
+    </p>
+
+    <div class="documental-card-actions">
+      <a [routerLink]="['/medias', documental().slug_url]" class="documental-action-link documental-action-link--primary" aria-label="Reproducir documental">
+        <mat-icon>play_circle</mat-icon>
+        <span>Reproducir</span>
+      </a>
+
+      <a [routerLink]="['/documental', documental().slug_url]" class="documental-action-link documental-action-link--secondary" aria-label="Ver detalles de documental">
+        <mat-icon>info</mat-icon>
+        <span>Detalles</span>
+      </a>
+    </div>
+  </div>
+</mat-card>

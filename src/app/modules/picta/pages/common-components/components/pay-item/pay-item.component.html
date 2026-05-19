@@ -1,0 +1,228 @@
+<mat-dialog-content class="pay-item-dialog-content">
+  <button #closeBtn mat-icon-button mat-dialog-close class="pay-item-close-btn" aria-label="Cerrar modal de pago" title="Cerrar" type="button">
+    <mat-icon>close</mat-icon>
+  </button>
+  @if (paymentM$ | async; as paymentMethod) {
+    <mat-horizontal-stepper #stepper labelPosition="bottom" class="paymentStepper">
+      <mat-step label="Metodo de pago">
+        <div class="payment-step payment-step--methods">
+          <div class="step-heading">
+            <h3>Elige como deseas pagar</h3>
+            <p>Selecciona un metodo para continuar con el proceso de pago seguro.</p>
+          </div>
+          <mat-selection-list #methods (selectionChange)="onPaymentMethodChange($event)" [multiple]="false" [disabled]="isMethodLoading" class="payment-methods-list">
+             @if (isMethodLoading) {
+               <div class="method-loading-banner">
+                 <div class="method-loading-content">
+                   <mat-spinner [diameter]="18" color="accent"></mat-spinner>
+                   <span>Generando pago...</span>
+                 </div>
+               </div>
+             }
+            <div class="payment-methods-row">
+              @for (item of $any(paymentMethod).methods; track $index) {
+                @switch (item) {
+                  @case ('tr') {
+                    <mat-list-option (click)="!isMethodLoading && handleTransfermovil()" value="tr" [disabled]="isMethodLoading" class="payment-option-inline">
+                      <img matListItemAvatar class="payment-method-img" alt="Transfermóvil logo" ngSrc="icons/cu.etecsa.cubacel.tr.tm.webp" width="48" height="48"/>
+                      <span matListItemTitle>Transfermóvil</span>
+                      <span matListItemLine>Pago en Línea</span>
+                    </mat-list-option>
+                  }
+                  @case ('lp') {
+                    <mat-list-option [disabled]="true" value="lp" class="payment-option-inline">
+                      <img matListItemAvatar class="payment-method-img" alt="Laberinto logo" ngSrc="icons/logo-lab-rt-103x108.png" width="48" height="48"/>
+                      <span matListItemTitle>Laberinto</span>
+                      <span matListItemLine class="method-badge">No disponible</span>
+                    </mat-list-option>
+                  }
+                  @case ('ez') {
+                    <mat-list-option (click)="isSubscriptionPayment && !isMethodLoading && handleEnzona()" value="ez" [disabled]="isMethodLoading || !isSubscriptionPayment" class="payment-option-inline">
+                      <img matListItemAvatar class="payment-method-img" alt="Enzona logo" ngSrc="icons/cu.xetid.apk.enzona.webp" width="48" height="48"/>
+                      <span matListItemTitle>Enzona</span>
+                      <span matListItemLine>Pago en Línea</span>
+                    </mat-list-option>
+                  }
+                }
+              }
+            </div>
+          </mat-selection-list>
+        </div>
+      </mat-step>
+
+      @switch (selectedPaymentMethod) {
+        @case ('tr') {
+          <mat-step label="Transfermovil">
+            <div class="payment-step payment-step--gateway">
+              <div class="gateway-panel">
+                <div class="gateway-header">
+                  <h3>Pago con Transfermóvil</h3>
+                  <p>Escanea el código QR para completar el pago.</p>
+                </div>
+                <div class="qr-wrap">
+                  <qrcode [qrdata]="parsedQR" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+                </div>
+                @if (platform.ANDROID || platform.IOS) {
+                  <a [href]="tmLink" class="payLink">Abrir en Transfermóvil</a>
+                }
+                <div class="gateway-actions">
+                  <button mat-stroked-button (click)="checkPayment()">Comprobar pago</button>
+                  <button mat-raised-button color="primary" mat-dialog-close>Cerrar</button>
+                </div>
+              </div>
+            </div>
+          </mat-step>
+        }
+        @case ('lp') {
+          <mat-step label="Laberinto">
+            <ng-container
+              [ngTemplateOutlet]="gatewayRedirectStep"
+              [ngTemplateOutletContext]="{
+                logo: 'icons/logo-lab-rt-103x108.png',
+                alt: 'Laberinto logo',
+                title: 'Pago con Laberinto',
+                description: 'Serás redirigido a Laberinto para completar el pago.',
+                ariaLabel: 'Pago con Laberinto',
+                buttonLabel: 'Continuar con Laberinto'
+              }">
+            </ng-container>
+        </mat-step>
+      }
+      @case ('ez') {
+        <mat-step label="Enzona">
+          <ng-container
+            [ngTemplateOutlet]="gatewayRedirectStep"
+            [ngTemplateOutletContext]="{
+              logo: 'icons/cu.xetid.apk.enzona.webp',
+              alt: 'Enzona logo',
+              title: 'Pago con Enzona',
+              description: 'Serás redirigido a Enzona para completar el pago.',
+              ariaLabel: 'Pago con Enzona',
+              buttonLabel: 'Continuar con Enzona'
+            }">
+          </ng-container>
+        </mat-step>
+      }
+    }
+
+    <ng-template
+      #gatewayRedirectStep
+      let-logo="logo"
+      let-alt="alt"
+      let-title="title"
+      let-description="description"
+      let-ariaLabel="ariaLabel"
+      let-buttonLabel="buttonLabel">
+      <div class="payment-step payment-step--gateway">
+        <div class="gateway-panel">
+          <img [alt]="alt" [ngSrc]="logo" width="56" height="56"/>
+          <div class="gateway-info">
+            <h3>{{ title }}</h3>
+            <p>{{ description }}</p>
+          </div>
+          <a mat-flat-button [href]="urlSegura" color="primary">
+            <mat-icon [attr.aria-label]="ariaLabel" fontIcon="attach_money"></mat-icon>
+            <span>{{ buttonLabel }}</span>
+          </a>
+        </div>
+      </div>
+    </ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--       @if (paymentMethod.methods[0] == 'lp') {
+    <mat-step>
+      <div class="flex flex-col">
+        <mat-selection-list #methods [multiple]="false" class="beneficios-list">
+          <div matListItemTitle>Selecciona un Método de pago</div>
+          <mat-list-option (click)="handleLaberinto()" value="laberinto" class="py-2 my-2">
+            <div class="flex items-center">
+              <img class="mr-2" alt="Laberinto logo" width="40" height="40" matListItemAvatar ngSrc="icons/logo-lab-rt-103x108.png"/>
+              <span> Laberinto </span>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+      </div>
+    </mat-step>
+    <mat-step>
+      <div class="flex flex-col items-center justify-center">
+        <h2>Pago con Laberinto</h2>
+        <iframe
+          [src]="urlSegura"
+          width="100%"
+          height="500px"
+          frameborder="0">
+        </iframe>
+      </div>
+    </mat-step>
+  } @else {
+    <mat-step>
+      <div class="flex flex-col">
+        <mat-selection-list #methods [multiple]="false" class="beneficios-list">
+          <div matListItemTitle>Selecciona un Método de pago</div>
+          <mat-list-option (click)="handleTransfermovil()" value="transfermovil" class="py-2 my-2">
+            <div class="flex items-center">
+              <img class="mr-2" alt="Transfermóvil logo" width="40" height="40" matListItemAvatar ngSrc="icons/cu.etecsa.cubacel.tr.tm.webp"/>
+              <h6> Transfermóvil </h6>
+            </div>
+          </mat-list-option>
+          <mat-list-option value="enzona" [disabled]="true">
+            <div class="flex items-center">
+              <img class="mr-2" alt="Enzona logo" width="40" height="40" matListItemAvatar ngSrc="icons/cu.xetid.apk.enzona.webp"/>
+              <h6 matLine> Enzona (próximamente) </h6>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+      </div>
+    </mat-step>
+    <mat-step>
+      <div class="flex flex-col items-center justify-center">
+        <h2>Pago con Transfermóvil</h2>
+        <p style="text-align: justify">Escanea el código qr para completar el pago</p>
+        <qrcode [qrdata]="parsedQR" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+        <p style="text-align: justify"><a *ngIf="platform.ANDROID || platform.IOS" [href]="tmLink" class="payLink">Abrir en Transfermóvil</a></p>
+        <div class="flex justify-around items-center" style="width: 100%;">
+          <button mat-stroked-button class="!rounded-full" (click)="checkPayment()">Comprobar</button>
+          <button mat-raised-button class="!rounded-full" color="primary" mat-dialog-close>Cerrar</button>
+        </div>
+      </div>
+    </mat-step>
+    } -->
+  </mat-horizontal-stepper>
+  }  @else {
+  <div class="p-8 inset-0 flex items-center justify-center">
+    <div class="!rounded-lg flex items-center">
+      <mat-spinner aria-label="cargando" [diameter]="20" color="accent"></mat-spinner>
+      <p class="mt-4 text-gray-600">Cargando...</p>
+    </div>
+  </div>
+}
+</mat-dialog-content>
+<!--<mat-dialog-actions>
+<button color="warn" mat-button mat-dialog-close>Cancelar</button>
+&lt;!&ndash;<button (click)="goPremium()" color="primary" mat-raised-button>
+<mat-icon>payment</mat-icon>
+Shut up and take my money!!
+</button>&ndash;&gt;
+</mat-dialog-actions>-->

@@ -1,0 +1,45 @@
+.volume-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--picta-card-text, #f4f7fb);
+}
+
+.volume-control input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 160px;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--picta-card-bg-start, rgba(10, 15, 36, 0.7)),
+    var(--picta-card-bg-end, rgba(16, 25, 53, 0.7))
+  );
+  border-radius: 6px;
+  outline: none;
+}
+
+.volume-control .volume-slider {
+  width: 160px;
+  margin: 0 0.5rem;
+  height: 6px;
+}
+
+.volume-control .volume-slider .mat-slider-thumb {
+  background-color: #f3e628;
+}
+
+.volume-control input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #f3e628;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.volume-control button:focus-visible {
+  outline: 3px solid rgba(243, 230, 40, 0.32);
+  outline-offset: 2px;
+}

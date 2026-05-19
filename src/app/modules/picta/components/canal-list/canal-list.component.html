@@ -1,0 +1,48 @@
+<div>
+  <app-section-header
+    title="Canales"
+    description="Explora todos los canales de televisión en vivo">
+  </app-section-header>
+</div>
+
+@if (loading) {
+  <!-- Estado de carga -->
+  <div class="inset-0 flex flex-col items-center justify-center h-screen z-50">
+    <div class="p-4 !rounded-lg flex flex-col items-center">
+      <mat-spinner aria-label="cargando" [diameter]="50" color="warn"></mat-spinner>
+      <p class="mt-4">Cargando...</p>
+    </div>
+  </div>
+} @else {
+  <div class="px-3 md:px-4">
+    @if (canales.length) {
+      <div class="canal-list w-full">
+        <div class="canal-toolbar w-full">
+          <mat-form-field appearance="fill" floatLabel="auto" class="canal-search-field">
+            <mat-label>Buscar canal...</mat-label>
+            <input [formControl]="searchControl" matInput type="text">
+          </mat-form-field>
+          <div class="canal-view-mode" role="group" aria-label="Modo de visualizacion de canales">
+            <mat-button-toggle-group [formControl]="viewModeControl" aria-label="Modo de vista">
+              <mat-button-toggle value="card">Tarjetas</mat-button-toggle>
+              <mat-button-toggle value="list">Lista</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+        </div>
+        <app-canal-list-item [canales]="canales" [mode]="viewModeControl.value" [logged]="!!user"></app-canal-list-item>
+        @if (loadingMore && canales?.length) {
+          <app-categoria-loading-state
+            [label]="'Cargando más canales...'"
+            [ariaLabel]="'Cargando más canales'"
+          ></app-categoria-loading-state>
+        }
+      </div>
+    } @else {
+      <div class="flex justify-center items-center h-screen mt-5 px-4">
+        <mat-icon class="mr-3">error</mat-icon><h1>No se encontraron resultados.</h1>
+      </div>
+    }
+
+  </div>
+}
+

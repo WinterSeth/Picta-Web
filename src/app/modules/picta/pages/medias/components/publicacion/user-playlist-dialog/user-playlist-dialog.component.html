@@ -1,0 +1,48 @@
+<section class="picta-modal">
+  <button (click)="dialogRef.close()" aria-label="Cerrar diálogo" class="picta-modal-close rounded-full! flex! justify-center!" mat-icon-button>
+    <mat-icon>close</mat-icon>
+  </button>
+
+  <header class="picta-modal-header">
+    <p class="picta-modal-kicker">Picta</p>
+    <h2 mat-dialog-title class="picta-modal-title">Guardar en lista</h2>
+    <p class="picta-modal-subtitle">Elige una lista para agregar esta publicación.</p>
+  </header>
+
+  <mat-dialog-content class="picta-modal-content">
+    @if (loadingPlaylists) {
+      <section class="picta-note">
+        <p class="picta-loading"><mat-spinner diameter="18"></mat-spinner>Cargando listas...</p>
+      </section>
+    } @else {
+      <section class="picta-list-shell">
+        <mat-selection-list [formControl]="publicacionesControl" [multiple]="false" color="primary" class="picta-selection-list">
+          @for (list of playlists; track list.id) {
+            <mat-list-option [checkboxPosition]="'before'" [value]="list.id" class="picta-list-option">
+              {{ list.nombre }}
+            </mat-list-option>
+          }
+        </mat-selection-list>
+
+        @if (!playlists?.length) {
+          <div class="picta-empty-state">No tienes listas creadas todavía.</div>
+        }
+      </section>
+
+      <button (click)="showCreateDialog()" mat-stroked-button class="picta-secondary-btn" [disabled]="savingPlaylist || loadingPlaylists">
+        Crear nueva lista
+      </button>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="picta-modal-actions">
+    <button mat-stroked-button mat-dialog-close class="picta-secondary-btn">Cancelar</button>
+    <button (click)="save()" [disabled]="publicacionesControl.invalid || savingPlaylist || loadingPlaylists" mat-raised-button class="picta-primary-btn">
+      @if (savingPlaylist) {
+        <span class="picta-loading"><mat-spinner diameter="18"></mat-spinner>Guardando...</span>
+      } @else {
+        Guardar
+      }
+    </button>
+  </mat-dialog-actions>
+</section>

@@ -1,0 +1,15 @@
+<section>
+  <div>
+    <h1 class="p-2 text-white">Notificaciones</h1>
+    <div (scroll)="onNotificationScroll($event)" class="custom-scrollbar" style="height: 70vh; overflow-y: scroll; scrollbar-width: thin;">
+      @for (notificacion of notificacionesList; track notificacion) {
+        <app-notificacion-item [notification]="notificacion" [fixedWidth]="false"></app-notificacion-item>
+      }
+    </div>
+    @if (loadingNotifications) {
+      <div class="flex justify-center items-center mt-3">
+        <mat-spinner aria-label="cargando" [diameter]="30"></mat-spinner>
+      </div>
+    }
+  </div>
+</section>

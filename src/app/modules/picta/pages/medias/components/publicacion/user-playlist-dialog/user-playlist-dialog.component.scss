@@ -1,0 +1,187 @@
+:host {
+  display: block;
+  color: var(--picta-text, #f4f7fb);
+}
+
+.picta-modal {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(243, 230, 40, 0.15);
+  background:
+    radial-gradient(
+      128% 128% at 100% 0%,
+      rgba(243, 230, 40, 0.06) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(16, 25, 53, 0.98) 0%,
+      rgba(10, 17, 38, 1) 100%
+    );
+  padding: 20px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(243, 230, 40, 0.05) inset;
+}
+
+.picta-modal-close {
+  position: absolute !important;
+  right: 12px;
+  top: 12px;
+  color: var(--picta-text-muted, rgba(244,247,251,0.6)) !important;
+  
+  &:hover {
+    color: var(--picta-yellow, #f3e628) !important;
+  }
+}
+
+.picta-modal-header {
+  padding: 0 36px 0 0;
+}
+
+.picta-modal-kicker {
+  margin: 0 0 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--picta-yellow, #f3e628);
+}
+
+.picta-modal-title {
+  margin: 0 0 4px;
+  padding: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--picta-text, #f4f7fb);
+}
+
+.picta-modal-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--picta-text-muted, rgba(244,247,251,0.7));
+}
+
+.picta-modal-content {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.picta-note,
+.picta-list-shell {
+  border-radius: 10px;
+  border: 1px solid rgba(243, 230, 40, 0.08);
+  background: rgba(243, 230, 40, 0.03);
+  padding: 10px;
+}
+
+.picta-selection-list {
+  max-height: min(28rem, 55vh);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.picta-list-option {
+  margin-bottom: 8px;
+  border-radius: 10px !important;
+  border: 1px solid rgba(243, 230, 40, 0.12) !important;
+  background: rgba(243, 230, 40, 0.04) !important;
+  transition: all 180ms ease;
+  
+  &:hover {
+    background: rgba(243, 230, 40, 0.08) !important;
+    border-color: rgba(243, 230, 40, 0.2) !important;
+  }
+  
+  &.mat-mdc-list-item-selected {
+    background: rgba(243, 230, 40, 0.1) !important;
+    border-color: rgba(243, 230, 40, 0.3) !important;
+  }
+  
+  ::ng-deep .mdc-label {
+    color: var(--picta-text, #f4f7fb) !important;
+  }
+}
+
+.picta-empty-state {
+  border: 1px dashed rgba(243, 230, 40, 0.2);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  color: var(--picta-text-muted, rgba(244,247,251,0.7));
+  font-size: 0.85rem;
+}
+
+// Acciones con mismo estilo que playlist-item
+.picta-modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+
+  button {
+    flex: 1;
+    height: 44px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: none;
+  }
+}
+
+// Secondary button (Cancelar, Crear nueva lista)
+.picta-modal-actions button[mat-stroked-button],
+.picta-secondary-btn {
+  border-color: rgba(243, 230, 40, 0.3) !important;
+  color: var(--picta-yellow, #f3e628) !important;
+  background: transparent !important;
+  
+  &:hover:not([disabled]) {
+    border-color: rgba(243, 230, 40, 0.5) !important;
+    background: rgba(243, 230, 40, 0.08) !important;
+  }
+  
+  &[disabled] {
+    opacity: 0.5;
+  }
+}
+
+// Primary button (Guardar)
+.picta-modal-actions button[mat-raised-button],
+.picta-primary-btn {
+  background: var(--picta-yellow, #f3e628) !important;
+  color: rgba(10, 17, 38, 0.95) !important;
+  border: none !important;
+  box-shadow: none !important;
+  
+  &:hover:not([disabled]) {
+    background: rgba(255, 245, 157, 1) !important;
+  }
+  
+  &[disabled] {
+    opacity: 0.5;
+    background: var(--picta-yellow, #f3e628) !important;
+  }
+}
+
+.picta-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--picta-text-muted, rgba(244,247,251,0.7));
+}
+
+@media (max-width: 480px) {
+  .picta-modal-actions {
+    flex-direction: column;
+  }
+  
+  .picta-modal-actions button {
+    width: 100%;
+  }
+}
