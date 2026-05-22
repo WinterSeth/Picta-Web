@@ -26,15 +26,15 @@ export class ActivePerfilService {
   }
 
   /**
-   * Set the active profile ID and save to sessionStorage
+   * Set the active profile ID and save to localStorage
    */
   setActiveProfileId(id: number | null): void {
     this.activeProfileId.set(id);
     if (id !== null) {
       try {
-        sessionStorage.setItem(ACTIVE_PROFILE_KEY, String(id));
+        localStorage.setItem(ACTIVE_PROFILE_KEY, String(id));
       } catch (e) {
-        console.warn('Could not save active profile to sessionStorage', e);
+        console.warn('Could not save active profile to localStorage', e);
       }
     } else {
       this.clearActiveProfile();
@@ -49,28 +49,28 @@ export class ActivePerfilService {
   }
 
   /**
-   * Clear the active profile from memory and sessionStorage
+   * Clear the active profile from memory and localStorage
    */
   clearActiveProfile(): void {
     this.activeProfileId.set(null);
     try {
-      sessionStorage.removeItem(ACTIVE_PROFILE_KEY);
+      localStorage.removeItem(ACTIVE_PROFILE_KEY);
     } catch (e) {
-      console.warn('Could not clear active profile from sessionStorage', e);
+      console.warn('Could not clear active profile from localStorage', e);
     }
   }
 
   /**
-   * Load active profile from sessionStorage
+   * Load active profile from localStorage
    */
   private loadFromStorage(): void {
     try {
-      const storedId = sessionStorage.getItem(ACTIVE_PROFILE_KEY);
+      const storedId = localStorage.getItem(ACTIVE_PROFILE_KEY);
       if (storedId) {
         this.activeProfileId.set(Number(storedId));
       }
     } catch (e) {
-      console.warn('Could not load active profile from sessionStorage', e);
+      console.warn('Could not load active profile from localStorage', e);
     }
   }
 }
