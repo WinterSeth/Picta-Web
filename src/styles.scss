@@ -3,6 +3,41 @@
 
 @use 'tailwindcss';
 
+@theme {
+  --color-primary-50: #e5e6ea;
+  --color-primary-100: #bfc1cb;
+  --color-primary-200: #9497a9;
+  --color-primary-300: #696d87;
+  --color-primary-400: #494e6d;
+  --color-primary-500: #292c48;
+  --color-primary-600: #191b30;
+  --color-primary-700: #1f2138;
+  --color-primary-800: #191b30;
+  --color-primary-900: #0f1021;
+
+  --color-secondary-50: #fce8e5;
+  --color-secondary-100: #f8c6be;
+  --color-secondary-200: #f3a093;
+  --color-secondary-300: #e30613;
+  --color-secondary-400: #ea5c47;
+  --color-secondary-500: #e8462e;
+  --color-secondary-600: #e53f29;
+  --color-secondary-700: #e23723;
+  --color-secondary-800: #de2f1d;
+  --color-secondary-900: #d82012;
+
+  --color-accent-50: #fefce6;
+  --color-accent-100: #fdf8c2;
+  --color-accent-200: #fcf399;
+  --color-accent-300: #fbed6d;
+  --color-accent-400: #f9e74c;
+  --color-accent-500: #f3e628;
+  --color-accent-600: #e3d424;
+  --color-accent-700: #cfbe1e;
+  --color-accent-800: #bba818;
+  --color-accent-900: #988509;
+}
+
 @import 'animate.css';
 
 a,
