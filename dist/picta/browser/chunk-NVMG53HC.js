@@ -1,0 +1,1 @@
+import"./chunk-ODN5LVDJ.js";var t=[{path:"",loadComponent:()=>import("./chunk-QUQZKCSK.js").then(o=>o.DoramasComponent)},{path:"recientes",loadComponent:()=>import("./chunk-XP3ABFP3.js").then(o=>o.DoramasUpdatedExpandedComponent)}];export{t as DORAMAS_ROUTES};

@@ -1,0 +1,1 @@
+import"./chunk-ODN5LVDJ.js";var t=[{path:"",loadComponent:()=>import("./chunk-GVEM7R4S.js").then(o=>o.RadioListComponent)},{path:"cubandjspro_radio",loadComponent:()=>import("./chunk-6N7NSHWB.js").then(o=>o.CubanradioComponent)},{path:":mount",loadComponent:()=>import("./chunk-RLCT3VEL.js").then(o=>o.RadioDetailComponent)}];export{t as RADIO_ROUTES};

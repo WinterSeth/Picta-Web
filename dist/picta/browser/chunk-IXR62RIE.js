@@ -1,0 +1,1 @@
+import"./chunk-ODN5LVDJ.js";var t=[{path:":slug",loadComponent:()=>import("./chunk-NQKDNPUT.js").then(o=>o.ActorComponent)},{path:":slug/:media",loadComponent:()=>import("./chunk-OWRNEWZD.js").then(o=>o.ActorExpandedComponent)}];export{t as ACTOR_ROUTES};
