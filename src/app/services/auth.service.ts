@@ -148,6 +148,8 @@ export class AuthService {
 
     registerForm.phone_number && newUser.append('country_code', '+53');
 
+    registerForm.codigo_referido && newUser.append('codigo_referido', registerForm.codigo_referido);
+
     return this.httpCli.post(`${environment.baseUrl}/v1/usuario/`, newUser);
   }
 

@@ -75,6 +75,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     password: ['', [Validators.required, Validators.minLength(6)]],
     repeat_password: ['', [Validators.required]],
     with_mail: [true, []],
+    codigo_referido: ['', []],
   }, {
     validator: CustomValidators.passwordMatchValidator
   });
@@ -110,7 +111,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
 
     const raw = this.registerForm.getRawValue();
     const withMail = raw.with_mail ?? true;
-    const registerData = {
+    const registerData: any = {
       username: raw.username,
       password: raw.password,
       fecha_nacimiento: format(raw.fecha_nacimiento, this.format, { locale: es }),
@@ -119,9 +120,14 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
 
     // Solo enviar el canal seleccionado
     if (withMail) {
-      (registerData as any).email = raw.email;
+      registerData['email'] = raw.email;
     } else {
-      (registerData as any).phone_number = raw.phone_number;
+      registerData['phone_number'] = raw.phone_number;
+    }
+
+    // Enviar código de referido si fue proporcionado
+    if (raw.codigo_referido?.trim()) {
+      registerData['codigo_referido'] = raw.codigo_referido.trim();
     }
 
     this.subs.add(
@@ -154,7 +160,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
 
           // Errores de username con sugerencias
           if (apiErrors.username && apiErrors.username[0] === 'Este campo debe ser único.') {
-            this.authService.get_username(registerData.username).subscribe({
+            this.authService.get_username(registerData['username']).subscribe({
               next: (res: any) => {
                 this.userMsg.set('Disponibles: ' + res.toString());
               }

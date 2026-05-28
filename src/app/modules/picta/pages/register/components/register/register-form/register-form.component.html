@@ -38,6 +38,11 @@
       }
 
       <mat-form-field appearance="fill" floatLabel="auto">
+        <mat-label>Código de referido (opcional)</mat-label>
+        <input formControlName="codigo_referido" matInput>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Contraseña</mat-label>
         <input [required]="!registerForm.get('password').pristine" [type]="showPass() ? 'text' : 'password'" formControlName="password" matInput>
         <button type="button" class="password-toggle" (click)="toggleVisibility($event)" [matTooltip]="showPass() ? 'Ocultar contraseña' : 'Mostrar contraseña'" mat-icon-button matSuffix>
