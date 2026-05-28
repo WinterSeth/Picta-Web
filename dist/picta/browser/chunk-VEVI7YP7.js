@@ -1,0 +1,1 @@
+import"./chunk-ODN5LVDJ.js";var t=[{path:"acceder",loadComponent:()=>import("./chunk-2XXNZMUM.js").then(o=>o.LoginComponent)},{path:"registro",loadComponent:()=>import("./chunk-L6Y7TZCB.js").then(o=>o.RegisterComponent)}];export{t as LOGIN_ROUTES};

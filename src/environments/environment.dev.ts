@@ -2,15 +2,15 @@ export const environment = {
   production: false,
   clientId: 'ebkU3YeFu3So9hesQHrS8AZjEa4v7TiYbS5QZIgO', // admin client id for dev.
 
-  pictaUrl: 'http://dev-www.picta.cu',
-  baseUrl: 'http://dev-api.picta.cu:8080',
+  pictaUrl: 'https://www.picta.cu',
+  baseUrl: 'https://api.picta.cu',
 
-  baseUrlV1: 'http://dev-api.picta.cu:8080/v1',
-  baseUrlV2: 'http://dev-api.picta.cu:8080/v2',
-  baseUrlv3: 'http://dev-api.picta.cu:8080/v3',
+  baseUrlV1: 'https://api.picta.cu/v1',
+  baseUrlV2: 'https://api.picta.cu/v2',
+  baseUrlv3: 'https://api.picta.cu/v3',
 
-  addUser: 'https://dev-api.picta.cu:8080/v1/usuario/',
-  authUrl: 'http://dev-api.picta.cu:8080/o/token/',
+  addUser: 'https://api.picta.cu/v1/usuario/',
+  authUrl: 'https://api.picta.cu/o/token/',
   natioUrl: 'https://natio.picta.cu'
 };
 

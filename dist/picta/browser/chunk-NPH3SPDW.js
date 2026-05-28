@@ -1,0 +1,1 @@
+import{a,b}from"./chunk-IADLFKYJ.js";import"./chunk-DE6AW4IO.js";import"./chunk-M5DHKUJI.js";import"./chunk-FAUG57GJ.js";import"./chunk-I3F5GQHU.js";import"./chunk-GJM5653O.js";import"./chunk-ODN5LVDJ.js";export{a as MatBadge,b as MatBadgeModule};
