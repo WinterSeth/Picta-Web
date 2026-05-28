@@ -1,0 +1,1 @@
+import{d as l}from"./chunk-ODN5LVDJ.js";function u(c,o){o=encodeURIComponent(o);for(let e of c.split(";")){let n=e.indexOf("="),[t,s]=n==-1?[e,""]:[e.slice(0,n),e.slice(n+1)];if(t.trim()===o)return decodeURIComponent(s)}return null}var i,r=l(()=>{i=class{}});export{u as a,i as b,r as c};
