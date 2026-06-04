@@ -65,16 +65,39 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       const rp = this.registerForm.get('repeat_password')?.value;
       this.passwordMismatchError.set(!!pw && !!rp && pw !== rp);
     });
+
+    // Aplicar validadores según el canal (email o teléfono) y reaccionar a cambios
+    this.applyChannelValidators();
+    this.registerForm.get('with_mail')?.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.applyChannelValidators());
+  }
+
+  private applyChannelValidators(): void {
+    const withMail = !!this.registerForm.get('with_mail')?.value;
+    const email = this.registerForm.get('email');
+    const phone = this.registerForm.get('phone_number');
+
+    if (withMail) {
+      email?.setValidators([Validators.required, Validators.email]);
+      phone?.clearValidators();
+    } else {
+      email?.clearValidators();
+      phone?.setValidators([Validators.required]);
+    }
+
+    email?.updateValueAndValidity();
+    phone?.updateValueAndValidity();
   }
 
   registerForm: UntypedFormGroup = this.fb.group({
     username: ['', [Validators.required, Validators.pattern('^[\\w.@+-]+$')]],
     phone_number: ['', []],
-    email: ['', [Validators.email, Validators.required]],
+    email: ['', [Validators.email]],
     fecha_nacimiento: ['', [Validators.required]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     repeat_password: ['', [Validators.required]],
-    with_mail: [true, []],
+    with_mail: [false, []],
     codigo_referido: ['', []],
   }, {
     validator: CustomValidators.passwordMatchValidator
