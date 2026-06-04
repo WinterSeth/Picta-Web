@@ -96,6 +96,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     phone_number: signal(''),
   };
   passwordMismatchError = signal(false);
+  termsAccepted = signal(false);
   authUser: { access_token: string; refresh_token: string } = { access_token: '', refresh_token: '' };
   subs = new SubSink();
   readonly registerCompleted = output();
@@ -204,12 +205,12 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
   }
 
-  openTCU(evt: Event, checkBoxTerm: MatCheckbox) {
+  openTCU(evt: Event) {
     evt.preventDefault();
     evt.stopPropagation();
     const dialogRef = this.dialog.open(TermsDialogComponent, { maxHeight: '90vh', width: '440px', minWidth: '340px', panelClass: 'picta-dark-dialog' });
     dialogRef.afterClosed().subscribe((result: boolean) => {
-      checkBoxTerm.checked = result;
+      this.termsAccepted.set(!!result);
     });
   }
 

@@ -68,7 +68,7 @@
 
       <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Fecha de nacimiento</mat-label>
-        <input matInput [matDatepicker]="picker" [max]="maxDate" [min]="minDate" [required]="!registerForm.get('fecha_nacimiento').pristine" formControlName="fecha_nacimiento">
+        <input matInput [matDatepicker]="picker" [max]="maxDate" [min]="minDate" [required]="!registerForm.get('fecha_nacimiento').pristine" formControlName="fecha_nacimiento" readonly (click)="picker.open()">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -112,14 +112,19 @@
         }
       }
 
-      <mat-checkbox #checkBoxTerms labelPosition="after" class="terms-checkbox">
-        He leído y acepto los <a (click)="openTCU($event, checkBoxTerms)">términos y condiciones de uso</a>.
+      <mat-checkbox
+        [checked]="termsAccepted()"
+        (change)="termsAccepted.set($event.checked)"
+        #checkBoxTerms
+        labelPosition="after"
+        class="terms-checkbox">
+        He leído y acepto los <a (click)="openTCU($event)">términos y condiciones de uso</a>.
       </mat-checkbox>
 
       <button
         type="button"
         (click)="register()"
-        [disabled]="!checkBoxTerms.checked || registerForm.invalid || isSubmitting()"
+        [disabled]="!termsAccepted() || registerForm.invalid || isSubmitting()"
         class="register-submit">
         @if (isSubmitting()) {
           <mat-spinner [diameter]="20"></mat-spinner>
