@@ -8,7 +8,7 @@ import { PublicationService } from '../../medias/services/publication-service';
 import { Title } from '@angular/platform-browser';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { NgIf } from '@angular/common';
+
 import {
   MatButtonToggleGroup,
   MatButtonToggle,
@@ -44,7 +44,6 @@ import { CarouselSkeletonComponent } from '../../common-components/components/ca
     CategoriaLoadingStateComponent,
     SectionHeaderComponent,
     CarouselSkeletonComponent,
-    NgIf
   ],
   templateUrl: './shows.component.html',
   styleUrl: './shows.component.scss',

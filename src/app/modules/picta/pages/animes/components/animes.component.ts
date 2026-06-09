@@ -24,7 +24,6 @@ import { CategoriaLoadingStateComponent } from '../../categoria/components/categ
 import { SectionHeaderComponent } from '../../common-components/components/section-header/section-header.component';
 import { LocalstorageService } from '../../../../../services/localstorage.service';
 import { CarouselSkeletonComponent } from '../../common-components/components/carousel-skeleton/carousel-skeleton.component';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-animes',
@@ -45,7 +44,6 @@ import { NgIf } from '@angular/common';
     CategoriaLoadingStateComponent,
     SectionHeaderComponent,
     CarouselSkeletonComponent,
-    NgIf
   ],
   templateUrl: './animes.component.html',
   styleUrl: './animes.component.scss',
@@ -359,13 +357,18 @@ export class AnimesComponent {
     try {
       const parsed = JSON.parse(raw);
       // Convertir a números para asegurar comparación correcta
-      return (parsed as (number | string)[]).map(id => Number(id)).filter(id => Number.isFinite(id));
+      return (parsed as (number | string)[])
+        .map(id => Number(id))
+        .filter(id => Number.isFinite(id));
     } catch {
       return [];
     }
   }
 
-  private sortAnimesByFavoriteOrder(animes: Publication[], ids: number[]): Publication[] {
+  private sortAnimesByFavoriteOrder(
+    animes: Publication[],
+    ids: number[],
+  ): Publication[] {
     const sorted: Publication[] = [];
     for (const id of ids) {
       // Buscar por pelser_id porque eso es lo que guardamos en storage
@@ -403,7 +406,9 @@ export class AnimesComponent {
       })
       .subscribe({
         next: (response: any) => {
-          const batch = Array.isArray(response?.results) ? response.results : [];
+          const batch = Array.isArray(response?.results)
+            ? response.results
+            : [];
           const merged = [...collected, ...batch];
           const nextPage = this.resolveNextPage(response?.next);
 
@@ -412,9 +417,7 @@ export class AnimesComponent {
             return;
           }
 
-          this.favoriteAnimes.set(
-            this.sortAnimesByFavoriteOrder(merged, ids),
-          );
+          this.favoriteAnimes.set(this.sortAnimesByFavoriteOrder(merged, ids));
           this.isLoadingFavoriteAnimes.set(false);
         },
         error: () => {
@@ -435,7 +438,11 @@ export class AnimesComponent {
     }
   }
 
-  onFavoriteAnimeChanged(event: { type: 'movie' | 'series'; key: number; isFavorite: boolean }): void {
+  onFavoriteAnimeChanged(event: {
+    type: 'movie' | 'series';
+    key: number;
+    isFavorite: boolean;
+  }): void {
     const id = Number(event.key); // Asegurar que sea número
     const ids = this.getFavoriteAnimesIdsFromStorage();
     let newIds: number[];
@@ -451,12 +458,17 @@ export class AnimesComponent {
       newIds = ids.filter(i => i !== id);
     }
 
-    this.localStorage.setItem(this.animesFavoritesStorageKey, JSON.stringify(newIds));
+    this.localStorage.setItem(
+      this.animesFavoritesStorageKey,
+      JSON.stringify(newIds),
+    );
 
     if (!event.isFavorite) {
       // Filtrar por pelser_id (que es lo que guardamos) o id
       this.favoriteAnimes.update(current =>
-        current.filter((a: any) => Number(a.pelser_id) !== id && Number(a.id) !== id),
+        current.filter(
+          (a: any) => Number(a.pelser_id) !== id && Number(a.id) !== id,
+        ),
       );
     } else {
       // Recargar para obtener el anime completo

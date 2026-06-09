@@ -10,17 +10,26 @@
     <div class="categoria-carousel-section">
       <div class="rich-shelf-header">
         <div class="style-scope ytd-rich-shelf-renderer">
-          <span class="style-scope ytd-rich-shelf-renderer rich-shelf-title">Tus animes favoritos</span>
+          <span class="style-scope ytd-rich-shelf-renderer rich-shelf-title"
+            >Tus animes favoritos</span
+          >
         </div>
       </div>
-      <div class="categoria-results-skeleton" role="status" aria-live="polite" aria-label="Cargando animes favoritos">
+      <div
+        class="categoria-results-skeleton"
+        role="status"
+        aria-live="polite"
+        aria-label="Cargando animes favoritos">
         @for (item of [1, 2, 3, 4]; track item) {
           <article class="categoria-skeleton-card" aria-hidden="true">
             <div class="categoria-skeleton-thumb"></div>
             <div class="categoria-skeleton-body">
-              <div class="categoria-skeleton-line categoria-skeleton-line-title"></div>
-              <div class="categoria-skeleton-line categoria-skeleton-line-meta"></div>
-              <div class="categoria-skeleton-line categoria-skeleton-line-meta short"></div>
+              <div
+                class="categoria-skeleton-line categoria-skeleton-line-title"></div>
+              <div
+                class="categoria-skeleton-line categoria-skeleton-line-meta"></div>
+              <div
+                class="categoria-skeleton-line categoria-skeleton-line-meta short"></div>
             </div>
           </article>
         }
@@ -41,13 +50,21 @@
     <div class="categoria-carousel-section" aria-live="polite">
       <div class="rich-shelf-header">
         <div class="style-scope ytd-rich-shelf-renderer">
-          <span class="style-scope ytd-rich-shelf-renderer rich-shelf-title">Tus animes favoritos</span>
+          <span class="style-scope ytd-rich-shelf-renderer rich-shelf-title"
+            >Tus animes favoritos</span
+          >
         </div>
       </div>
       <div class="categoria-favorites-empty">
-        <mat-icon class="categoria-favorites-empty-icon" aria-hidden="true">favorite_border</mat-icon>
-        <p class="categoria-favorites-empty-title">Aún no tienes animes favoritos</p>
-        <p class="categoria-favorites-empty-text">Marca el corazón en un anime para verla aquí.</p>
+        <mat-icon class="categoria-favorites-empty-icon" aria-hidden="true"
+          >favorite_border</mat-icon
+        >
+        <p class="categoria-favorites-empty-title">
+          Aún no tienes animes favoritos
+        </p>
+        <p class="categoria-favorites-empty-text">
+          Marca el corazón en un anime para verla aquí.
+        </p>
       </div>
     </div>
   }
@@ -71,15 +88,16 @@
       <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
         <mat-label>Buscar Animes...</mat-label>
         <input [formControl]="searchControl" matInput type="text" />
-        <button
-          type="button"
-          mat-icon-button
-          matSuffix
-          (click)="clearSearch()"
-          *ngIf="searchControl.value"
-          aria-label="Limpiar búsqueda">
-          <mat-icon>close</mat-icon>
-        </button>
+        @if (searchControl.value) {
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="clearSearch()"
+            aria-label="Limpiar búsqueda">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
       <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
         <mat-label>País</mat-label>

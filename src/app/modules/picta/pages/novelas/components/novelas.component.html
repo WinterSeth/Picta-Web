@@ -4,7 +4,7 @@
     description="Telenovelas cubanas y más"
     [image]="'/img/novelas_header.webp'">
   </app-section-header>
-  
+
   @if (loadingCarousel()) {
     <app-carousel-skeleton></app-carousel-skeleton>
   } @else if (latestUpdatedNovels().length) {
@@ -23,15 +23,16 @@
       <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
         <mat-label>Buscar Novelas...</mat-label>
         <input [formControl]="searchControl" matInput type="text" />
-        <button
-          type="button"
-          mat-icon-button
-          matSuffix
-          (click)="clearSearch()"
-          *ngIf="searchControl.value"
-          aria-label="Limpiar búsqueda">
-          <mat-icon>close</mat-icon>
-        </button>
+        @if (searchControl.value) {
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="clearSearch()"
+            aria-label="Limpiar búsqueda">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
       <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
         <mat-label>País</mat-label>

@@ -1,9 +1,9 @@
 import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {PublicationService} from '../../pages/medias/services/publication-service';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Publication} from '../../pages/medias/models/publicacion.model';
-import { isPlatformBrowser, NgIf } from '@angular/common';
+import { PublicationService } from '../../pages/medias/services/publication-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Publication } from '../../pages/medias/models/publicacion.model';
+import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -28,10 +28,10 @@ interface VideoInfo {
 }
 
 interface Descarga {
-  low?: string;    // Propiedad opcional
+  low?: string; // Propiedad opcional
   medium?: string; // Propiedad opcional
-  high?: string;   // Propiedad opcional
-  pro?: string;    // Propiedad opcional
+  high?: string; // Propiedad opcional
+  pro?: string; // Propiedad opcional
 }
 
 interface QualityRow {
@@ -44,10 +44,18 @@ interface QualityRow {
 }
 
 @Component({
-    selector: 'app-download-popup',
-    templateUrl: './download-popup.component.html',
-    styleUrls: ['./download-popup.component.scss'],
-    imports: [MatActionList, MatIcon, MatButton, MatProgressSpinner, MatAnchor, RouterLink, MatIconButton, NgIf]
+  selector: 'app-download-popup',
+  templateUrl: './download-popup.component.html',
+  styleUrls: ['./download-popup.component.scss'],
+  imports: [
+    MatActionList,
+    MatIcon,
+    MatButton,
+    MatProgressSpinner,
+    MatAnchor,
+    RouterLink,
+    MatIconButton,
+  ],
 })
 export class DownloadPopupComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
@@ -56,16 +64,16 @@ export class DownloadPopupComponent implements OnInit {
   data = inject<{
     video: Publication;
     user: any;
-}>(MAT_DIALOG_DATA);
+  }>(MAT_DIALOG_DATA);
 
   private publicationService = inject(PublicationService);
   private snackBar = inject(MatSnackBar);
   private localStorage = inject(LocalstorageService);
   private matomo = inject(MatomoTracker);
 
-  progreso: number = 0; 
-  contador: number; 
-  mostrandoProgreso: boolean = false; 
+  progreso: number = 0;
+  contador: number;
+  mostrandoProgreso: boolean = false;
   intervalo: any;
   generarTiempo_descarga: any;
   descargas: any;
@@ -87,27 +95,32 @@ export class DownloadPopupComponent implements OnInit {
   /** Inserted by Angular inject() migration for backwards compatibility */
   constructor(...args: unknown[]);
 
-  constructor() { }
+  constructor() {}
 
   get descarga(): Descarga {
     const descargaJSON = JSON.parse(this.data.video.descarga);
     const calidades: Descarga = {};
-  
+
     for (const calidad in descargaJSON) {
       if (
         descargaJSON.hasOwnProperty(calidad) &&
         descargaJSON[calidad] &&
-        descargaJSON[calidad].trim() !== ""
+        descargaJSON[calidad].trim() !== ''
       ) {
         calidades[calidad as keyof Descarga] = descargaJSON[calidad];
       }
     }
-  
+
     return calidades;
   }
 
   get isAudio() {
-    return this.data.video.categoria.audio || this.data.video.categoria.tipologia.modelo === 'audio' || this.data.video.categoria.cancion || this.data.video.categoria.tipologia.modelo === 'cancion';
+    return (
+      this.data.video.categoria.audio ||
+      this.data.video.categoria.tipologia.modelo === 'audio' ||
+      this.data.video.categoria.cancion ||
+      this.data.video.categoria.tipologia.modelo === 'cancion'
+    );
   }
 
   ngOnInit() {
@@ -116,15 +129,15 @@ export class DownloadPopupComponent implements OnInit {
     this.obtenertiempo_descarga();
     this.obtener_calidad();
     this.obtener_descarga();
-    
+
     // Suscribirse a los cambios de descargas
     this.descargasRealizadas$.subscribe(value => {
       this.descargasRestantes.set(value);
     });
   }
 
-   // Verificar si el enlace de descarga es válido
-   checkDownloadLinkValidity(): void {
+  // Verificar si el enlace de descarga es válido
+  checkDownloadLinkValidity(): void {
     const expiration = this.localStorage.getItem('downloadExpiration');
     if (expiration && Date.now() < expiration) {
       this.downloadLink = this.localStorage.getItem('downloadLink');
@@ -138,11 +151,13 @@ export class DownloadPopupComponent implements OnInit {
   getTimeRemaining(downloadId: string): string {
     const videoInfo = this.getVideoInfo();
     const download = videoInfo.downloads[downloadId];
-  
+
     if (download && download.expirationTime > Date.now()) {
       const timeRemaining = download.expirationTime - Date.now();
       const hours = Math.floor(timeRemaining / (1000 * 60 * 60));
-      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      const minutes = Math.floor(
+        (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
+      );
       return `${hours}h ${minutes}m`;
     } else {
       return '';
@@ -157,7 +172,9 @@ export class DownloadPopupComponent implements OnInit {
 
       if (remainingTime > 0) {
         const hours = Math.floor(remainingTime / (1000 * 60 * 60));
-        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        const minutes = Math.floor(
+          (remainingTime % (1000 * 60 * 60)) / (1000 * 60),
+        );
         this.timeRemaining = `Disponible por ${hours}h ${minutes}m`;
       } else {
         this.timeRemaining = 'Enlace expirado';
@@ -168,7 +185,7 @@ export class DownloadPopupComponent implements OnInit {
   }
 
   // Descargar el archivo
-/*   downloadFile(): void {
+  /*   downloadFile(): void {
     if (this.downloadLink) {
       this.downloading = true; // Activar estado de carga
       window.open(this.limpiarUrl(this.downloadLink), '_self'); // Abrir la URL en la misma pestaña
@@ -179,7 +196,7 @@ export class DownloadPopupComponent implements OnInit {
   downloadFile(downloadId: string): void {
     const videoInfo = this.getVideoInfo();
     const download = videoInfo.downloads[downloadId];
-    
+
     if (download && download.expirationTime > Date.now()) {
       this.trackDownloadEvent(download.type, download.resolution || downloadId);
       this.runAfterTracking(() => {
@@ -212,7 +229,7 @@ export class DownloadPopupComponent implements OnInit {
     const infoToSave = {
       visita: videoInfo.visita,
       reproduccion: videoInfo.reproduccion,
-      downloads: videoInfo.downloads || {} // Inicializa downloads si no está definido
+      downloads: videoInfo.downloads || {}, // Inicializa downloads si no está definido
     };
     this.localStorage.setItem(this.data.video.id, JSON.stringify(infoToSave));
   }
@@ -229,7 +246,10 @@ export class DownloadPopupComponent implements OnInit {
   /**
    * Wrapper: when user clicks generate, start a 10s timer and then call the API.
    */
-  generateDownloadLink(tipo: 'subtitulo' | 'video', key?: 'pro' | 'high' | 'medium' | 'low') {
+  generateDownloadLink(
+    tipo: 'subtitulo' | 'video',
+    key?: 'pro' | 'high' | 'medium' | 'low',
+  ) {
     if (this.generatingLink || this.mostrandoProgreso) return;
 
     if (this.descargasDisponibles <= 0) {
@@ -245,7 +265,10 @@ export class DownloadPopupComponent implements OnInit {
       // mark this item as active so spinner aligns with it
       this.activeTimerId = id;
       this.generatingLink = true;
-      const params: any = tipo === 'video' ? { id: this.data.video.id, calidad: key, tipo } : { id: this.data.video.id, tipo };
+      const params: any =
+        tipo === 'video'
+          ? { id: this.data.video.id, calidad: key, tipo }
+          : { id: this.data.video.id, tipo };
       this.performGenerateDownloadLink(params, tipo, key);
       return;
     }
@@ -256,8 +279,14 @@ export class DownloadPopupComponent implements OnInit {
     this.startGenerateTimer(tipo, key, id, duration);
   }
 
-  private startGenerateTimer(tipo: 'subtitulo' | 'video', key?: 'pro' | 'high' | 'medium' | 'low', id?: string, durationSeconds?: number) {
-    this.timerDuration = durationSeconds && durationSeconds > 0 ? durationSeconds : 10;
+  private startGenerateTimer(
+    tipo: 'subtitulo' | 'video',
+    key?: 'pro' | 'high' | 'medium' | 'low',
+    id?: string,
+    durationSeconds?: number,
+  ) {
+    this.timerDuration =
+      durationSeconds && durationSeconds > 0 ? durationSeconds : 10;
     this.timerRemaining = this.timerDuration;
     this.timerProgressValue = 0;
     this.timerActive = true;
@@ -267,7 +296,10 @@ export class DownloadPopupComponent implements OnInit {
     this.timerInterval = setInterval(() => {
       this.timerRemaining -= 1;
       const elapsed = this.timerDuration - this.timerRemaining;
-      this.timerProgressValue = Math.min(100, Math.round((elapsed / this.timerDuration) * 100));
+      this.timerProgressValue = Math.min(
+        100,
+        Math.round((elapsed / this.timerDuration) * 100),
+      );
 
       if (this.timerRemaining <= 0) {
         clearInterval(this.timerInterval);
@@ -285,63 +317,85 @@ export class DownloadPopupComponent implements OnInit {
     }, 1000);
   }
 
-  private performGenerateDownloadLink(params: any, tipo: 'subtitulo' | 'video', key?: 'pro' | 'high' | 'medium' | 'low') {
+  private performGenerateDownloadLink(
+    params: any,
+    tipo: 'subtitulo' | 'video',
+    key?: 'pro' | 'high' | 'medium' | 'low',
+  ) {
     this.generatingLink = true; // API in progress
     // keep activeTimerId until API finishes so UI shows spinner on the same item
 
-    this.publicationService.getDownloadUrl(params).subscribe((response: any) => {
-      if (response.url_descarga) {
-        this.downloadLink = this.limpiarUrl(response.url_descarga);
-        this.downloadExpiration = Date.now() + 48 * 60 * 60 * 1000;
-        this.localStorage.setItem('downloadLink', JSON.stringify(this.downloadLink));
-        this.localStorage.setItem('downloadExpiration', JSON.stringify(this.downloadExpiration));
-        this.descargasDisponibles--;
-        this.updateTimeRemaining();
+    this.publicationService.getDownloadUrl(params).subscribe(
+      (response: any) => {
+        if (response.url_descarga) {
+          this.downloadLink = this.limpiarUrl(response.url_descarga);
+          this.downloadExpiration = Date.now() + 48 * 60 * 60 * 1000;
+          this.localStorage.setItem(
+            'downloadLink',
+            JSON.stringify(this.downloadLink),
+          );
+          this.localStorage.setItem(
+            'downloadExpiration',
+            JSON.stringify(this.downloadExpiration),
+          );
+          this.descargasDisponibles--;
+          this.updateTimeRemaining();
 
-        const videoDownload: VideoDownload = {
-          id: `${tipo}-${key || ''}`,
-          downloadLink: this.downloadLink!,
-          expirationTime: this.downloadExpiration!,
-          type: tipo,
-          resolution: tipo === 'video' ? key : undefined
-        };
+          const videoDownload: VideoDownload = {
+            id: `${tipo}-${key || ''}`,
+            downloadLink: this.downloadLink!,
+            expirationTime: this.downloadExpiration!,
+            type: tipo,
+            resolution: tipo === 'video' ? key : undefined,
+          };
 
-        const videoInfo = this.getVideoInfo();
-        videoInfo.downloads[videoDownload.id] = videoDownload;
-        this.saveVideoInfo(videoInfo);
-      }
-      if (response.descargas) {
-        this.descargasRealizadas$ = this.publicationService.getDownloads();
-      }
-      this.generatingLink = false;
-      this.timerProgressValue = 0;
-      this.timerRemaining = 0;
-      this.activeTimerId = null;
-    }, (error) => {
-      console.error('Error al generar el enlace de descarga:', error);
-      this.generatingLink = false;
-      this.timerActive = false;
-      this.timerProgressValue = 0;
-      this.timerRemaining = 0;
-      this.preparing = false;
-      this.activeTimerId = null;
-    });
+          const videoInfo = this.getVideoInfo();
+          videoInfo.downloads[videoDownload.id] = videoDownload;
+          this.saveVideoInfo(videoInfo);
+        }
+        if (response.descargas) {
+          this.descargasRealizadas$ = this.publicationService.getDownloads();
+        }
+        this.generatingLink = false;
+        this.timerProgressValue = 0;
+        this.timerRemaining = 0;
+        this.activeTimerId = null;
+      },
+      error => {
+        console.error('Error al generar el enlace de descarga:', error);
+        this.generatingLink = false;
+        this.timerActive = false;
+        this.timerProgressValue = 0;
+        this.timerRemaining = 0;
+        this.preparing = false;
+        this.activeTimerId = null;
+      },
+    );
   }
 
   quality(key) {
     switch (key) {
-      case 'pro': { return '1080P' }
-      case 'high': { return '720P' }
-      case 'medium': { return '360P' }
-      case 'low': { return '144P' }
-      default: return 'Desconocido'; // 👈 Valor por defecto
+      case 'pro': {
+        return '1080P';
+      }
+      case 'high': {
+        return '720P';
+      }
+      case 'medium': {
+        return '360P';
+      }
+      case 'low': {
+        return '144P';
+      }
+      default:
+        return 'Desconocido'; // 👈 Valor por defecto
     }
   }
 
   obtener_descarga() {
     const beneficioDescarga = this.data.user.subscription_plan?.beneficios.find(
-      (beneficio) => beneficio.nombre_raw === 'descargas'
-    ); 
+      beneficio => beneficio.nombre_raw === 'descargas',
+    );
     if (beneficioDescarga) {
       this.descargas = beneficioDescarga.valor;
     } else {
@@ -351,8 +405,8 @@ export class DownloadPopupComponent implements OnInit {
 
   obtener_calidad() {
     const beneficioCalidad = this.data.user.subscription_plan?.beneficios.find(
-      (beneficio) => beneficio.nombre_raw === 'calidad'
-    ); 
+      beneficio => beneficio.nombre_raw === 'calidad',
+    );
     if (beneficioCalidad) {
       this.calidad = beneficioCalidad.valor;
     } else {
@@ -361,9 +415,10 @@ export class DownloadPopupComponent implements OnInit {
   }
 
   obtenertiempo_descarga() {
-    const beneficioTiempoDescarga = this.data.user.subscription_plan?.beneficios.find(
-      (beneficio) => beneficio.nombre_raw === 'tiempo_generar_descarga'
-    ); 
+    const beneficioTiempoDescarga =
+      this.data.user.subscription_plan?.beneficios.find(
+        beneficio => beneficio.nombre_raw === 'tiempo_generar_descarga',
+      );
 
     if (beneficioTiempoDescarga) {
       this.generarTiempo_descarga = beneficioTiempoDescarga.valor;
@@ -372,18 +427,18 @@ export class DownloadPopupComponent implements OnInit {
     }
   }
 
-  iniciarDescarga(calidad: string) { 
-    this.mostrandoProgreso = true; 
-    this.progreso = 0; 
-    this.contador = 10; 
-    this.intervalo = setInterval(() => { 
-      this.contador--; 
-      this.progreso += 10; 
-      if (this.contador === 0) { 
-        clearInterval(this.intervalo); 
-        this.getDownloadURL('video', calidad); 
-      } 
-    }, 1000); 
+  iniciarDescarga(calidad: string) {
+    this.mostrandoProgreso = true;
+    this.progreso = 0;
+    this.contador = 10;
+    this.intervalo = setInterval(() => {
+      this.contador--;
+      this.progreso += 10;
+      if (this.contador === 0) {
+        clearInterval(this.intervalo);
+        this.getDownloadURL('video', calidad);
+      }
+    }, 1000);
   }
 
   subtitleDownloadId(): string {
@@ -494,43 +549,52 @@ export class DownloadPopupComponent implements OnInit {
   }
 
   getDownloadURL(tipo: string, key?: any) {
-    this.mostrandoProgreso = false; // Lógica para iniciar la descarga del video console.log('Descargando video...'); 
+    this.mostrandoProgreso = false; // Lógica para iniciar la descarga del video console.log('Descargando video...');
     let params;
     if (tipo === 'video') {
       params = {
         id: this.data.video.id,
         calidad: key,
-        tipo
+        tipo,
       };
     } else if (tipo === 'subtitulo') {
       params = {
         id: this.data.video.id,
-        tipo
+        tipo,
       };
     }
     /*   if (this.platform.IOS) {
          this.snackBar.open('Generando enlace de descarga');
        }*/
-    this.publicationService.getDownloadUrl(params).subscribe(async (res: any) => {
-      const {url_descarga} = res;
-      if (url_descarga) {
-        /*  if (this.platform.IOS) {
+    this.publicationService.getDownloadUrl(params).subscribe(
+      async (res: any) => {
+        const { url_descarga } = res;
+        if (url_descarga) {
+          /*  if (this.platform.IOS) {
             const dialog = this.dialog.open(DownloadLinkComponent, {
               data: {
                 url_descarga
               }
             });
           } else {*/
-        if (isPlatformBrowser(this.platformId)) {
-          this.trackDownloadEvent(tipo as 'video' | 'subtitulo', key || 'directo');
-          this.runAfterTracking(() => window.open(url_descarga, '_self'));
+          if (isPlatformBrowser(this.platformId)) {
+            this.trackDownloadEvent(
+              tipo as 'video' | 'subtitulo',
+              key || 'directo',
+            );
+            this.runAfterTracking(() => window.open(url_descarga, '_self'));
+          }
+          /*   }*/
         }
-        /*   }*/
-      }
-    }, error => {
-      //console.log(error);
-      this.snackBar.open('Error al obtener el enlace. Intente otra vez. Error: ' + JSON.stringify(error.error.detail));
-    });
+      },
+      error => {
+        //console.log(error);
+        this.snackBar.open(
+          'Error al obtener el enlace. Intente otra vez. Error: ' +
+            JSON.stringify(error.error.detail),
+        );
+      },
+    );
   }
 
   // Método para limpiar el enlace de comillas dobles
@@ -538,12 +602,16 @@ export class DownloadPopupComponent implements OnInit {
     return url.replace(/"/g, ''); // Elimina todas las comillas dobles
   }
 
-  private trackDownloadEvent(tipo: 'video' | 'subtitulo', detalle: string): void {
+  private trackDownloadEvent(
+    tipo: 'video' | 'subtitulo',
+    detalle: string,
+  ): void {
     const videoId = this.data?.video?.id;
     if (!videoId) {
       return;
     }
-    const slug = this.data?.video?.slug_url || this.data?.video?.nombre || 'sin-slug';
+    const slug =
+      this.data?.video?.slug_url || this.data?.video?.nombre || 'sin-slug';
     const label = `${videoId}:${slug}:${tipo}:${detalle}`;
     setTimeout(() => this.matomo.trackEvent('video', 'descarga', label), 0);
   }

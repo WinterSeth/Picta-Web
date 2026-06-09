@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { NgIf } from '@angular/common';
+
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +16,6 @@ import { RadioCardsComponent } from '../../components/radio-cards/radio-cards.co
     MatIconModule,
     MatButtonModule,
     RadioCardsComponent,
-    NgIf
   ],
   template: `
     <div class="favorites-page">
@@ -28,9 +27,9 @@ import { RadioCardsComponent } from '../../components/radio-cards/radio-cards.co
           (toggleFavorite)="onToggleFavorite($event)">
         </app-radio-cards>
       </div>
-      <div *ngIf="stations.length === 0" class="empty">
-        No tenés estaciones favoritas aún.
-      </div>
+      @if (stations.length === 0) {
+        <div class="empty">No tenés estaciones favoritas aún.</div>
+      }
     </div>
   `,
   styles: [

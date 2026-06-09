@@ -10,44 +10,76 @@
             [alt]="station?.name"
             (error)="onImgError($event)" />
           <!-- Overlay: Estás escuchando + nombre + live badge + ondas rojas -->
-          <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
+          <div
+            class="absolute inset-0 flex flex-col items-center justify-center z-10">
             <div
               class="radio-now-overlay backdrop-blur-lg bg-black/50 !rounded-2xl px-10 py-8 flex flex-col items-center gap-4 shadow-2xl min-w-[260px] min-h-[180px]"
-              [class.radio-now-overlay--active]="isPlaying && !isMuted"
-            >
-              <div class="radio-live-row flex items-center justify-center gap-3 mb-2">
+              [class.radio-now-overlay--active]="isPlaying && !isMuted">
+              <div
+                class="radio-live-row flex items-center justify-center gap-3 mb-2">
                 <!-- Icono de ondas rojas (radio waves) -->
-                <span class="radio-wave-icon inline-flex items-center justify-center" [class.radio-wave-icon--active]="isPlaying && !isMuted">
-                  <span class="radio-wave-icon__ring radio-wave-icon__ring--1" aria-hidden="true"></span>
-                  <span class="radio-wave-icon__ring radio-wave-icon__ring--2" aria-hidden="true"></span>
-                  <span class="radio-wave-icon__ring radio-wave-icon__ring--3" aria-hidden="true"></span>
-                  <svg width="48" height="48" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="16" cy="16" r="4" fill="#ef4444"/>
-                    <path d="M8 16a8 8 0 0 1 16 0" stroke="#ef4444" stroke-width="2" fill="none"/>
-                    <path d="M4 16a12 12 0 0 1 24 0" stroke="#ef4444" stroke-width="2" fill="none"/>
+                <span
+                  class="radio-wave-icon inline-flex items-center justify-center"
+                  [class.radio-wave-icon--active]="isPlaying && !isMuted">
+                  <span
+                    class="radio-wave-icon__ring radio-wave-icon__ring--1"
+                    aria-hidden="true"></span>
+                  <span
+                    class="radio-wave-icon__ring radio-wave-icon__ring--2"
+                    aria-hidden="true"></span>
+                  <span
+                    class="radio-wave-icon__ring radio-wave-icon__ring--3"
+                    aria-hidden="true"></span>
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="4" fill="#ef4444" />
+                    <path
+                      d="M8 16a8 8 0 0 1 16 0"
+                      stroke="#ef4444"
+                      stroke-width="2"
+                      fill="none" />
+                    <path
+                      d="M4 16a12 12 0 0 1 24 0"
+                      stroke="#ef4444"
+                      stroke-width="2"
+                      fill="none" />
                   </svg>
                 </span>
-                <span class="radio-live-label uppercase text-base sm:text-lg tracking-widest text-red-400 font-bold">En vivo</span>
+                <span
+                  class="radio-live-label uppercase text-base sm:text-lg tracking-widest text-red-400 font-bold"
+                  >En vivo</span
+                >
               </div>
-              <div class="label text-lg opacity-90 text-white">Estás escuchando</div>
-              <div class="station-name font-bold text-2xl text-white text-center drop-shadow">{{ getStationDisplayName() }}</div>
+              <div class="label text-lg opacity-90 text-white">
+                Estás escuchando
+              </div>
+              <div
+                class="station-name font-bold text-2xl text-white text-center drop-shadow">
+                {{ getStationDisplayName() }}
+              </div>
             </div>
           </div>
-          <div
-            class="equalizer-modern"
-            [class.playing]="isPlaying && !isMuted">
-            <span class="bar" *ngFor="let bar of [1,2,3,4,5]"></span>
+          <div class="equalizer-modern" [class.playing]="isPlaying && !isMuted">
+            @for (bar of [1, 2, 3, 4, 5]; track bar) {
+              <span class="bar"></span>
+            }
           </div>
-          <div class="autoplay-overlay" *ngIf="showAutoplayPlayButton && !isPlaying">
-            <button
-              class="play-overlay-btn"
-              mat-fab
-              color="primary"
-              aria-label="Play"
-              (click)="onPlayButtonClick()">
-              <mat-icon>play_arrow</mat-icon>
-            </button>
-          </div>
+          @if (showAutoplayPlayButton && !isPlaying) {
+            <div class="autoplay-overlay">
+              <button
+                class="play-overlay-btn"
+                mat-fab
+                color="primary"
+                aria-label="Play"
+                (click)="onPlayButtonClick()">
+                <mat-icon>play_arrow</mat-icon>
+              </button>
+            </div>
+          }
         </div>
       </div>
     </div>
@@ -55,20 +87,39 @@
     <!-- Barra de controles debajo de la imagen -->
     <div class="player-controls bg-black text-white p-0 shadow-sm">
       <audio #audioPlayer class="hidden"></audio>
-      <div class="p-2 bg-black !rounded-lg shadow-sm flex flex-col md:flex-row justify-around items-center">
-        <div class="flex items-center justify-between gap-4 w-full mx-12 sm:mx-2">
+      <div
+        class="p-2 bg-black !rounded-lg shadow-sm flex flex-col md:flex-row justify-around items-center">
+        <div
+          class="flex items-center justify-between gap-4 w-full mx-12 sm:mx-2">
           <div class="flex items-center gap-2">
             <!-- Botón Play/Pause -->
-            <button mat-icon-button color="primary" (click)="togglePlay()" class="flex !bg-blue-600 !text-white hover:!bg-blue-700">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="togglePlay()"
+              class="flex !bg-blue-600 !text-white hover:!bg-blue-700">
               <mat-icon>{{ isPlaying ? 'pause' : 'play_arrow' }}</mat-icon>
             </button>
             <!-- Botón Mute/Unmute -->
-            <button mat-icon-button color="primary" (click)="toggleMute()" class="flex !bg-blue-600 !text-white hover:!bg-blue-700">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="toggleMute()"
+              class="flex !bg-blue-600 !text-white hover:!bg-blue-700">
               <mat-icon>{{ isMuted ? 'volume_off' : 'volume_up' }}</mat-icon>
             </button>
             <!-- Slider de volumen igual que Cubanradio -->
-            <mat-slider color="warn" class="hidden! lg:flex! mx-4" min="0" max="100" step="1">
-              <input class="hidden lg:flex" matSliderThumb [value]="volume" (valueChange)="onVolumeChange($event)">
+            <mat-slider
+              color="warn"
+              class="hidden! lg:flex! mx-4"
+              min="0"
+              max="100"
+              step="1">
+              <input
+                class="hidden lg:flex"
+                matSliderThumb
+                [value]="volume"
+                (valueChange)="onVolumeChange($event)" />
             </mat-slider>
             <span class="hidden lg:flex text-sm w-10">{{ volume }}%</span>
           </div>
@@ -77,36 +128,39 @@
             {{ getStationDisplayName() }}
           </span>
           <div class="flex items-center gap-2 ml-4 mr-2">
-            <div class="footer-eq mr-2" *ngIf="isPlaying && !isMuted" aria-hidden="true">
-              <span class="bar"></span>
-              <span class="bar"></span>
-              <span class="bar"></span>
-              <span class="bar"></span>
-              <span class="bar"></span>
-            </div>
+            @if (isPlaying && !isMuted) {
+              <div class="footer-eq mr-2" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+              </div>
+            }
             <mat-icon>headset</mat-icon>
-            <span class="text-sm">{{ listenersCount !== undefined ? listenersCount : '—' }}</span>
+            <span class="text-sm">{{
+              listenersCount !== undefined ? listenersCount : '—'
+            }}</span>
           </div>
         </div>
       </div>
-</div>
+    </div>
   </div>
 
   <aside class="playlist">
     <div class="playlist-header flex items-center justify-center text-center">
-        <div class="now-text">
-          <div class="label text-xs opacity-80"></div>
-          <div class="station-name font-semibold">Otras emisoras de radio</div>
-        </div>
+      <div class="now-text">
+        <div class="label text-xs opacity-80"></div>
+        <div class="station-name font-semibold">Otras emisoras de radio</div>
       </div>
+    </div>
     <div class="playlist-card">
       @if (station) {
         <button
           type="button"
           class="playlist-item playlist-item--current"
           (click)="onSelectFromPlaylist(station)"
-          [attr.aria-current]="'true'"
-        >
+          [attr.aria-current]="'true'">
           <img
             [src]="station.imageUrl || '/img/default.webp'"
             [alt]="station.name"
@@ -118,18 +172,17 @@
         </button>
       }
       <div class="playlist-list max-h-[60vh] overflow-y-auto mt-4">
-        <button
-          class="playlist-item"
-          *ngFor="let s of otherStations"
-          (click)="onSelectFromPlaylist(s)">
-          <img
-            [src]="s.imageUrl || '/img/default.webp'"
-            [alt]="s.name"
-            (error)="onImgError($event)" />
-          <div class="meta">
-            <div class="name text-lg">{{ formatStationName(s) }}</div>
-          </div>
-        </button>
+        @for (s of otherStations; track s) {
+          <button class="playlist-item" (click)="onSelectFromPlaylist(s)">
+            <img
+              [src]="s.imageUrl || '/img/default.webp'"
+              [alt]="s.name"
+              (error)="onImgError($event)" />
+            <div class="meta">
+              <div class="name text-lg">{{ formatStationName(s) }}</div>
+            </div>
+          </button>
+        }
       </div>
     </div>
   </aside>

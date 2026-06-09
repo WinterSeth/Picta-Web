@@ -5,8 +5,7 @@
       type="button"
       aria-label="Cerrar diálogo"
       class="download-close"
-      (click)="dialogRef.close()"
-    >
+      (click)="dialogRef.close()">
       <mat-icon>close</mat-icon>
     </button>
 
@@ -27,7 +26,9 @@
       <section class="download-note download-note-warning">
         <p>
           <strong>Atención:</strong> alcanzaste el límite de descargas.
-          <a mat-button color="primary" routerLink="/profile/mis-pagos">Actualizar plan</a>
+          <a mat-button color="primary" routerLink="/profile/mis-pagos"
+            >Actualizar plan</a
+          >
         </p>
       </section>
     } @else {
@@ -51,32 +52,44 @@
           <p class="download-label">Subtítulos</p>
           <p class="download-detail">Archivo SRT</p>
           @if (isDownloadLinkValid(subtitleDownloadId())) {
-            <p class="download-validity">{{ getTimeRemaining(subtitleDownloadId()) }}</p>
+            <p class="download-validity">
+              {{ getTimeRemaining(subtitleDownloadId()) }}
+            </p>
           }
         </div>
 
         <div class="download-actions">
           @if (!isDownloadLinkValid(subtitleDownloadId())) {
-            <div class="timer-outer" *ngIf="activeTimerId === 'subtitulo' && preparing">
-              <div class="timer-wrapper">
-                <mat-progress-spinner mode="determinate" [value]="timerProgressValue" diameter="36"></mat-progress-spinner>
-                <div class="timer-center">{{ timerRemaining }}s</div>
+            @if (activeTimerId === 'subtitulo' && preparing) {
+              <div class="timer-outer">
+                <div class="timer-wrapper">
+                  <mat-progress-spinner
+                    mode="determinate"
+                    [value]="timerProgressValue"
+                    diameter="36"></mat-progress-spinner>
+                  <div class="timer-center">{{ timerRemaining }}s</div>
+                </div>
               </div>
-            </div>
+            }
             <button
               mat-raised-button
               color="primary"
               type="button"
               [disabled]="subtitleGenerateDisabled()"
-              (click)="generateDownloadLink('subtitulo')"
-            >
+              (click)="generateDownloadLink('subtitulo')">
               <span class="btn-content">
                 @if (generatingLink && activeTimerId === 'subtitulo') {
                   <mat-spinner diameter="16"></mat-spinner>
                 } @else {
                   <mat-icon>cloud_download</mat-icon>
                 }
-                {{ preparing && activeTimerId === 'subtitulo' ? 'Preparando...' : (generatingLink && activeTimerId === 'subtitulo' ? 'Generando' : 'Generar') }}
+                {{
+                  preparing && activeTimerId === 'subtitulo'
+                    ? 'Preparando...'
+                    : generatingLink && activeTimerId === 'subtitulo'
+                      ? 'Generando'
+                      : 'Generar'
+                }}
               </span>
             </button>
           } @else {
@@ -84,8 +97,7 @@
               mat-raised-button
               color="accent"
               type="button"
-              (click)="downloadFile(subtitleDownloadId())"
-            >
+              (click)="downloadFile(subtitleDownloadId())">
               <mat-icon>get_app</mat-icon>
               Descargar
             </button>
@@ -100,32 +112,44 @@
           <p class="download-label">{{ row.label }}</p>
           <p class="download-detail">{{ row.resolution }} • {{ row.size }}</p>
           @if (isDownloadLinkValid(row.downloadId)) {
-            <p class="download-validity">{{ getTimeRemaining(row.downloadId) }}</p>
+            <p class="download-validity">
+              {{ getTimeRemaining(row.downloadId) }}
+            </p>
           }
         </div>
 
         <div class="download-actions">
           @if (!isDownloadLinkValid(row.downloadId)) {
-            <div class="timer-outer" *ngIf="activeTimerId === ('video-' + row.key) && preparing">
-              <div class="timer-wrapper">
-                <mat-progress-spinner mode="determinate" [value]="timerProgressValue" diameter="36"></mat-progress-spinner>
-                <div class="timer-center">{{ timerRemaining }}s</div>
+            @if (activeTimerId === 'video-' + row.key && preparing) {
+              <div class="timer-outer">
+                <div class="timer-wrapper">
+                  <mat-progress-spinner
+                    mode="determinate"
+                    [value]="timerProgressValue"
+                    diameter="36"></mat-progress-spinner>
+                  <div class="timer-center">{{ timerRemaining }}s</div>
+                </div>
               </div>
-            </div>
+            }
             <button
               mat-raised-button
               color="primary"
               type="button"
               [disabled]="videoGenerateDisabled(row.key)"
-              (click)="generateDownloadLink('video', row.key)"
-            >
+              (click)="generateDownloadLink('video', row.key)">
               <span class="btn-content">
-                @if (generatingLink && activeTimerId === ('video-' + row.key)) {
+                @if (generatingLink && activeTimerId === 'video-' + row.key) {
                   <mat-spinner diameter="16"></mat-spinner>
                 } @else {
                   <mat-icon>cloud_download</mat-icon>
                 }
-                {{ preparing && activeTimerId === ('video-' + row.key) ? 'Prep...' : (generatingLink && activeTimerId === ('video-' + row.key) ? 'Gen...' : 'Generar') }}
+                {{
+                  preparing && activeTimerId === 'video-' + row.key
+                    ? 'Prep...'
+                    : generatingLink && activeTimerId === 'video-' + row.key
+                      ? 'Gen...'
+                      : 'Generar'
+                }}
               </span>
             </button>
           } @else {
@@ -133,8 +157,7 @@
               mat-raised-button
               color="accent"
               type="button"
-              (click)="downloadFile(row.downloadId)"
-            >
+              (click)="downloadFile(row.downloadId)">
               <mat-icon>get_app</mat-icon>
               Descargar
             </button>

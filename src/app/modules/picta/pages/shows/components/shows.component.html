@@ -24,15 +24,16 @@
       <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
         <mat-label>Buscar Realities...</mat-label>
         <input [formControl]="searchControl" matInput type="text" />
-        <button
-          type="button"
-          mat-icon-button
-          matSuffix
-          (click)="clearSearch()"
-          *ngIf="searchControl.value"
-          aria-label="Limpiar búsqueda">
-          <mat-icon>close</mat-icon>
-        </button>
+        @if (searchControl.value) {
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="clearSearch()"
+            aria-label="Limpiar búsqueda">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
       <mat-form-field appearance="fill" class="mr-md-3" floatLabel="auto">
         <mat-label>País</mat-label>

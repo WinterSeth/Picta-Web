@@ -1,12 +1,23 @@
-import { Component, inject, OnInit, AfterViewInit, ElementRef, viewChild } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  AfterViewInit,
+  ElementRef,
+  viewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatSliderModule } from '@angular/material/slider';
-import { RadioService, RadioStation, normalizeListenUrl } from '../../services/radio.service';
+import {
+  RadioService,
+  RadioStation,
+  normalizeListenUrl,
+} from '../../services/radio.service';
 import { ListenerService } from '../../services/listener.service';
 import { getImageSrcForStation } from '../../../../utils/radio-image.util';
 import { Subscription } from 'rxjs';
@@ -14,7 +25,13 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-radio-detail',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, MatIconModule, FormsModule, MatSliderModule, NgFor, NgIf],
+  imports: [
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    FormsModule,
+    MatSliderModule,
+  ],
   templateUrl: './radio-detail.component.html',
   styleUrls: ['./radio-detail.component.scss'],
 })
@@ -147,25 +164,31 @@ export class RadioDetailComponent implements OnInit, AfterViewInit {
     this.togglePlay();
   }
 
-
-
   onPause() {
     if (!this.player) return;
-    try { this.player.pause(); } catch(e) {}
+    try {
+      this.player.pause();
+    } catch (e) {}
   }
 
   togglePlay() {
-    if (!this.player) { return; }
+    if (!this.player) {
+      return;
+    }
     if (this.player.paused) {
       const p = this.player.play();
-      if (p && p.catch) { p.catch(() => {}); }
+      if (p && p.catch) {
+        p.catch(() => {});
+      }
     } else {
       this.player.pause();
     }
   }
 
   toggleMute() {
-    if (!this.player) { return; }
+    if (!this.player) {
+      return;
+    }
 
     if (this.player.muted) {
       // unmute and restore volume
@@ -187,9 +210,11 @@ export class RadioDetailComponent implements OnInit, AfterViewInit {
   }
 
   onVolumeChange(event: any) {
-    const newVolume = (typeof event === 'number') ? event : (event?.value ?? 0);
+    const newVolume = typeof event === 'number' ? event : (event?.value ?? 0);
     this.volume = newVolume;
-    if (!this.player) { return; }
+    if (!this.player) {
+      return;
+    }
     this.player.volume = Math.max(0, Math.min(1, this.volume / 100));
 
     // If volume > 0, ensure not muted
@@ -203,7 +228,9 @@ export class RadioDetailComponent implements OnInit, AfterViewInit {
     if (!station) return;
     try {
       // Stop any shared RadioService audio to prevent duplicate playback
-      try { this.radioService.stop(); } catch(e) {}
+      try {
+        this.radioService.stop();
+      } catch (e) {}
 
       this.player = this.audioElementRef().nativeElement as HTMLAudioElement;
       const url = (station.listenurl as string) || '';
@@ -214,10 +241,17 @@ export class RadioDetailComponent implements OnInit, AfterViewInit {
       this.player.autoplay = true;
       // initialize volume from radioService if available
       try {
-        this.volume = Math.round((this.radioService && this.radioService.volume ? this.radioService.volume() : (this.volume / 100)) * 100);
-      } catch(e) {}
+        this.volume = Math.round(
+          (this.radioService && this.radioService.volume
+            ? this.radioService.volume()
+            : this.volume / 100) * 100,
+        );
+      } catch (e) {}
       this.player.volume = Math.max(0, Math.min(1, this.volume / 100));
-      this.player.muted = (this.radioService && this.radioService.muted ? this.radioService.muted() : this.isMuted);
+      this.player.muted =
+        this.radioService && this.radioService.muted
+          ? this.radioService.muted()
+          : this.isMuted;
       this.player.load();
       const p = this.player.play();
       if (p && p.then) {
@@ -236,11 +270,19 @@ export class RadioDetailComponent implements OnInit, AfterViewInit {
       // Start polling listeners for this station (20s interval)
       try {
         if (this.listenersSub) {
-          try { this.listenersSub.unsubscribe(); } catch (e) {}
+          try {
+            this.listenersSub.unsubscribe();
+          } catch (e) {}
           this.listenersSub = null;
         }
-        const streamKey = (station?.mount ?? station?.server_name ?? String(station?.listenurl ?? '')).toString();
-        this.listenersSub = this.listenerService.pollListeners(streamKey, 20000).subscribe(n => this.listenersCount = n);
+        const streamKey = (
+          station?.mount ??
+          station?.server_name ??
+          String(station?.listenurl ?? '')
+        ).toString();
+        this.listenersSub = this.listenerService
+          .pollListeners(streamKey, 20000)
+          .subscribe(n => (this.listenersCount = n));
       } catch (e) {
         // ignore polling errors
       }
@@ -346,13 +388,17 @@ export class RadioDetailComponent implements OnInit, AfterViewInit {
     // cleanup player listeners and destroy audio element
     try {
       if (this.player) {
-        try { this.player.pause(); } catch(e) {}
-        if (this._onPlayBound) this.player.removeEventListener('play', this._onPlayBound);
-        if (this._onPauseBound) this.player.removeEventListener('pause', this._onPauseBound);
+        try {
+          this.player.pause();
+        } catch (e) {}
+        if (this._onPlayBound)
+          this.player.removeEventListener('play', this._onPlayBound);
+        if (this._onPauseBound)
+          this.player.removeEventListener('pause', this._onPauseBound);
         try {
           this.player.src = '';
           this.player.load();
-        } catch(e) {}
+        } catch (e) {}
         // Remove the audio element from the DOM if possible
         if (this.player.parentNode) {
           this.player.parentNode.removeChild(this.player);
@@ -362,7 +408,10 @@ export class RadioDetailComponent implements OnInit, AfterViewInit {
     } catch (e) {}
     // stop listeners polling
     try {
-      if (this.listenersSub) { this.listenersSub.unsubscribe(); this.listenersSub = null; }
+      if (this.listenersSub) {
+        this.listenersSub.unsubscribe();
+        this.listenersSub = null;
+      }
     } catch (e) {}
   }
 }

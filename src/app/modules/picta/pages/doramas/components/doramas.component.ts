@@ -24,7 +24,6 @@ import { CategoriaLoadingStateComponent } from '../../categoria/components/categ
 import { SectionHeaderComponent } from '../../common-components/components/section-header/section-header.component';
 import { LocalstorageService } from '../../../../../services/localstorage.service';
 import { CarouselSkeletonComponent } from '../../common-components/components/carousel-skeleton/carousel-skeleton.component';
-import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-doramas',
@@ -45,7 +44,6 @@ import { NgIf } from '@angular/common';
     CategoriaLoadingStateComponent,
     SectionHeaderComponent,
     CarouselSkeletonComponent,
-    NgIf
   ],
   templateUrl: './doramas.component.html',
   styleUrl: './doramas.component.scss',
@@ -360,13 +358,18 @@ export class DoramasComponent {
     }
     try {
       const parsed = JSON.parse(raw);
-      return (parsed as (number | string)[]).map(id => Number(id)).filter(id => Number.isFinite(id));
+      return (parsed as (number | string)[])
+        .map(id => Number(id))
+        .filter(id => Number.isFinite(id));
     } catch {
       return [];
     }
   }
 
-  private sortDoramasByFavoriteOrder(doramas: Publication[], ids: number[]): Publication[] {
+  private sortDoramasByFavoriteOrder(
+    doramas: Publication[],
+    ids: number[],
+  ): Publication[] {
     const sorted: Publication[] = [];
     for (const id of ids) {
       const found = doramas.find((d: any) => d.pelser_id === id || d.id === id);
@@ -403,7 +406,9 @@ export class DoramasComponent {
       })
       .subscribe({
         next: (response: any) => {
-          const batch = Array.isArray(response?.results) ? response.results : [];
+          const batch = Array.isArray(response?.results)
+            ? response.results
+            : [];
           const merged = [...collected, ...batch];
           const nextPage = this.resolveNextPage(response?.next);
 
@@ -435,7 +440,11 @@ export class DoramasComponent {
     }
   }
 
-  onFavoriteDoramaChanged(event: { type: 'movie' | 'series'; key: number; isFavorite: boolean }): void {
+  onFavoriteDoramaChanged(event: {
+    type: 'movie' | 'series';
+    key: number;
+    isFavorite: boolean;
+  }): void {
     const id = Number(event.key);
     const ids = this.getFavoriteDoramasIdsFromStorage();
     let newIds: number[];
@@ -450,7 +459,10 @@ export class DoramasComponent {
       newIds = ids.filter(i => i !== id);
     }
 
-    this.localStorage.setItem(this.doramasFavoritesStorageKey, JSON.stringify(newIds));
+    this.localStorage.setItem(
+      this.doramasFavoritesStorageKey,
+      JSON.stringify(newIds),
+    );
 
     if (!event.isFavorite) {
       this.favoriteDoramas.update(current =>
