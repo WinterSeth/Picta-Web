@@ -476,6 +476,14 @@ activeProfileId = this.activePerfilService.getActiveProfileIdValue();
         const list = res?.results || res || [];
         this.profiles.set(list);
         this.loading.set(false);
+
+        // Auto-select profile: principal > first > none
+        if (list.length === 1) {
+          this.selectProfile(list[0]);
+        } else if (list.length > 1) {
+          const principal = list.find((p: Perfil) => p.clasificacion === 'PRINCIPAL');
+          this.selectProfile(principal || list[0]);
+        }
       },
       error: (err) => {
         console.error('Error fetching perfiles', err);

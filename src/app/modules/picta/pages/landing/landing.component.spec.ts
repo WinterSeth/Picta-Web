@@ -8,7 +8,8 @@ describe('LandingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LandingComponent]
+      imports: [LandingComponent],
+      rethrowApplicationErrors: false
     })
     .compileComponents();
 

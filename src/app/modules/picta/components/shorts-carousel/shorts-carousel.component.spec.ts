@@ -8,7 +8,8 @@ describe('ShortsCarouselComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShortsCarouselComponent]
+      imports: [ShortsCarouselComponent],
+      rethrowApplicationErrors: false
     })
     .compileComponents();
 

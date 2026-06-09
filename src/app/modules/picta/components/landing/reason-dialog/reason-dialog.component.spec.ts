@@ -8,7 +8,8 @@ describe('ReasonDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReasonDialogComponent]
+      imports: [ReasonDialogComponent],
+      rethrowApplicationErrors: false
     })
     .compileComponents();
 

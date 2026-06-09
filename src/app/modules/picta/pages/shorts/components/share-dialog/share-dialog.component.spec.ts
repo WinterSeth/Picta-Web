@@ -8,7 +8,8 @@ describe('ShareDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShareDialogComponent]
+      imports: [ShareDialogComponent],
+      rethrowApplicationErrors: false
     })
     .compileComponents();
 

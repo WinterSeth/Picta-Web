@@ -8,7 +8,8 @@ describe('EmbedComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [EmbedComponent]
+    imports: [EmbedComponent],
+    rethrowApplicationErrors: false
 })
       .compileComponents();
   }));

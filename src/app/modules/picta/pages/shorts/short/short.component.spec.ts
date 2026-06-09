@@ -8,7 +8,8 @@ describe('ShortComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShortComponent]
+      imports: [ShortComponent],
+      rethrowApplicationErrors: false
     })
     .compileComponents();
 

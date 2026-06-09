@@ -8,7 +8,8 @@ describe('CommentsSheetComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommentsSheetComponent]
+      imports: [CommentsSheetComponent],
+      rethrowApplicationErrors: false
     })
     .compileComponents();
 

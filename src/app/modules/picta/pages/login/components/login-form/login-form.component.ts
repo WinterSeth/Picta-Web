@@ -9,7 +9,8 @@ import { LoginRecoveryPasswordComponent } from '../../../../components/dialogs/l
 import { ChangePasswordModalComponent } from '../../../../components/dialogs/change-password-modal/change-password-modal.component';
 import { NotificationService } from '../../../../../../services/notification.service';
 import { SubSink } from 'subsink';
-import { switchMap, tap } from 'rxjs';
+import { switchMap, tap, mergeMap } from 'rxjs';
+import { PerfilesService } from '../../../../../../services/perfiles.service';
 import { Credentials, CredentialsService } from '../../../../services/credentials.service';
 import { NgOptimizedImage } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -50,6 +51,7 @@ export class LoginFormComponent implements OnDestroy, OnInit {
   private notificationService = inject(NotificationService);
   private credentialsService = inject(CredentialsService);
   private localstorage = inject(LocalstorageService);
+  private perfilesService = inject(PerfilesService);
 
   pendingRedirectUrl: string | null = null;
 
@@ -97,19 +99,38 @@ export class LoginFormComponent implements OnDestroy, OnInit {
           const credentials: Credentials = { access_token, refresh_token };
           this.credentialsService.setCredentials(credentials);
         }),
-        switchMap(() => this.loginService.getUserData())
-      ).subscribe({
-        next: (res: any) => {
-          this.isLoggingIn.set(false);
+        switchMap(() => this.loginService.getUserData()),
+        mergeMap((res: any) => {
           this.credentialsService.setCredentials({ user: res, ...this.credentialsService.credentials });
           this.loginService.setUserData(res);
           this.loggedIn.emit();
+
+          // Fetch profiles and auto-select one
+          return this.perfilesService.getAll().pipe(
+            switchMap((profileRes: any) => {
+              const list = profileRes?.results || profileRes || [];
+              if (list.length > 0) {
+                const principal = list.find((p: any) => p.clasificacion === 'PRINCIPAL');
+                const selected = principal || list[0];
+                return this.perfilesService.setActive(selected.id).pipe(
+                  tap(() => {
+                    this.activePerfilService.setActiveProfileId(selected.id);
+                  })
+                );
+              }
+              return [];
+            })
+          );
+        })
+      ).subscribe({
+        next: () => {
+          this.isLoggingIn.set(false);
           
-          // Redirect to original destination or profile selector after login
+          // Redirect to original destination or home after login
           if (this.pendingRedirectUrl) {
             this.router.navigateByUrl(this.pendingRedirectUrl);
           } else {
-            this.router.navigate(['/perfil']);
+            this.router.navigate(['/']);
           }
         },
         error: (err) => {

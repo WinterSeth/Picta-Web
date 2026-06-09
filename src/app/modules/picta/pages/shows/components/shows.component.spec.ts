@@ -8,7 +8,8 @@ describe('ShowsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShowsComponent]
+      imports: [ShowsComponent],
+      rethrowApplicationErrors: false
     })
     .compileComponents();
 

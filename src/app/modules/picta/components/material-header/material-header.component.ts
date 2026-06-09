@@ -193,7 +193,6 @@ constructor() {
     this.subs.add(
       this.notificationStore.badgeCount$.subscribe(count => {
         this.unseenNotifications = count;
-        this.cdr.detectChanges();
       })
     );
 
@@ -235,7 +234,7 @@ this.notificationStore.load(true);
            setTimeout(() => {
              const count = this.notificationStore.badgeCount();
              this.unseenNotifications = count;
-             this.cdr.detectChanges();
+             this.cdr.markForCheck();
            }, 300);
           
           // Show browser notification

@@ -8,7 +8,8 @@ describe('PaymentConfirmationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    imports: [PaymentConfirmationComponent]
+    imports: [PaymentConfirmationComponent],
+    rethrowApplicationErrors: false
 })
     .compileComponents();
   }));

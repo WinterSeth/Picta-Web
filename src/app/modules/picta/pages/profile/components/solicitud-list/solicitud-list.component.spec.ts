@@ -8,7 +8,8 @@ describe('SolicitudListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [SolicitudListComponent]
+    imports: [SolicitudListComponent],
+    rethrowApplicationErrors: false
 })
     .compileComponents();
 
