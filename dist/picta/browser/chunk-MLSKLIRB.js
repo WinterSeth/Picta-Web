@@ -1,1 +1,0 @@
-import{Jd as p,Nb as a}from"./chunk-GJM5653O.js";p();var i=class r{transform(e,t){return e[0].toUpperCase()}static \u0275fac=function(t){return new(t||r)};static \u0275pipe=a({name:"capitalLead",type:r,pure:!0})};export{i as a};

@@ -1,1 +1,0 @@
-import{Jd as i,Mb as o,ka as e,td as c}from"./chunk-GJM5653O.js";i();i();var l=class t{closeAll=c();constructor(){}closeAllPanel(){this.closeAll.emit()}static \u0275fac=function(r){return new(r||t)};static \u0275dir=o({type:t,outputs:{closeAll:"closeAll"}});static \u0275prov=e({token:t,factory:t.\u0275fac,providedIn:"root"})};export{l as a};

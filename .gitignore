@@ -3,3 +3,8 @@ node_modules/
 bun.lock
 package-lock.json
 bun-lock.json
+# Local AI runtime state
+.atl/
+
+# Build output
+dist/

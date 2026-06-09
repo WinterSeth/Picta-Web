@@ -1,1 +1,0 @@
-import"./chunk-ODN5LVDJ.js";var t=[{path:"",loadComponent:()=>import("./chunk-T4IB3OEM.js").then(o=>o.AnimesComponent)},{path:"recientes",loadComponent:()=>import("./chunk-ZSEYD6MQ.js").then(o=>o.AnimesUpdatedExpandedComponent)}];export{t as ANIMES_ROUTES};

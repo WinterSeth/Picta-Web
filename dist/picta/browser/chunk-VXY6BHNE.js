@@ -1,1 +1,0 @@
-import{Jd as n,ga as i,h as t,ka as r}from"./chunk-GJM5653O.js";i();n();var e=class o{position=new t(null);constructor(){}static \u0275fac=function(c){return new(c||o)};static \u0275prov=r({token:o,factory:o.\u0275fac,providedIn:"root"})};export{e as a};

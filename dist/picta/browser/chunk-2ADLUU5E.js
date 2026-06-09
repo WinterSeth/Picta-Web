@@ -1,1 +1,0 @@
-import{Jd as s,ga as i,h as t,ka as o}from"./chunk-GJM5653O.js";i();s();var r=class e{loader=new t(!1);isLoading=this.loader.asObservable();constructor(){}show(){this.loader.next(!0)}hide(){this.loader.next(!1)}static \u0275fac=function(a){return new(a||e)};static \u0275prov=o({token:e,factory:e.\u0275fac,providedIn:"root"})};export{r as a};
