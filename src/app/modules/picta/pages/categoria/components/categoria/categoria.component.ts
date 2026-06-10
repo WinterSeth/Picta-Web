@@ -435,6 +435,7 @@ canalesTv: Publication[] = [];
               this.loadSeriesHighlights();
               this.loadFavoriteSeriesCarousel();
               this.resetSeriesGenresPagination();
+              this.loadNextSeriesGenresPage();
             }
             if (this.categoria === 'Live') {
               this.loadDataLives();
