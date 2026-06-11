@@ -80,6 +80,9 @@ import { Canal } from '../../../canal/models/canal.model';
                 @if (channel.tipo) {
                   <span class="channel-badge">{{ channel.tipo }}</span>
                 }
+                @if (memberIds().has(channel.id)) {
+                  <span class="member-badge">Miembro</span>
+                }
               </span>
             </div>
             @if (selectedChannel()?.id === channel.id) {
@@ -350,6 +353,21 @@ import { Canal } from '../../../canal/models/canal.model';
       border: 1px solid rgba(243, 230, 40, 0.2);
     }
 
+    .member-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(76, 175, 80, 0.12);
+      color: #81c784;
+      border: none;
+    }
+
     .check-icon {
       color: #23a6d5;
       font-size: 22px;
@@ -422,6 +440,7 @@ export class SelectChannelDialogComponent {
   selectedChannel = signal<Canal | null>(null);
   searching = signal(false);
   searchValue = signal('');
+  memberIds = signal<Set<number>>(new Set());
 
   constructor() {
     effect((onCleanup) => {
@@ -431,7 +450,7 @@ export class SelectChannelDialogComponent {
         this.searching.set(true);
 
         const params: Record<string, any> = {
-          page_size: 20,
+          page_size: 10,
           ordering: '-cantidad_suscripciones',
         };
         if (query.length > 0) {
@@ -440,14 +459,33 @@ export class SelectChannelDialogComponent {
 
         this.canalService.getChanels(params).subscribe({
           next: (response: any) => {
-            this.channels.set(response.results ?? response);
+            const results = (response.results ?? response).filter(
+              (c: Canal) => c.planes && c.planes.length > 0
+            );
+            this.channels.set(results);
             this.searching.set(false);
+            this.checkMembership(results);
           },
           error: () => this.searching.set(false),
         });
       }, query === '' ? 0 : 300);
 
       onCleanup(() => clearTimeout(timer));
+    });
+  }
+
+  private checkMembership(channels: Canal[]): void {
+    const ids = new Set<number>();
+    channels.forEach(channel => {
+      this.canalService.esMiembro(channel.id).subscribe({
+        next: (res: any) => {
+          if (res.is_member) {
+            ids.add(channel.id);
+            this.memberIds.set(new Set(ids));
+          }
+        },
+        error: () => {},
+      });
     });
   }
 

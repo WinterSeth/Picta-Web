@@ -12,13 +12,6 @@ import { environment } from '../../../../../../environments/environment';
 export class CanalService {
   private httpClient = inject(HttpClient);
 
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
-
-  constructor() {
-  }
-
   public getChanels(params: any): Observable<PictaResponse<Canal>> {
     let queryParameters = new HttpParams();
     if (Object.keys(params).length > 0) {
@@ -48,5 +41,11 @@ export class CanalService {
     }
 
     return this.httpClient.get<any>(`${environment.baseUrl}/v2/publicacion/`, { params: queryParameters });
+  }
+
+  public esMiembro(canalId: number): Observable<any> {
+    return this.httpClient.get<any>(`${environment.baseUrl}/v2/canal/es_miembro/`, {
+      params: new HttpParams().set('canal_id', canalId.toString()),
+    });
   }
 }

@@ -284,6 +284,14 @@
                   </button>
                 </mat-menu>
               }
+              @if (canal?.planes?.length > 0) {
+                <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (isLoggedIn ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
+                  <button (click)="isLoggedIn ? handleBecomeMember() : null" class="canal-member-btn" [class.is-member]="isMember" [disabled]="!isLoggedIn || isMember" [ngStyle]="{ width: '130px' }" mat-stroked-button>
+                    <mat-icon>{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
+                    <span>Miembro</span>
+                  </button>
+                </span>
+              }
             </div>
           </div>
         }

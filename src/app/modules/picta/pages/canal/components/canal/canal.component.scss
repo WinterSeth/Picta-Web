@@ -564,6 +564,26 @@
   color: #1a1a2e !important;
 }
 
+.canal-member-btn.is-member {
+  background: rgba(76, 175, 80, 0.15) !important;
+  border: 1px solid rgba(102, 187, 106, 0.4) !important;
+  color: #81c784 !important;
+}
+
+.canal-member-btn.is-member:hover {
+  background: rgba(76, 175, 80, 0.22) !important;
+  box-shadow: 0 2px 12px rgba(76, 175, 80, 0.2);
+}
+
+.canal-member-btn.is-member mat-icon {
+  color: #66bb6a !important;
+}
+
+.canal-member-btn.is-member span {
+  color: #81c784 !important;
+  font-weight: 700;
+}
+
 .canal-actions-row {
   flex-wrap: wrap;
 }

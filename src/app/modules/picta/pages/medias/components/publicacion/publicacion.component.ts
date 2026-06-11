@@ -19,6 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PublicationService } from '../../services/publication-service';
 import { ListaReproduccionCanalService } from '../../services/lista-reproduccion-canal.service';
+import { CanalService } from '../../../canal/services/canal-service.service';
 import { SubSink } from 'subsink';
 import { VotoService } from '../../services/voto.service';
 import {
@@ -60,6 +61,7 @@ import { PictaResponse } from '../../../../models/response.picta.model';
 import { LocalstorageService } from '../../../../../../services/localstorage.service';
 import { AdsService } from '../../../../../../services/ads.service';
 import { DonateDialogComponent } from '../../../common-components/components/donate-dialog/donate-dialog.component';
+import { MembershipPlansDialogComponent } from '../../../canal/components/membership-plans-dialog/membership-plans-dialog.component';
 import { DialogMessageComponent } from './dialog-message/dialog-message.component';
 import { VideoInfoDialogComponent } from '../../../../components/dialogs/video-info-dialog/video-info-dialog.component';
 import { ShortNumbersPipe } from '../../pipes/short-numbers.pipe';
@@ -133,6 +135,7 @@ export class PublicacionComponent implements OnInit, OnDestroy, AfterViewInit {
   private title = inject(Title);
   private publicacionService = inject(PublicationService);
   private listaReproduccionCanalService = inject(ListaReproduccionCanalService);
+  private canalService = inject(CanalService);
   private router = inject(Router);
   private votoService = inject(VotoService);
   private location = inject(Location);
@@ -197,6 +200,7 @@ export class PublicacionComponent implements OnInit, OnDestroy, AfterViewInit {
   comentarioText: string;
   isLoggedIn = false;
   subscription;
+  isMember: boolean = false;
   
   // Cine mode signals
   cineMode = signal(false);
@@ -1494,6 +1498,7 @@ export class PublicacionComponent implements OnInit, OnDestroy, AfterViewInit {
         this.likes = this.video.cantidad_me_gusta;
         this.dislikes = this.video.cantidad_no_me_gusta;
         this.canal = this.video.canal;
+        this.checkMembership();
         // initialize notification mode based on localStorage silenced channels
         this.notificationMode = this.checkIfSilenced() ? 'none' : 'all';
         // Fallback mapping: la publicación 2502 corresponde a Telerebelde
@@ -2941,6 +2946,66 @@ exitCineMode() {
   private checkIfSilenced(): boolean {
     const silenced = this.getSilencedChannels();
     return silenced.includes(this.canal.nombre);
+  }
+
+  checkMembership() {
+    if (!this.canal) return;
+    this.canalService.esMiembro(this.canal.id).subscribe({
+      next: (res: any) => {
+        this.isMember = res.is_member || false;
+      },
+      error: () => {
+        this.isMember = false;
+      },
+    });
+  }
+
+  handleBecomeMember() {
+    if (!this.isLoggedIn) {
+      this.notificationService.open('error', 'Debes estar autenticado para ser miembro');
+      return;
+    }
+
+    const dialogRef = this.dialog.open(MembershipPlansDialogComponent, {
+      panelClass: 'picta-dark-dialog',
+      backdropClass: 'picta-dialog-backdrop',
+      width: 'min(640px, 96vw)',
+      maxWidth: '96vw',
+      maxHeight: '90vh',
+      enterAnimationDuration: '320',
+      exitAnimationDuration: '240',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.plan && result.offer) {
+        this.openMembershipPayment(result.plan, result.offer, result.externalId);
+      }
+    });
+  }
+
+  private openMembershipPayment(plan: any, offer: any, externalId: string): void {
+    const paymentDialogRef = this.dialog.open(PayItemComponent, {
+      closeOnNavigation: true,
+      hasBackdrop: true,
+      panelClass: 'picta-pay-dialog',
+      backdropClass: 'picta-pay-backdrop',
+      width: '92vw',
+      maxWidth: '980px',
+      maxHeight: '90vh',
+      data: {
+        video: plan,
+        offer,
+        externalId,
+        canal_id: this.canal.id,
+      },
+    });
+
+    paymentDialogRef.afterClosed().subscribe(result => {
+      if (result === 'payment-successful') {
+        this.notificationService.open('ok', 'Membresía activada correctamente');
+        this.checkMembership();
+      }
+    });
   }
 
   handleUnsubscribe() {

@@ -31,6 +31,7 @@ import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field'
 import { MatTabChangeEvent, MatTabGroup, MatTab, MatTabContent, MatTabsModule } from '@angular/material/tabs';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { PortadaComponent } from '../../../common-components/components/portada/portada.component';
 import { NgOptimizedImage, NgStyle, UpperCasePipe } from '@angular/common';
 import { DatePipe } from '@angular/common';
@@ -49,6 +50,7 @@ import { PayItemComponent } from '../../../common-components/components/pay-item
     PortadaComponent,
     MatButton,
     MatIcon,
+    MatTooltipModule,
     NgStyle,
     MatTabGroup,
     MatTab,
@@ -92,6 +94,7 @@ export class CanalComponent implements OnInit, OnDestroy {
   subscriptionLoading: boolean = true;
   subscription: any;
   notificationMode: 'all' | 'none' = 'all';
+  isMember: boolean = false;
   subs = new SubSink();
   user: UserModel;
   
@@ -240,6 +243,7 @@ export class CanalComponent implements OnInit, OnDestroy {
           ]);
           this.canal.videos = [];
           this.initAll();
+          this.checkMembership();
           this.authService.user$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user: any) => {
             if (user) {
               this.user = user;
@@ -350,6 +354,18 @@ export class CanalComponent implements OnInit, OnDestroy {
       this.subscribed = false;
       this.subscription = null;
     }
+  }
+
+  checkMembership() {
+    if (!this.canal) return;
+    this.canalService.esMiembro(this.canal.id).subscribe({
+      next: (res: any) => {
+        this.isMember = res.is_member || false;
+      },
+      error: () => {
+        this.isMember = false;
+      },
+    });
   }
 
   handleSubscribe() {

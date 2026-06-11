@@ -148,6 +148,19 @@ import { Canal } from '../../../../canal/models/canal.model';
               </button>
             </mat-menu>
           }
+          @if (canal()?.planes?.length > 0) {
+            <span [matTooltip]="isMember() ? 'Ya eres miembro de este canal' : (isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
+              <button
+                (click)="isLoggedIn() ? memberClick.emit() : null"
+                class="canal-member-btn"
+                [class.is-member]="isMember()"
+                [disabled]="!isLoggedIn() || isMember()"
+                mat-stroked-button>
+                <mat-icon>{{ isMember() ? 'check_circle' : 'workspace_premium' }}</mat-icon>
+                <span>Miembro</span>
+              </button>
+            </span>
+          }
         </div>
       </div>
     }
@@ -239,6 +252,53 @@ import { Canal } from '../../../../canal/models/canal.model';
       height: 38px;
       padding: 0 0.95rem;
     }
+
+    .canal-member-btn {
+      --mat-button-outlined-container-shape: 999px;
+      --mat-button-outlined-outline-color: rgba(243, 230, 40, 0.55);
+      --mat-button-outlined-label-text-color: #1a1a2e;
+
+      min-width: 0;
+      height: 38px;
+      padding: 0 0.95rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #f3e628 0%, #d4c724 100%) !important;
+      border-color: rgba(243, 230, 40, 0.55) !important;
+      transition: transform 170ms ease, box-shadow 170ms ease;
+    }
+
+    .canal-member-btn:hover {
+      box-shadow: 0 4px 16px rgba(243, 230, 40, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .canal-member-btn mat-icon {
+      margin-right: 0.35rem;
+      color: #1a1a2e !important;
+    }
+
+    .canal-member-btn span {
+      font-size: 0.875rem;
+      color: #1a1a2e;
+    }
+
+    .canal-member-btn.is-member {
+      background: rgba(76, 175, 80, 0.15) !important;
+      border: 1px solid rgba(102, 187, 106, 0.4) !important;
+    }
+
+    .canal-member-btn.is-member:hover {
+      background: rgba(76, 175, 80, 0.22) !important;
+      box-shadow: 0 2px 12px rgba(76, 175, 80, 0.2);
+    }
+
+    .canal-member-btn.is-member mat-icon {
+      color: #66bb6a !important;
+    }
+
+    .canal-member-btn.is-member span {
+      color: #81c784;
+    }
   `,
   imports: [
     MatProgressSpinner,
@@ -265,10 +325,12 @@ export class PublicationChannelComponent {
   subscribing = input(false, { transform: booleanAttribute });
   subscriptionLoading = input(false, { transform: booleanAttribute });
   notificationMode = input<'all' | 'none'>('all');
+  isMember = input(false, { transform: booleanAttribute });
 
   // Outputs
   subscribeClick = output<void>();
   unsubscribeClick = output<void>();
   notificationChange = output<'all' | 'none'>();
   donateClick = output<void>();
+  memberClick = output<void>();
 }

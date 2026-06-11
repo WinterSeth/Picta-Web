@@ -29,6 +29,7 @@ export interface Canal {
   'alias': string,
   'lista_publicaciones': PictaResponse<Publication>,
   videos: Publication[];
+  planes?: { plan_canal_id: number; plan: any }[];
 
 
 }

@@ -50,14 +50,19 @@
                       <span class="follow-slot right" aria-hidden="true"></span>
                     </div>
                   </button>
-                  <button (click)="handleBecomeMember()" [title]="authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro'"
+                  @if (canal.planes?.length > 0) {
+                  <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
+                  <button (click)="handleBecomeMember()"
                     [ngStyle]="{ width: '130px' }"
                     class="canal-member-btn !rounded-full flex items-center"
-                    [disabled]="!authService.isLoggedIn()"
+                    [class.is-member]="isMember"
+                    [disabled]="!authService.isLoggedIn() || isMember"
                     mat-stroked-button>
-                    <mat-icon class="mr-1">workspace_premium</mat-icon>
+                    <mat-icon class="mr-1">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
                     <span class="text-black">Miembro</span>
                   </button>
+                  </span>
+                  }
                 </div>
                 } @else {
                 <div class="canal-actions-row flex gap-2">
@@ -80,14 +85,19 @@
                       <span class="channel-follow-label text-black" style="visibility: visible !important;">Siguiendo</span>
                     </div>
                   </button>
-                  <button (click)="handleBecomeMember()" [title]="authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro'"
+                  @if (canal.planes?.length > 0) {
+                  <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
+                  <button (click)="handleBecomeMember()"
                     [ngStyle]="{ width: '130px' }"
                     class="canal-member-btn !rounded-full flex items-center"
-                    [disabled]="!authService.isLoggedIn()"
+                    [class.is-member]="isMember"
+                    [disabled]="!authService.isLoggedIn() || isMember"
                     mat-stroked-button>
-                    <mat-icon class="mr-1">workspace_premium</mat-icon>
+                    <mat-icon class="mr-1">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
                     <span class="text-black">Miembro</span>
                   </button>
+                  </span>
+                  }
                 </div>
                 }
                 <mat-menu #subscribeMenu="matMenu" class="subscribe-menu header-menu-panel">
@@ -364,13 +374,18 @@
                                     <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ subscribed ? 'Siguiendo' : 'Seguir' }}</span>
                                   </div>
                                 </button>
-                                <button (click)="handleBecomeMember()" [title]="authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro'"
+                                  @if (canal.planes?.length > 0) {
+                                  <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
+                                <button (click)="handleBecomeMember()"
                                   class="canal-member-btn flex items-center !rounded-full"
-                                  [disabled]="!authService.isLoggedIn()"
+                                  [class.is-member]="isMember"
+                                  [disabled]="!authService.isLoggedIn() || isMember"
                                   mat-stroked-button>
-                                  <mat-icon class="mr-1">workspace_premium</mat-icon>
+                                  <mat-icon class="mr-1">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
                                   <span class="text-black">Miembro</span>
                                 </button>
+                                  </span>
+                                  }
                               </div>
                             </div>
                           </ng-template>
