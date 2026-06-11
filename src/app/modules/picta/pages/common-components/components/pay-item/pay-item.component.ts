@@ -182,8 +182,10 @@ export class PayItemComponent {
   subscribeToTicket(ticket) {
     this.authService.payment$
       .pipe(takeUntil(this.stopSubscription))
-      .subscribe(() => {
-        this.checkPayment();
+      .subscribe((notification: any) => {
+        if (notification && notification.tipo === 'notificacion_pago') {
+          this.checkPayment();
+        }
       });
   }
 
