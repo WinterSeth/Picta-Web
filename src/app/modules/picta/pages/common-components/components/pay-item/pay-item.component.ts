@@ -202,8 +202,8 @@ export class PayItemComponent implements OnDestroy {
     this.paymentPolling = setInterval(() => {
       if (!this.data?.externalId) return;
       this.paymentService.checkPayedItems()
-        .pipe(map((resp: any) => resp.paid))
-        .subscribe((paid: string[]) => {
+        .subscribe((resp: any) => {
+          const paid: string[] = resp?.paid ?? [];
           if (paid.length) {
             const paidItem = paid.filter(p => p === this.data.externalId);
             if (paidItem.length) {
@@ -242,8 +242,8 @@ export class PayItemComponent implements OnDestroy {
     this.loaderService.show();
     this.paymentService
       .checkPayedItems()
-      .pipe(map((resp: any) => resp.paid))
-      .subscribe((paid: string[]) => {
+      .subscribe((resp: any) => {
+        const paid: string[] = resp?.paid ?? [];
         if (paid.length) {
           const paidItem = paid.filter( payment => payment === this.data.externalId);
           if (paidItem.length) {
@@ -270,8 +270,8 @@ export class PayItemComponent implements OnDestroy {
     setTimeout(() => {
       this.paymentService
         .checkPayedItems()
-        .pipe(map((resp: any) => resp.paid))
-        .subscribe((paid: string[]) => {
+        .subscribe((resp: any) => {
+          const paid: string[] = resp?.paid ?? [];
           if (paid.length) {
             const paidItem = paid.filter( payment => payment === this.data.externalId);
             if (paidItem.length) {
