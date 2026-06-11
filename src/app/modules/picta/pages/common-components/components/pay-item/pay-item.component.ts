@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID, viewChild } from '@angular/core';
+import { Component, inject, PLATFORM_ID, viewChild, OnDestroy } from '@angular/core';
 import { MatStepper, MatStep } from '@angular/material/stepper';
  import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogClose } from '@angular/material/dialog';
 import { PaymentService } from '../../../profile/services/payment.service';
@@ -43,7 +43,7 @@ import { MatomoTracker } from 'ngx-matomo-client';
     MatProgressSpinner
 ]
 })
-export class PayItemComponent {
+export class PayItemComponent implements OnDestroy {
   dialogRef = inject<MatDialogRef<PayItemComponent>>(MatDialogRef);
   data = inject<any>(MAT_DIALOG_DATA);
   private iconRegistry = inject(MatIconRegistry);
@@ -81,6 +81,7 @@ export class PayItemComponent {
   };
   tmLink: SafeUrl = '';
   stopSubscription = new Subject();
+  private paymentPolling: any;
   public myAngularxQrCode: string = null;
 
   paymentM$: any = this.paymentService.checkPayementMethods().pipe(
@@ -89,9 +90,6 @@ export class PayItemComponent {
       return res;
     })
   )
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
 
   constructor() {
     const iconRegistry = this.iconRegistry;
@@ -105,6 +103,12 @@ export class PayItemComponent {
         'icons/qr_code_scanner-24px.svg'
       )
     );
+  }
+
+  ngOnDestroy() {
+    this.stopPaymentPolling();
+    this.stopSubscription.next(true);
+    this.stopSubscription.complete();
   }
 
   onPaymentMethodChange(event: MatSelectionListChange) {
@@ -184,9 +188,42 @@ export class PayItemComponent {
       .pipe(takeUntil(this.stopSubscription))
       .subscribe((notification: any) => {
         if (notification && notification.tipo === 'notificacion_pago') {
+          this.stopPaymentPolling();
           this.checkPayment();
         }
       });
+
+    // Polling de seguridad: verificar pago cada 5s mientras el dialog esté abierto
+    this.startPaymentPolling();
+  }
+
+  private startPaymentPolling() {
+    this.stopPaymentPolling();
+    this.paymentPolling = setInterval(() => {
+      if (!this.data?.externalId) return;
+      this.paymentService.checkPayedItems()
+        .pipe(map((resp: any) => resp.paid))
+        .subscribe((paid: string[]) => {
+          if (paid.length) {
+            const paidItem = paid.filter(p => p === this.data.externalId);
+            if (paidItem.length) {
+              this.stopPaymentPolling();
+              this.snackBar.open('Pago comprobado');
+              if (this.data.canal_id) {
+                this.canalService.esMiembro(this.data.canal_id).subscribe();
+              }
+              this.dialogRef.close('payment-successful');
+            }
+          }
+        });
+    }, 5000);
+  }
+
+  private stopPaymentPolling() {
+    if (this.paymentPolling) {
+      clearInterval(this.paymentPolling);
+      this.paymentPolling = null;
+    }
   }
 
   selectMethod($event: MatSelectionListChange) {
@@ -216,13 +253,41 @@ export class PayItemComponent {
             }
             this.dialogRef.close('payment-successful');
           } else {
-            this.snackBar.open('No se detectaron pagos con este código QR');
+            this.retryCheckPayment(2);
           }
         } else {
-          this.snackBar.open('No se detectaron pagos con este código QR');
+          this.retryCheckPayment(2);
         }
         this.loaderService.hide();
       });
+  }
+
+  private retryCheckPayment(attempts: number) {
+    if (attempts <= 0) {
+      this.snackBar.open('No se detectaron pagos con este código QR');
+      return;
+    }
+    setTimeout(() => {
+      this.paymentService
+        .checkPayedItems()
+        .pipe(map((resp: any) => resp.paid))
+        .subscribe((paid: string[]) => {
+          if (paid.length) {
+            const paidItem = paid.filter( payment => payment === this.data.externalId);
+            if (paidItem.length) {
+              this.snackBar.open('Pago comprobado');
+              if (this.data.canal_id) {
+                this.canalService.esMiembro(this.data.canal_id).subscribe();
+              }
+              this.dialogRef.close('payment-successful');
+            } else {
+              this.retryCheckPayment(attempts - 1);
+            }
+          } else {
+            this.retryCheckPayment(attempts - 1);
+          }
+        });
+    }, 2000);
   }
 
   private trackSubscriptionPaymentCompletion(): void {
