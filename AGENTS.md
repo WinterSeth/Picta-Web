@@ -52,3 +52,19 @@
 ## Environment Files
 - `src/environments/environment.ts` — default
 - `src/environments/environment.dev.ts` — used by `development` build config
+
+## TypeScript Quirk
+- `tsconfig.json` has `strict: false` and `strictNullChecks: false`, but `angularCompilerOptions` has `strictTemplates: true` and `strictStandalone: true`. The Angular compiler is stricter than the TS compiler — template type errors will surface even when TS code compiles loosely.
+
+## Multi-Profile System
+- Netflix-style profile selection at `/perfil` (guarded by `AuthGuard`)
+- `PerfilesService` manages CRUD at `api.picta.cu/v1/perfiles/`
+- `ActivePerfilService` stores active profile ID in `localStorage['active-profile-id']` via signal
+- Login auto-selects the `PRINCIPAL` profile or the first available
+- Profile types: `ADULTO`, `INFANTIL`
+- Rollback guide: `RESTAURAR-SELECCION-PERFILES.md`
+
+## Documentation
+- `docs/` folder has comprehensive docs: ARQUITECTURA, COMPONENTES, SERVICIOS, RUTAS, MODELOS, DESARROLLO
+- `CLAUDE.md` has full design context (brand, aesthetic, color system, typography, API)
+- `guidelines.md` has Angular best practices with code examples

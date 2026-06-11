@@ -12,8 +12,8 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port=4211 --host 0.0.0.0 --configuration development",
-    "start-prod": "ng serve --port=4211 --host 0.0.0.0 --configuration production",
+    "start": "ng serve --port=4212 --host 0.0.0.0 --configuration development",
+    "start-prod": "ng serve --port=4212 --host 0.0.0.0 --configuration production",
     "start:es": "ng serve --aot --locale es",
     "build": "ng build",
     "build-prod": "ng build --configuration production",
