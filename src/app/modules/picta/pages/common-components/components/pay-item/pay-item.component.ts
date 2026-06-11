@@ -12,6 +12,7 @@ import { AsyncPipe, isPlatformBrowser, NgOptimizedImage, NgTemplateOutlet } from
 import { catchError, finalize, map, takeUntil } from 'rxjs';
 import { Platform } from '@angular/cdk/platform';
 import { AuthService } from '../../../../../../services/auth.service';
+import { CanalService } from '../../../canal/services/canal-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { QRCodeComponent } from 'angularx-qrcode';
@@ -54,6 +55,7 @@ export class PayItemComponent {
   private platformId = inject(PLATFORM_ID);
 
   private paymentService = inject(PaymentService);
+  private canalService = inject(CanalService);
   private router = inject(Router);
   private matomo = inject(MatomoTracker);
 
@@ -209,6 +211,9 @@ export class PayItemComponent {
           const paidItem = paid.filter( payment => payment === this.data.externalId);
           if (paidItem.length) {
             this.snackBar.open('Pago comprobado');
+            if (this.data.canal_id) {
+              this.canalService.esMiembro(this.data.canal_id).subscribe();
+            }
             this.dialogRef.close('payment-successful');
           } else {
             this.snackBar.open('No se detectaron pagos con este código QR');
