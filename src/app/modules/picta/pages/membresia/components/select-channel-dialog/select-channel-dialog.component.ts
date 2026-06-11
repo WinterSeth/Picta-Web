@@ -4,6 +4,7 @@ import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { CanalService } from '../../../canal/services/canal-service.service';
 import { Canal } from '../../../canal/models/canal.model';
 
@@ -48,7 +49,7 @@ import { Canal } from '../../../canal/models/canal.model';
       </div>
     </div>
 
-    <div class="channel-list">
+    <div class="channel-list" [@listAnimation]="channels().length">
       @if (searching() && channels().length === 0) {
         <div class="loading-state">
           <mat-spinner [diameter]="28" color="accent"></mat-spinner>
@@ -398,6 +399,18 @@ import { Canal } from '../../../canal/models/canal.model';
   host: {
     '(document:keydown.escape)': 'dialogRef.close()',
   },
+  animations: [
+    trigger('listAnimation', [
+      transition('* => *', [
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateY(12px)' }),
+          stagger('30ms', [
+            animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+          ]),
+        ], { optional: true }),
+      ]),
+    ]),
+  ],
 })
 export class SelectChannelDialogComponent {
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
