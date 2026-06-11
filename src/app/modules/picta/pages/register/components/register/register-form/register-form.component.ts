@@ -64,6 +64,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
       const pw = this.registerForm.get('password')?.value;
       const rp = this.registerForm.get('repeat_password')?.value;
       this.passwordMismatchError.set(!!pw && !!rp && pw !== rp);
+      this.passwordTooShortError.set(!!pw && pw.length < 8);
     });
 
     // Aplicar validadores según el canal (email o teléfono) y reaccionar a cambios
@@ -95,7 +96,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     phone_number: ['', []],
     email: ['', [Validators.email]],
     fecha_nacimiento: ['', [Validators.required]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
     repeat_password: ['', [Validators.required]],
     with_mail: [false, []],
     codigo_referido: ['', []],
@@ -119,6 +120,7 @@ export class RegisterFormComponent implements OnInit, OnDestroy {
     phone_number: signal(''),
   };
   passwordMismatchError = signal(false);
+  passwordTooShortError = signal(false);
   termsAccepted = signal(false);
   authUser: { access_token: string; refresh_token: string } = { access_token: '', refresh_token: '' };
   subs = new SubSink();

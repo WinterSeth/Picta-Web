@@ -49,6 +49,14 @@
           <mat-icon>{{ showPass() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
       </mat-form-field>
+      @if (passwordTooShortError()) {
+        <div class="field-error">
+          <span>La contraseña debe tener al menos 8 caracteres.</span>
+          <button type="button" class="message-close" (click)="registerForm.get('password').reset()" aria-label="Cerrar">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      }
 
       <mat-form-field appearance="fill" floatLabel="auto">
         <mat-label>Confirmar contraseña</mat-label>
