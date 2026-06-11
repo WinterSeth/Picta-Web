@@ -565,23 +565,26 @@
 }
 
 .canal-member-btn.is-member {
-  background: rgba(76, 175, 80, 0.15) !important;
-  border: 1px solid rgba(102, 187, 106, 0.4) !important;
-  color: #81c784 !important;
+  background: linear-gradient(135deg, rgba(243, 230, 40, 0.08) 0%, rgba(212, 199, 36, 0.12) 100%) !important;
+  border: 1px solid rgba(243, 230, 40, 0.35) !important;
+  color: #f3e628 !important;
+  box-shadow: 0 0 16px rgba(243, 230, 40, 0.08), inset 0 1px 0 rgba(243, 230, 40, 0.1);
 }
 
 .canal-member-btn.is-member:hover {
-  background: rgba(76, 175, 80, 0.22) !important;
-  box-shadow: 0 2px 12px rgba(76, 175, 80, 0.2);
+  background: linear-gradient(135deg, rgba(243, 230, 40, 0.14) 0%, rgba(212, 199, 36, 0.18) 100%) !important;
+  box-shadow: 0 0 24px rgba(243, 230, 40, 0.15), inset 0 1px 0 rgba(243, 230, 40, 0.15);
 }
 
 .canal-member-btn.is-member mat-icon {
-  color: #66bb6a !important;
+  color: #f3e628 !important;
 }
 
 .canal-member-btn.is-member span {
-  color: #81c784 !important;
+  color: #f3e628 !important;
   font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 12px rgba(243, 230, 40, 0.2);
 }
 
 .canal-actions-row {
