@@ -136,7 +136,7 @@ export class PayItemComponent {
 
   get isSubscriptionPayment(): boolean {
     const externalId = this.data?.externalId;
-    return typeof externalId === 'string' && externalId.startsWith('pago_suscripcion_');
+    return typeof externalId === 'string' && (externalId.startsWith('pago_suscripcion_') || externalId.startsWith('suscripcion_canal_'));
   }
 
   goPremium(options: MatListOption[]) {
