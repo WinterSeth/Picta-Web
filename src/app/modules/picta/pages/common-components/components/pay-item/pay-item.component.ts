@@ -182,7 +182,7 @@ export class PayItemComponent {
       .pipe(takeUntil(this.stopSubscription))
       .subscribe((notification: any) => {
         if (notification?.ticket === ticket) {
-          this.notifyResult();
+          this.checkPayment();
         }
       });
   }
