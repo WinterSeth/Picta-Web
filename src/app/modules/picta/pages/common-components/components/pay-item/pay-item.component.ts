@@ -182,10 +182,8 @@ export class PayItemComponent {
   subscribeToTicket(ticket) {
     this.authService.payment$
       .pipe(takeUntil(this.stopSubscription))
-      .subscribe((notification: any) => {
-        if (notification?.ticket === ticket) {
-          this.checkPayment();
-        }
+      .subscribe(() => {
+        this.checkPayment();
       });
   }
 
