@@ -346,10 +346,15 @@ export class AuthService {
             this.setUserData(res);
           });
           this.notificationService.open('notification', `${data.data.msg}`);
-} else if (data.tipo === 'notificacion_issue_report') {
+        } else if (data.tipo === 'notificacion_issue_report') {
           const text = 'Su reporte ha sido respondido por un administrador';
           this.notificationService.open('notification', text, { label: 'Ver', url: '/ayuda-soporte' });
           this.notificationStore.incrementBadge();
+        } else if (data.tipo === 'notificacion_pago') {
+          this.paymentSource.next(data);
+          this.getUserData().subscribe((res: any) => {
+            this.setUserData(res);
+          });
         }
          
         // Siempre emitir al observable para actualizar badge
