@@ -1,0 +1,127 @@
+<ng-container>
+  @if (loading) {
+    <div class="inset-0 flex flex-col items-center justify-center h-screen z-50 plans-loading" role="status" aria-live="polite">
+      <div class="p-4 !rounded-lg flex flex-col items-center">
+        <mat-spinner aria-label="cargando" [diameter]="50" color="warn"></mat-spinner>
+        <p class="mt-4">Cargando planes...</p>
+      </div>
+    </div>
+  } @else {
+    <section class="plans-page py-6 mt-2 lg:mt-2">
+      <div class="px-2 sm:px-4">
+        <div class="plans-shell">
+          <div class="plans-hero mb-8">
+            <span class="plans-step">Membresías</span>
+            <h1 class="text-2xl md:text-3xl font-bold">Planes de Membresía</h1>
+            <p class="plans-hero-subtitle mt-2">Accede a contenido exclusivo convirtiéndote en miembro de tus canales favoritos.</p>
+          </div>
+
+          <div class="plans-tabs">
+            <mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="200ms" class="plans-tabs-inner">
+              <mat-tab label="Membresía">
+                @if (membershipPlans.length) {
+                  <div class="plans-grid flex flex-wrap justify-center gap-5 md:gap-6 mt-6">
+                    @for (plan of membershipPlans; track plan.id) {
+                      <div class="plan-card-shell">
+                        <div class="plan-card w-full relative">
+                          <div class="plan-card-body">
+                            <div class="plan-card-hero plan-hero-basic">
+                              <div>
+                                <h5 class="plan-card-title" [matTooltip]="plan.descripcion || plan.nombre">
+                                  {{ plan.nombre }}
+                                </h5>
+                                <p class="plan-card-duration">{{ plan.duracion }} días</p>
+                              </div>
+                            </div>
+
+                            <div class="plan-card-price">
+                              <p class="plan-card-price-value">{{ plan.precio }}</p>
+                              <p class="plan-card-price-label">{{ plan.moneda }}</p>
+                            </div>
+
+                            <div class="plan-card-features">
+                              <mat-divider class="plan-card-divider"></mat-divider>
+                              <div class="plan-card-feature">
+                                <p class="plan-card-feature-name">Descripción</p>
+                                <p class="plan-card-feature-value">{{ plan.descripcion }}</p>
+                              </div>
+                              <div class="plan-card-feature">
+                                <p class="plan-card-feature-name">Tipo</p>
+                                <p class="plan-card-feature-value">
+                                  <span class="plan-badge" [class.internacional]="plan.internacional">
+                                    {{ plan.internacional ? 'Internacional' : 'Nacional' }}
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+
+                            <div class="plan-card-actions mt-4">
+                              <button 
+                                mat-flat-button 
+                                color="primary" 
+                                class="!rounded-full w-full"
+                                (click)="openMembershipPlanPayment(plan)">
+                                <mat-icon>attach_money</mat-icon>
+                                <span>Obtener</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="w-full empty-state flex items-center justify-center py-10">
+                    <mat-icon class="mr-2">info</mat-icon>
+                    <span>No hay planes de membresía disponibles</span>
+                  </div>
+                }
+              </mat-tab>
+
+              <mat-tab label="Canales">
+                <div class="w-full empty-state flex items-center justify-center py-10">
+                  <span>Próximamente</span>
+                </div>
+              </mat-tab>
+
+            </mat-tab-group>
+          </div>
+
+          <div class="plan_descripcion py-8 text-center">
+            <small class="text-sm text-gray-600">
+              <span>
+                Consulta nuestros
+                <a href="/terms" target="_blank" class="text-blue-500 hover:text-blue-700">
+                  Términos de uso
+                </a>
+                para obtener más información.
+              </span>
+            </small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="plans-support py-8">
+      <div class="px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 support-grid">
+          <div class="text-center md:text-left support-card">
+            <h4 class="text-lg font-semibold mb-2">¿Preguntas?</h4>
+            <a href="https://t.me/picta_comunidad" target="_blank" class="support-link flex items-center justify-center md:justify-start text-blue-400 hover:text-blue-300">
+              <mat-icon svgIcon="telegram" aria-hidden="false" aria-label="telegram SVG icon" class="mr-2"></mat-icon>
+              Únete a nuestro soporte en Telegram
+            </a>
+          </div>
+
+          <div class="text-center md:text-left support-card">
+            <h4 class="text-lg font-semibold mb-2">Enlaces útiles</h4>
+            <div class="flex flex-col gap-2">
+              <a href="/faq" class="text-gray-400 hover:text-blue-400">Preguntas frecuentes</a>
+              <a href="/terms" class="text-gray-400 hover:text-blue-400">Términos de uso</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+</ng-container>

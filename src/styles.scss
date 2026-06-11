@@ -687,6 +687,34 @@ mat-horizontal-stepper {
   min-width: 320px !important;
 }
 
+/* Channel autocomplete dark panel */
+.channel-autocomplete-panel {
+  background: rgba(17, 28, 45, 0.98) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(12px);
+  max-height: 320px !important;
+  padding: 6px !important;
+
+  .mat-mdc-option {
+    border-radius: 10px !important;
+    margin-bottom: 2px;
+  }
+
+  .mat-mdc-option:hover:not(.mat-mdc-option-disabled) {
+    background: rgba(35, 166, 213, 0.12) !important;
+  }
+
+  .mat-mdc-option.mat-mdc-option-active {
+    background: rgba(35, 166, 213, 0.08) !important;
+  }
+
+  .mdc-list-item__primary-text {
+    color: white !important;
+  }
+}
+
 .paymentDialog {
   & mat-dialog-container {
     padding: 8px;
@@ -1276,8 +1304,12 @@ app-help-support .mat-divider {
     0 0 80px rgba(243, 230, 40, 0.04) !important;
   color: #f4f7fb !important;
   position: relative;
-  overflow: visible !important;
+  overflow: hidden !important;
   animation: picta-dialog-scale-in 340ms cubic-bezier(0.25, 1, 0.5, 1) both;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
 }
 
 // Animación de entrada más suave para diálogos

@@ -313,8 +313,9 @@
 
 .qr-wrap {
   width: min(100%, 256px);
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 16px;
   background: #fff;
   border-radius: 12px;

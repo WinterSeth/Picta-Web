@@ -1,7 +1,6 @@
 import { Component, signal, OnDestroy, OnInit, output, inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../../../../services/auth.service';
-import { ActivePerfilService } from '../../../../../../services/active-perfil.service';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../../../../services/user.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,8 +8,7 @@ import { LoginRecoveryPasswordComponent } from '../../../../components/dialogs/l
 import { ChangePasswordModalComponent } from '../../../../components/dialogs/change-password-modal/change-password-modal.component';
 import { NotificationService } from '../../../../../../services/notification.service';
 import { SubSink } from 'subsink';
-import { switchMap, tap, mergeMap } from 'rxjs';
-import { PerfilesService } from '../../../../../../services/perfiles.service';
+import { switchMap, tap } from 'rxjs';
 import { Credentials, CredentialsService } from '../../../../services/credentials.service';
 import { NgOptimizedImage } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -44,14 +42,12 @@ import { LocalstorageService } from '../../../../../../services/localstorage.ser
 export class LoginFormComponent implements OnDestroy, OnInit {
   private fb = inject(UntypedFormBuilder);
   private loginService = inject(AuthService);
-  private activePerfilService = inject(ActivePerfilService);
   private router = inject(Router);
   private userService = inject(UserService);
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
   private credentialsService = inject(CredentialsService);
   private localstorage = inject(LocalstorageService);
-  private perfilesService = inject(PerfilesService);
 
   pendingRedirectUrl: string | null = null;
 
@@ -99,38 +95,19 @@ export class LoginFormComponent implements OnDestroy, OnInit {
           const credentials: Credentials = { access_token, refresh_token };
           this.credentialsService.setCredentials(credentials);
         }),
-        switchMap(() => this.loginService.getUserData()),
-        mergeMap((res: any) => {
+        switchMap(() => this.loginService.getUserData())
+      ).subscribe({
+        next: (res: any) => {
+          this.isLoggingIn.set(false);
           this.credentialsService.setCredentials({ user: res, ...this.credentialsService.credentials });
           this.loginService.setUserData(res);
           this.loggedIn.emit();
 
-          // Fetch profiles and auto-select one
-          return this.perfilesService.getAll().pipe(
-            switchMap((profileRes: any) => {
-              const list = profileRes?.results || profileRes || [];
-              if (list.length > 0) {
-                const principal = list.find((p: any) => p.clasificacion === 'PRINCIPAL');
-                const selected = principal || list[0];
-                return this.perfilesService.setActive(selected.id).pipe(
-                  tap(() => {
-                    this.activePerfilService.setActiveProfileId(selected.id);
-                  })
-                );
-              }
-              return [];
-            })
-          );
-        })
-      ).subscribe({
-        next: () => {
-          this.isLoggingIn.set(false);
-          
-          // Redirect to original destination or home after login
+          // Redirect to original destination or profile selector after login
           if (this.pendingRedirectUrl) {
             this.router.navigateByUrl(this.pendingRedirectUrl);
           } else {
-            this.router.navigate(['/']);
+            this.router.navigate(['/perfil']);
           }
         },
         error: (err) => {

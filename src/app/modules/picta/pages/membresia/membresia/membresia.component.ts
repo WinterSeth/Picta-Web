@@ -13,21 +13,25 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltip } from '@angular/material/tooltip';
 
-import { CardComponent } from '../card/card.component';
-import { CountdownTimerComponent } from '../../profile/components/countdown-timer/countdown-timer.component';
+import { finalize } from 'rxjs';
+
+import { CardComponent } from '../../suscripciones/card/card.component';
 import { SuscripcionService } from '../../profile/services/suscripcion.service';
 import { AuthService } from '../../../../../services/auth.service';
 import { PaymentService } from '../../profile/services/payment.service';
 import { PayItemComponent } from '../../common-components/components/pay-item/pay-item.component';
-
-
+import { PlanService, Plan as PlanV2 } from '../../../../../services/plan.service';
+import { SelectChannelDialogComponent } from '../components/select-channel-dialog/select-channel-dialog.component';
+import { Canal } from '../../canal/models/canal.model';
 
 interface Beneficio {
   nombre: string;
   valor: string;
   precio: string;
 }
+
 interface Plan {
   id: number;
   nombre: string;
@@ -46,8 +50,7 @@ interface DataPlan extends Plan {
   acumulable: boolean;
 }
 
-const THUMBUP_ICON =
-  `
+const THUMBUP_ICON = `
   <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M24 48C37.2548 48 48 37.2548 48 24C48 10.7452 37.2548 0 24 0C10.7452 0 0 10.7452 0 24C0 37.2548 10.7452 48 24 48Z" fill="url(#paint0_linear)"/>
 <path d="M8.93822 25.174C11.7438 23.6286 14.8756 22.3388 17.8018 21.0424C22.836 18.919 27.8902 16.8324 32.9954 14.8898C33.9887 14.5588 35.7734 14.2351 35.9484 15.7071C35.8526 17.7907 35.4584 19.8621 35.188 21.9335C34.5017 26.4887 33.7085 31.0283 32.935 35.5685C32.6685 37.0808 30.774 37.8637 29.5618 36.8959C26.6486 34.9281 23.713 32.9795 20.837 30.9661C19.8949 30.0088 20.7685 28.6341 21.6099 27.9505C24.0093 25.5859 26.5539 23.5769 28.8279 21.0901C29.4413 19.6088 27.6289 20.8572 27.0311 21.2397C23.7463 23.5033 20.5419 25.9051 17.0787 27.8945C15.3097 28.8683 13.2479 28.0361 11.4797 27.4927C9.89428 26.8363 7.57106 26.175 8.93806 25.1741L8.93822 25.174Z" fill="white"/>
@@ -61,39 +64,42 @@ const THUMBUP_ICON =
 `;
 
 @Component({
-    selector: 'app-suscripciones',
-    templateUrl: './suscripciones.component.html',
-    styleUrls: ['./suscripciones.component.scss'],
-    animations: [
-        trigger("fadeIn", [
-            transition(":enter", [
-                style({ opacity: 0 }),
-                animate("100ms", style({ opacity: 1 })),
-            ]),
-            transition(":leave", [animate("100ms", style({ opacity: 0 }))]),
-        ]),
-    ],
-    imports: [
-        MatProgressSpinner,
-        MatIcon,
-        MatAnchor,
-      MatButton,
-      MatDivider,
-        RouterLink,
-        MatNavList,
-        MatListItem,
-        MatTabsModule,
-        CardComponent
-    ]
+  selector: 'app-membresia',
+  templateUrl: './membresia.component.html',
+  styleUrls: ['./membresia.component.scss'],
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('100ms', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [animate('100ms', style({ opacity: 0 }))]),
+    ]),
+  ],
+  imports: [
+    MatProgressSpinner,
+    MatIcon,
+    MatAnchor,
+    MatButton,
+    MatDivider,
+    RouterLink,
+    MatNavList,
+    MatListItem,
+    MatTabsModule,
+    MatTooltip,
+    CardComponent,
+  ],
 })
-
-export class SuscripcionesComponent implements OnInit{
+export class MembresiaComponent implements OnInit {
   private suscripcionService = inject(SuscripcionService);
   private authService = inject(AuthService);
   private paymentService = inject(PaymentService);
   private dialog = inject(MatDialog);
   private snackbar = inject(MatSnackBar);
+  private planService = inject(PlanService);
+
   plans: Plan[] = [];
+  membershipPlans: PlanV2[] = [];
   dataPlans: DataPlan[] = [
     {
       id: 49,
@@ -105,7 +111,8 @@ export class SuscripcionesComponent implements OnInit{
         { nombre: 'Vigencia', valor: '35 días', precio: '400' },
         { nombre: 'Uso', valor: 'Para la plataforma Picta', precio: '400' },
       ],
-      descripcion: 'Paquete de datos acumulable para uso dentro de la plataforma Picta, con prioridad visual premium.',
+      descripcion:
+        'Paquete de datos acumulable para uso dentro de la plataforma Picta, con prioridad visual premium.',
       activo: false,
       pago: false,
       externalId: 'pago_suscripcion_49',
@@ -116,60 +123,52 @@ export class SuscripcionesComponent implements OnInit{
   ];
   selectedTabIndex = 0;
   loading = true;
-  benefits: [];
-  url = {
-    label: "Beneficios",
-    path: "/subscribe/benefits",
-    icon: "apps_outage",
-  };
-
   buyed: any;
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
 
   constructor() {
     const iconRegistry = inject(MatIconRegistry);
     const sanitizer = inject(DomSanitizer);
- 
-    iconRegistry.addSvgIconLiteral('telegram', sanitizer.bypassSecurityTrustHtml(THUMBUP_ICON));
+    iconRegistry.addSvgIconLiteral(
+      'telegram',
+      sanitizer.bypassSecurityTrustHtml(THUMBUP_ICON),
+    );
   }
 
   ngOnInit(): void {
     this.loadData();
   }
 
-  // Método para manejar el evento de pago exitoso
-  onPaymentSuccess() {    
-    this.loadData(); // Actualizar la lista de planes
+  onPaymentSuccess() {
+    this.loadData();
   }
 
-  // Método para manejar el evento de pago exitoso
-  onCancelSuccess() {    
-    this.loading = true; // Actualizar la lista de planes
+  onCancelSuccess() {
+    this.loading = true;
   }
 
   loadData() {
     this.loading = true;
-    
-    // Cargar planes de v3 (actuales)
+
     this.suscripcionService
       .getAllPlans()
       .pipe(
         tap((data: any) => {
           this.plans = data.results.sort((a, b) => a.precio - b.precio);
-        })
+        }),
       )
       .subscribe(response => {
-        this.buyed = response.results.find(
-          (plan) => plan.activo === true
-        ); 
-        if(this.buyed){
+        this.buyed = response.results.find(plan => plan.activo === true);
+        if (this.buyed) {
           this.getUserData();
         }
       });
 
-    this.loading = false;
+    this.planService
+      .getAll({ page_size: 50 })
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(response => {
+        this.membershipPlans = response.results.filter(plan => plan.visible);
+      });
   }
 
   isCurrent(plan: any): boolean {
@@ -177,35 +176,24 @@ export class SuscripcionesComponent implements OnInit{
   }
 
   isRecommended(plan: any): boolean {
-    if (!plan) {
-      return false;
-    }
-
+    if (!plan) return false;
     const name = (plan.nombre || '').toLowerCase();
     return plan.id === 40 || name.includes('premium');
   }
 
   sortedPlans(): any[] {
-    if (!this.plans?.length) {
-      return [];
-    }
+    if (!this.plans?.length) return [];
 
     const priority = (plan: any): number => {
-      if (this.isCurrent(plan)) {
-        return 0;
-      }
-      if (this.isRecommended(plan)) {
-        return 1;
-      }
+      if (this.isCurrent(plan)) return 0;
+      if (this.isRecommended(plan)) return 1;
       return 2;
     };
 
     return [...this.plans].sort((a, b) => {
       const pa = priority(a);
       const pb = priority(b);
-      if (pa !== pb) {
-        return pa - pb;
-      }
+      if (pa !== pb) return pa - pb;
       return Number(a?.precio || 0) - Number(b?.precio || 0);
     });
   }
@@ -217,42 +205,84 @@ export class SuscripcionesComponent implements OnInit{
   openDataPlanPayment(plan: DataPlan) {
     const externalId = plan.externalId || `pago_suscripcion_${plan.id}`;
 
-    this.paymentService.getItem({ external_id: externalId }).subscribe((data: any) => {
-      if (data.results.length) {
-        const offer = data.results[0];
-        const dialogRef = this.dialog.open(PayItemComponent, {
-          closeOnNavigation: true,
-          hasBackdrop: true,
-          panelClass: 'picta-pay-dialog',
-          backdropClass: 'picta-pay-backdrop',
-          width: '92vw',
-          maxWidth: '980px',
-          maxHeight: '90vh',
-          data: {
-            video: plan,
-            offer,
-            externalId,
-          },
-        });
+    this.paymentService
+      .getItem({ external_id: externalId })
+      .subscribe((data: any) => {
+        if (data.results.length) {
+          const offer = data.results[0];
+          const dialogRef = this.dialog.open(PayItemComponent, {
+            closeOnNavigation: true,
+            hasBackdrop: true,
+            panelClass: 'picta-pay-dialog',
+            backdropClass: 'picta-pay-backdrop',
+            width: '92vw',
+            maxWidth: '980px',
+            maxHeight: '90vh',
+            data: { video: plan, offer, externalId },
+          });
 
-        dialogRef.afterClosed().subscribe(result => {
-          if (result === 'payment-successful') {
-            this.onPaymentSuccess();
-            this.snackbar.open('Pago realizado satisfactoriamente');
-          }
-        });
-      } else {
-        this.snackbar.open('No existe una oferta para este paquete de datos');
-      }
+          dialogRef.afterClosed().subscribe(result => {
+            if (result === 'payment-successful') {
+              this.onPaymentSuccess();
+              this.snackbar.open('Pago realizado satisfactoriamente');
+            }
+          });
+        } else {
+          this.snackbar.open(
+            'No existe una oferta para este paquete de datos',
+          );
+        }
+      });
+  }
+
+  getUserData() {
+    this.authService.getUserData().subscribe((res: any) => {
+      this.authService.setUserData(res);
     });
   }
 
-  getUserData(){
-    this.authService.getUserData().subscribe((res: any) => {
-      this.authService.setUserData(res);
-    })
+  openMembershipPlanPayment(plan: PlanV2) {
+    const dialogRef = this.dialog.open(SelectChannelDialogComponent, {
+      panelClass: 'picta-dark-dialog',
+      backdropClass: 'picta-dialog-backdrop',
+      width: 'min(560px, 96vw)',
+      maxWidth: '96vw',
+      maxHeight: '85vh',
+      enterAnimationDuration: '280',
+      exitAnimationDuration: '200',
+    });
+
+    dialogRef.afterClosed().subscribe((channel: Canal | undefined) => {
+      if (!channel) return;
+
+      const externalId = `suscripcion_canal_${plan.id}`;
+
+      this.paymentService
+        .getItem({ external_id: externalId })
+        .subscribe((data: any) => {
+          if (data.results.length) {
+            const offer = data.results[0];
+            const paymentRef = this.dialog.open(PayItemComponent, {
+              closeOnNavigation: true,
+              hasBackdrop: true,
+              panelClass: 'picta-pay-dialog',
+              backdropClass: 'picta-pay-backdrop',
+              width: '92vw',
+              maxWidth: '980px',
+              maxHeight: '90vh',
+              data: { video: plan, offer, externalId, canal_id: channel.id },
+            });
+
+            paymentRef.afterClosed().subscribe(result => {
+              if (result === 'payment-successful') {
+                this.onPaymentSuccess();
+                this.snackbar.open('Pago realizado satisfactoriamente');
+              }
+            });
+          } else {
+            this.snackbar.open('No existe una oferta para este plan');
+          }
+        });
+    });
   }
-
-
-
 }

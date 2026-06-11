@@ -540,6 +540,34 @@
   opacity: 0.58;
 }
 
+.canal-member-btn {
+  border-color: rgba(243, 230, 40, 0.55) !important;
+  color: #1a1a2e !important;
+  font-weight: 600;
+  min-height: 38px;
+  background: linear-gradient(135deg, #f3e628 0%, #d4c724 100%) !important;
+  transition: transform 170ms ease, box-shadow 170ms ease;
+}
+
+.canal-member-btn:hover {
+  box-shadow: 0 4px 16px rgba(243, 230, 40, 0.3);
+  transform: translateY(-1px);
+}
+
+.canal-member-btn[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background: #f0f0f0 !important;
+}
+
+.canal-member-btn mat-icon {
+  color: #1a1a2e !important;
+}
+
+.canal-actions-row {
+  flex-wrap: wrap;
+}
+
 .search {
   width: min(100%, 560px);
 }

@@ -128,6 +128,14 @@ export const PICTA_ROUTES: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'membresia',
+    loadChildren: () =>
+      import('./pages/membresia/membresia.routes').then(
+        v => v.MEMBRESIA_ROUTES,
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'profile',
     loadChildren: () =>
       import('./pages/profile/profile-routing.module').then(

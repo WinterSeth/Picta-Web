@@ -1,6 +1,5 @@
 <ng-container>
   @if (loading) {
-    <!-- Estado de carga -->
     <div class="inset-0 flex flex-col items-center justify-center h-screen z-50 plans-loading" role="status" aria-live="polite">
       <div class="p-4 !rounded-lg flex flex-col items-center">
         <mat-spinner aria-label="cargando" [diameter]="50" color="warn"></mat-spinner>
@@ -12,148 +11,186 @@
       <div class="px-2 sm:px-4">
         <div class="plans-shell">
           <div class="plans-hero mb-8">
-            <span class="plans-step">Suscripciones Picta</span>
-            <h1 class="text-2xl md:text-3xl font-bold">Selecciona el plan ideal para ti</h1>
-            <p class="plans-hero-subtitle mt-2">Accede a mas contenido y mejora tu experiencia en Picta.</p>
+            <span class="plans-step">Tus planes</span>
+            <h1 class="text-2xl md:text-3xl font-bold">Planes para disfrutar Picta</h1>
+            <p class="plans-hero-subtitle mt-2">Mejora tu experiencia de usuario sin anuncios.</p>
           </div>
 
-          <mat-tab-group animationDuration="200ms" [(selectedIndex)]="selectedTabIndex" class="plans-tabs">
-            <mat-tab label="Suscripciones">
-              @if (plans.length) {
-                @if (buyed) {
-                  <div class="plans-current-summary mb-6 mt-6">
-                    <mat-icon>verified</mat-icon>
-                    <span>Tu plan actual es <strong>{{ buyed?.nombre }}</strong>. Puedes renovarlo o cambiarlo cuando quieras.</span>
+          <div class="plans-tabs">
+            <mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="200ms" class="plans-tabs-inner">
+              <mat-tab label="Suscripciones">
+                @if (plans.length) {
+                  <div class="plans-grid flex flex-wrap justify-center gap-5 md:gap-6 mt-6">
+                    @for (plan of sortedPlans(); track plan.id) {
+                      <div class="plan-card-shell">
+                        <div class="plan-card w-full relative"
+                             [class.plan-current]="isCurrent(plan)"
+                             [class.plan-recommended]="isRecommended(plan)">
+                          @if (isCurrent(plan)) {
+                            <div class="plan-card-badge">Plan actual</div>
+                          }
+                          @if (isRecommended(plan)) {
+                            <div class="plan-card-badge plan-card-badge-accent">Recomendado</div>
+                          }
+                          <div class="plan-card-body">
+                            <div class="plan-card-hero"
+                                 [class.plan-hero-basic]="!isRecommended(plan)"
+                                 [class.plan-hero-recommended]="isRecommended(plan)">
+                              <div>
+                                <h5 class="plan-card-title">{{ plan.nombre }}</h5>
+                                <p class="plan-card-duration">{{ plan.duracion }} días</p>
+                              </div>
+                            </div>
+
+                            <div class="plan-card-price">
+                              <p class="plan-card-price-value">{{ plan.precio }}</p>
+                              <p class="plan-card-price-label">CUP</p>
+                            </div>
+
+                            @if (plan.beneficios_info?.length) {
+                              <div class="plan-card-features">
+                                <mat-divider class="plan-card-divider"></mat-divider>
+                                @for (beneficio of plan.beneficios_info; track beneficio.nombre) {
+                                  <div class="plan-card-feature">
+                                    <p class="plan-card-feature-name">{{ beneficio.nombre }}</p>
+                                    <p class="plan-card-feature-value">{{ beneficio.valor }}</p>
+                                  </div>
+                                }
+                              </div>
+                            }
+
+                            <div class="plan-card-actions mt-4">
+                              <button 
+                                mat-flat-button 
+                                color="primary" 
+                                class="!rounded-full w-full"
+                                [disabled]="isCurrent(plan)"
+                                (click)="openDataPlanPayment(plan)">
+                                <mat-icon>attach_money</mat-icon>
+                                <span>{{ isCurrent(plan) ? 'Activo' : 'Comprar' }}</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="w-full empty-state flex items-center justify-center py-10">
+                    <mat-icon class="mr-2">info</mat-icon>
+                    <span>No hay planes premium disponibles</span>
                   </div>
                 }
+              </mat-tab>
 
-                <div class="plans-grid flex flex-wrap justify-center gap-5 md:gap-6 mt-6">
-                  @for (plan of sortedPlans(); track plan?.id ?? $index; let i = $index) {
-                    <div class="plan-card-shell" [class.plan-card-shell--current]="isCurrent(plan)" [class.plan-card-shell--recommended]="isRecommended(plan) && !isCurrent(plan)">
-                      @if (isCurrent(plan)) {
-                        <span class="plan-ribbon plan-ribbon--current">Tu plan actual</span>
-                      } @else if (isRecommended(plan)) {
-                        <span class="plan-ribbon plan-ribbon--recommended">Recomendado</span>
-                      }
-                      <app-card
-                        class="app-card"
-                        [plan]="plan"
-                        [index]="i"
-                        [buyed]="buyed"
-                        (paymentSuccess)="onPaymentSuccess()"
-                        (cancelSuccess)="onCancelSuccess()">
-                      </app-card>
-                    </div>
-                  }
-                </div>
-              } @else {
-                <div class="w-full empty-state flex items-center justify-center py-10">
-                  <mat-icon class="mr-2">info</mat-icon>
-                  <span>En estos momentos no hay planes de suscripción disponibles</span>
-                </div>
-              }
-            </mat-tab>
+              <mat-tab label="Datos">
+                @if (sortedDataPlans().length) {
+                  <div class="plans-grid plans-grid--single flex flex-wrap justify-center gap-5 md:gap-6 mt-6">
+                    @for (plan of sortedDataPlans(); track plan.id; let i = $index) {
+                      <article class="data-plan-shell">
+                        <div class="data-plan-card">
+                          <div class="data-plan-card__badge">Disponible para Picta</div>
 
-            <mat-tab label="Datos">
-              <div class="plans-grid plans-grid--single flex flex-wrap justify-center gap-5 md:gap-6 mt-6">
-                @for (plan of sortedDataPlans(); track plan.id; let i = $index) {
-                  <article class="data-plan-shell">
-                    <div class="data-plan-card">
-                      <div class="data-plan-card__badge">Disponible para Picta</div>
+                          <div class="data-plan-card__hero">
+                            <div>
+                              <p class="data-plan-card__eyebrow">Planes de datos</p>
+                              <h2 class="data-plan-card__title">{{ plan.nombre }}</h2>
+                              <p class="data-plan-card__subtitle">{{ plan.descripcion }}</p>
+                            </div>
 
-                      <div class="data-plan-card__hero">
-                        <div>
-                          <p class="data-plan-card__eyebrow">Planes de datos</p>
-                          <h2 class="data-plan-card__title">{{ plan.nombre }}</h2>
-                          <p class="data-plan-card__subtitle">{{ plan.descripcion }}</p>
+                            <div class="data-plan-card__price">
+                              <span class="data-plan-card__price-value">*****</span>
+                              <span class="data-plan-card__price-currency">CUP</span>
+                            </div>
+                          </div>
+
+                          <div class="data-plan-card__metrics">
+                            <div class="data-plan-card__metric">
+                              <span class="data-plan-card__metric-label">Datos incluidos</span>
+                              <strong>*****</strong>
+                            </div>
+
+                            <div class="data-plan-card__metric">
+                              <span class="data-plan-card__metric-label">Vigencia</span>
+                              <strong>{{ plan.vigencia }}</strong>
+                            </div>
+
+                            <div class="data-plan-card__metric">
+                              <span class="data-plan-card__metric-label">Renovación</span>
+                              <strong>{{ plan.acumulable ? 'Acumulable' : 'No acumulable' }}</strong>
+                            </div>
+                          </div>
+
+                          <mat-divider class="data-plan-card__divider"></mat-divider>
+
+                          <ul class="data-plan-card__list">
+                            <li>
+                              <mat-icon>check_circle</mat-icon>
+                              <span>Capacidad: *****</span>
+                            </li>
+                            <li>
+                              <mat-icon>check_circle</mat-icon>
+                              <span>Vigencia: {{ plan.vigencia }}</span>
+                            </li>
+                            <li>
+                              <mat-icon>check_circle</mat-icon>
+                              <span>Uso: Para la plataforma Picta</span>
+                            </li>
+                          </ul>
+
+                          <div class="data-plan-card__footer">
+                            <button mat-flat-button color="primary" class="!rounded-full" disabled aria-disabled="true">
+                              <mat-icon>schedule</mat-icon>
+                              <span>Próximamente</span>
+                            </button>
+                          </div>
                         </div>
-
-                        <div class="data-plan-card__price" aria-label="Precio oculto, próximamente disponible">
-                          <span class="data-plan-card__price-value">*****</span>
-                          <span class="data-plan-card__price-currency">CUP</span>
-                        </div>
-                      </div>
-
-                      <div class="data-plan-card__metrics">
-                        <div class="data-plan-card__metric">
-                          <span class="data-plan-card__metric-label">Datos incluidos</span>
-                          <strong>*****</strong>
-                        </div>
-
-                        <div class="data-plan-card__metric">
-                          <span class="data-plan-card__metric-label">Vigencia</span>
-                          <strong>{{ plan.vigencia }}</strong>
-                        </div>
-
-                        <div class="data-plan-card__metric">
-                          <span class="data-plan-card__metric-label">Renovación</span>
-                          <strong>{{ plan.acumulable ? 'Acumulable' : 'No acumulable' }}</strong>
-                        </div>
-                      </div>
-
-                      <mat-divider class="data-plan-card__divider"></mat-divider>
-
-                      <ul class="data-plan-card__list">
-                        @for (benefit of plan.beneficios_info; track benefit.nombre) {
-                          <li>
-                            <mat-icon>check_circle</mat-icon>
-                            <span>
-                              {{ benefit.nombre }}:
-                              @if ((benefit.nombre || '').toLowerCase().includes('vigencia') || (benefit.nombre || '').toLowerCase().includes('uso')) {
-                                {{ benefit.valor }}
-                              } @else {
-                                *****
-                              }
-                            </span>
-                          </li>
-                        }
-                      </ul>
-
-                      <div class="data-plan-card__footer">
-                        <button mat-flat-button color="primary" class="!rounded-full" disabled aria-disabled="true">
-                          <mat-icon>schedule</mat-icon>
-                          <span>Próximamente</span>
-                        </button>
-                      </div>
-                    </div>
-                  </article>
+                      </article>
+                    }
+                  </div>
+                } @else {
+                  <div class="w-full empty-state flex items-center justify-center py-10">
+                    <mat-icon class="mr-2">info</mat-icon>
+                    <span>No hay paquetes de datos disponibles</span>
+                  </div>
                 }
-              </div>
-            </mat-tab>
-          </mat-tab-group>
-        </div>
+              </mat-tab>
 
-        <div class="plan_descripcion py-8 text-center">
-          <small class="text-sm text-gray-600">
-            <span>
-              La disponibilidad del contenido en HD (720p) y Full HD (1080p) depende de tu servicio de internet y del dispositivo en uso. No todo el contenido esta disponible en todas las resoluciones. Consulta nuestros
-              <a mat-button color="primary" routerLink="/terms" target="_blank" class="text-blue-500 hover:text-blue-700">
-                Terminos de uso
-              </a>
-              para obtener mas informacion.
-            </span>
-          </small>
+            </mat-tab-group>
+          </div>
+
+          <div class="plan_descripcion py-8 text-center">
+            <small class="text-sm text-gray-600">
+              <span>
+                Consulta nuestros
+                <a href="/terms" target="_blank" class="text-blue-500 hover:text-blue-700">
+                  Términos de uso
+                </a>
+                para obtener más información.
+              </span>
+            </small>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="plans-support py-8">
       <div class="px-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 support-grid">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 support-grid">
           <div class="text-center md:text-left support-card">
-            <h4 class="text-lg font-semibold mb-2">Preguntas?</h4>
+            <h4 class="text-lg font-semibold mb-2">¿Preguntas?</h4>
             <a href="https://t.me/picta_comunidad" target="_blank" class="support-link flex items-center justify-center md:justify-start text-blue-400 hover:text-blue-300">
               <mat-icon svgIcon="telegram" aria-hidden="false" aria-label="telegram SVG icon" class="mr-2"></mat-icon>
-              Unete a nuestro soporte en Telegram
+              Únete a nuestro soporte en Telegram
             </a>
           </div>
 
           <div class="text-center md:text-left support-card">
-            <h4 class="text-lg font-semibold mb-2">Enlaces utiles</h4>
-            <mat-nav-list>
-              <a mat-list-item routerLink="/faq" class="support-list-link text-gray-400 hover:text-blue-400">Preguntas frecuentes</a>
-              <a mat-list-item routerLink="/terms" class="support-list-link text-gray-400 hover:text-blue-400">Terminos de uso</a>
-            </mat-nav-list>
+            <h4 class="text-lg font-semibold mb-2">Enlaces útiles</h4>
+            <div class="flex flex-col gap-2">
+              <a href="/faq" class="text-gray-400 hover:text-blue-400">Preguntas frecuentes</a>
+              <a href="/terms" class="text-gray-400 hover:text-blue-400">Términos de uso</a>
+            </div>
           </div>
         </div>
       </div>

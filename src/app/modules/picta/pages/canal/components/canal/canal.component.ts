@@ -38,6 +38,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MarkdownModule } from 'ngx-markdown';
 import { ShortNumbersPipe } from '../../../medias/pipes/short-numbers.pipe';
 import { CategoriaLoadingStateComponent } from '../../../categoria/components/categoria-loading-state/categoria-loading-state.component';
+import { MembershipPlansDialogComponent } from '../membership-plans-dialog/membership-plans-dialog.component';
+import { PayItemComponent } from '../../../common-components/components/pay-item/pay-item.component';
 
 @Component({
     selector: 'app-canal',
@@ -465,6 +467,53 @@ export class CanalComponent implements OnInit, OnDestroy {
           );
         }
       });
+  }
+
+  handleBecomeMember() {
+    if (!this.authService.isLoggedIn()) {
+      this.notificationService.open('error', 'Debes estar autenticado para ser miembro');
+      return;
+    }
+
+    const dialogRef = this.dialog.open(MembershipPlansDialogComponent, {
+      panelClass: 'picta-dark-dialog',
+      backdropClass: 'picta-dialog-backdrop',
+      width: 'min(640px, 96vw)',
+      maxWidth: '96vw',
+      maxHeight: '90vh',
+      enterAnimationDuration: '320',
+      exitAnimationDuration: '240',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.plan && result.offer) {
+        this.openMembershipPayment(result.plan, result.offer, result.externalId);
+      }
+    });
+  }
+
+  private openMembershipPayment(plan: any, offer: any, externalId: string): void {
+    const paymentDialogRef = this.dialog.open(PayItemComponent, {
+      closeOnNavigation: true,
+      hasBackdrop: true,
+      panelClass: 'picta-pay-dialog',
+      backdropClass: 'picta-pay-backdrop',
+      width: '92vw',
+      maxWidth: '980px',
+      maxHeight: '90vh',
+      data: {
+        video: plan,
+        offer,
+        externalId,
+        canal_id: this.canal.id,
+      },
+    });
+
+    paymentDialogRef.afterClosed().subscribe(result => {
+      if (result === 'payment-successful') {
+        this.notificationService.open('ok', 'Membresía activada correctamente');
+      }
+    });
   }
 
   ngOnDestroy(): void {

@@ -31,44 +31,64 @@
                   }
                 </div>
                 @if (!subscribed) {
-                <button (click)="authService.isLoggedIn() ? handleSubscribe() : null" [title]="authService.isLoggedIn() ? 'Seguir' : 'Debes estar autenticado para seguir'"
-                  [ngStyle]="{ width: '130px' }"
-                  class="canal-subscribe-btn channel-follow-button !rounded-full flex items-center"
-                  [class.is-subscribing]="subscribing || subscriptionLoading"
-                  [disabled]="subscribing || subscriptionLoading || !authService.isLoggedIn()"
-                  mat-stroked-button>
-                  <div class="follow-content">
-                    <span class="follow-slot left">
-                      @if (subscribing || subscriptionLoading) {
-                        <span class="subscribe-spinner">
-                          <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent" style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
-                        </span>
-                      }
-                    </span>
-                    <span class="channel-follow-label text-black" style="visibility: visible !important;">Seguir</span>
-                    <span class="follow-slot right" aria-hidden="true"></span>
-                  </div>
-                </button>
+                <div class="canal-actions-row flex gap-2">
+                  <button (click)="authService.isLoggedIn() ? handleSubscribe() : null" [title]="authService.isLoggedIn() ? 'Seguir' : 'Debes estar autenticado para seguir'"
+                    [ngStyle]="{ width: '130px' }"
+                    class="canal-subscribe-btn channel-follow-button !rounded-full flex items-center"
+                    [class.is-subscribing]="subscribing || subscriptionLoading"
+                    [disabled]="subscribing || subscriptionLoading || !authService.isLoggedIn()"
+                    mat-stroked-button>
+                    <div class="follow-content">
+                      <span class="follow-slot left">
+                        @if (subscribing || subscriptionLoading) {
+                          <span class="subscribe-spinner">
+                            <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent" style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
+                          </span>
+                        }
+                      </span>
+                      <span class="channel-follow-label text-black" style="visibility: visible !important;">Seguir</span>
+                      <span class="follow-slot right" aria-hidden="true"></span>
+                    </div>
+                  </button>
+                  <button (click)="handleBecomeMember()" [title]="authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro'"
+                    [ngStyle]="{ width: '130px' }"
+                    class="canal-member-btn !rounded-full flex items-center"
+                    [disabled]="!authService.isLoggedIn()"
+                    mat-stroked-button>
+                    <mat-icon class="mr-1">workspace_premium</mat-icon>
+                    <span class="text-black">Miembro</span>
+                  </button>
+                </div>
                 } @else {
-                <button [matMenuTriggerFor]="subscribeMenu" (click)="$event.stopPropagation()" [title]="'Opciones de seguimiento'"
-                  [ngStyle]="{ width: '130px' }"
-                  class="canal-subscribe-btn channel-follow-button !rounded-full subscribed flex items-center"
-                  [class.is-subscribing]="subscribing || subscriptionLoading"
-                  [disabled]="subscribing || subscriptionLoading || !authService.isLoggedIn()"
-                  mat-stroked-button>
-                  <div class="follow-content">
-                    <span class="follow-slot left">
-                      @if (subscribing || subscriptionLoading) {
-                        <span class="subscribe-spinner">
-                          <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent" style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
-                        </span>
-                      } @else {
-                        <mat-icon class="channel-follow-icon">{{ notificationMode === 'all' ? 'notifications_active' : 'notifications_off' }}</mat-icon>
-                      }
-                    </span>
-                    <span class="channel-follow-label text-black" style="visibility: visible !important;">Siguiendo</span>
-                  </div>
-                </button>
+                <div class="canal-actions-row flex gap-2">
+                  <button [matMenuTriggerFor]="subscribeMenu" (click)="$event.stopPropagation()" [title]="'Opciones de seguimiento'"
+                    [ngStyle]="{ width: '130px' }"
+                    class="canal-subscribe-btn channel-follow-button !rounded-full subscribed flex items-center"
+                    [class.is-subscribing]="subscribing || subscriptionLoading"
+                    [disabled]="subscribing || subscriptionLoading || !authService.isLoggedIn()"
+                    mat-stroked-button>
+                    <div class="follow-content">
+                      <span class="follow-slot left">
+                        @if (subscribing || subscriptionLoading) {
+                          <span class="subscribe-spinner">
+                            <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent" style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
+                          </span>
+                        } @else {
+                          <mat-icon class="channel-follow-icon">{{ notificationMode === 'all' ? 'notifications_active' : 'notifications_off' }}</mat-icon>
+                        }
+                      </span>
+                      <span class="channel-follow-label text-black" style="visibility: visible !important;">Siguiendo</span>
+                    </div>
+                  </button>
+                  <button (click)="handleBecomeMember()" [title]="authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro'"
+                    [ngStyle]="{ width: '130px' }"
+                    class="canal-member-btn !rounded-full flex items-center"
+                    [disabled]="!authService.isLoggedIn()"
+                    mat-stroked-button>
+                    <mat-icon class="mr-1">workspace_premium</mat-icon>
+                    <span class="text-black">Miembro</span>
+                  </button>
+                </div>
                 }
                 <mat-menu #subscribeMenu="matMenu" class="subscribe-menu header-menu-panel">
                   <button mat-menu-item (click)="handleNotificationChange('all')" [class.active]="notificationMode === 'all'">
@@ -329,7 +349,7 @@
                               <div class="channel-dialog__body">
                                 <div class="channel-dialog__description markdown" markdown [data]="canal.descripcion" [disableSanitizer]="true"></div>
                               </div>
-                              <div class="channel-dialog__actions">
+                              <div class="channel-dialog__actions flex gap-2">
                                   <button mat-stroked-button color="primary" class="channel-follow-btn channel-follow-button flex items-center" [class.subscribed]="subscribed" [class.is-subscribing]="subscribing || subscriptionLoading" (click)="authService.isLoggedIn() ? handleSubscribe() : null" [disabled]="subscribing || subscriptionLoading">
                                   <div class="follow-content">
                                     @if (subscribing || subscriptionLoading) {
@@ -343,6 +363,13 @@
                                     }
                                     <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ subscribed ? 'Siguiendo' : 'Seguir' }}</span>
                                   </div>
+                                </button>
+                                <button (click)="handleBecomeMember()" [title]="authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro'"
+                                  class="canal-member-btn flex items-center !rounded-full"
+                                  [disabled]="!authService.isLoggedIn()"
+                                  mat-stroked-button>
+                                  <mat-icon class="mr-1">workspace_premium</mat-icon>
+                                  <span class="text-black">Miembro</span>
                                 </button>
                               </div>
                             </div>

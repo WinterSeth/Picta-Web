@@ -42,8 +42,11 @@ export class LoginRecoveryAccountComponent {
   subs = new SubSink();
 
   constructor() {
-    this.channelCtrl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value: boolean) => {
-      if (value) {
+    // Estado inicial: email seleccionado → teléfono deshabilitado
+    this.phoneCtrl.disable();
+
+    this.channelCtrl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value: string) => {
+      if (value === 'email') {
         this.phoneCtrl.disable();
         this.emailCtrl.enable();
       } else {

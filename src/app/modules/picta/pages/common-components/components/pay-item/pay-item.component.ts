@@ -246,6 +246,7 @@ export class PayItemComponent {
       type: 'payment',
       buyer: this.authService.userData.username.slice(0, 20),
       buyer_phone: this.authService.userData.phone_number,
+      canal_id: this.data.canal_id,
       items: [
         {
           id: this.data.offer.id,
@@ -293,6 +294,7 @@ export class PayItemComponent {
       type: 'payment',
       buyer: this.authService.userData.username.slice(0, 20),
       buyer_phone: this.authService.userData.phone_number,
+      canal_id: this.data.canal_id,
       items: [
         {
           id: this.data.offer.id,
@@ -336,6 +338,7 @@ export class PayItemComponent {
       type: 'payment',
       buyer: this.authService.userData.username.slice(0, 20),
       buyer_phone: this.authService.userData.phone_number,
+      canal_id: this.data.canal_id,
       items: [
         {
           id: this.data.offer.id,

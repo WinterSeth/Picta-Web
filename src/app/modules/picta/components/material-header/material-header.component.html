@@ -497,7 +497,7 @@ ngSrc="img/logo.svg" />
             </div>
             <mat-divider></mat-divider>
             <!-- Acciones principales (click)="openProfileSelector()"-->
-            <a  mat-menu-item disabled>
+            <a (click)="openProfileSelector()" mat-menu-item>
               <mat-icon fontIcon="switch_account"></mat-icon>
               Cambiar perfil
             </a>
@@ -516,6 +516,10 @@ ngSrc="img/logo.svg" />
             <a [routerLink]="['/suscripciones']" mat-menu-item>
               <mat-icon fontIcon="workspace_premium"></mat-icon>
               Suscripciones
+            </a>
+            <a [routerLink]="['/membresia']" mat-menu-item>
+              <mat-icon fontIcon="card_membership"></mat-icon>
+              Membresía
             </a>
             <a [routerLink]="['/profile/mis-pagos']" mat-menu-item>
               <mat-icon fontIcon="credit_card"></mat-icon>
