@@ -59,7 +59,7 @@
                     [disabled]="!authService.isLoggedIn() || isMember"
                     mat-stroked-button>
                     <mat-icon class="mr-1">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
-                    <span class="text-black">Miembro</span>
+                    <span class="text-black">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
                   </button>
                   </span>
                   }
@@ -94,7 +94,7 @@
                     [disabled]="!authService.isLoggedIn() || isMember"
                     mat-stroked-button>
                     <mat-icon class="mr-1">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
-                    <span class="text-black">Miembro</span>
+                    <span class="text-black">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
                   </button>
                   </span>
                   }
@@ -382,7 +382,7 @@
                                   [disabled]="!authService.isLoggedIn() || isMember"
                                   mat-stroked-button>
                                   <mat-icon class="mr-1">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
-                                  <span class="text-black">Miembro</span>
+                                  <span class="text-black">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
                                 </button>
                                   </span>
                                   }

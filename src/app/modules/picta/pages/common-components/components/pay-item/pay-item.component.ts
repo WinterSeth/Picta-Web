@@ -81,7 +81,6 @@ export class PayItemComponent implements OnDestroy {
   };
   tmLink: SafeUrl = '';
   stopSubscription = new Subject();
-  private paymentPolling: any;
   public myAngularxQrCode: string = null;
 
   paymentM$: any = this.paymentService.checkPayementMethods().pipe(
@@ -106,7 +105,6 @@ export class PayItemComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.stopPaymentPolling();
     this.stopSubscription.next(true);
     this.stopSubscription.complete();
   }
@@ -188,42 +186,12 @@ export class PayItemComponent implements OnDestroy {
       .pipe(takeUntil(this.stopSubscription))
       .subscribe((notification: any) => {
         if (notification && notification.tipo === 'notificacion_pago') {
-          this.stopPaymentPolling();
-          this.checkPayment();
+          if (this.data.canal_id) {
+            this.canalService.esMiembro(this.data.canal_id).subscribe();
+          }
+          this.dialogRef.close('payment-successful');
         }
       });
-
-    // Polling de seguridad: verificar pago cada 5s mientras el dialog esté abierto
-    this.startPaymentPolling();
-  }
-
-  private startPaymentPolling() {
-    this.stopPaymentPolling();
-    this.paymentPolling = setInterval(() => {
-      if (!this.data?.externalId) return;
-      this.paymentService.checkPayedItems()
-        .subscribe((resp: any) => {
-          const paid: string[] = resp?.paid ?? [];
-          if (paid.length) {
-            const paidItem = paid.filter(p => p === this.data.externalId);
-            if (paidItem.length) {
-              this.stopPaymentPolling();
-              this.snackBar.open('Pago comprobado');
-              if (this.data.canal_id) {
-                this.canalService.esMiembro(this.data.canal_id).subscribe();
-              }
-              this.dialogRef.close('payment-successful');
-            }
-          }
-        });
-    }, 5000);
-  }
-
-  private stopPaymentPolling() {
-    if (this.paymentPolling) {
-      clearInterval(this.paymentPolling);
-      this.paymentPolling = null;
-    }
   }
 
   selectMethod($event: MatSelectionListChange) {
@@ -237,58 +205,6 @@ export class PayItemComponent implements OnDestroy {
     const childArray = Array.from(headerContainer.childNodes);
     childArray.slice(5).forEach(node => node.remove());
   } */
-
-  checkPayment() {
-    this.loaderService.show();
-    this.paymentService
-      .checkPayedItems()
-      .subscribe((resp: any) => {
-        const paid: string[] = resp?.paid ?? [];
-        if (paid.length) {
-          const paidItem = paid.filter( payment => payment === this.data.externalId);
-          if (paidItem.length) {
-            this.snackBar.open('Pago comprobado');
-            if (this.data.canal_id) {
-              this.canalService.esMiembro(this.data.canal_id).subscribe();
-            }
-            this.dialogRef.close('payment-successful');
-          } else {
-            this.retryCheckPayment(2);
-          }
-        } else {
-          this.retryCheckPayment(2);
-        }
-        this.loaderService.hide();
-      });
-  }
-
-  private retryCheckPayment(attempts: number) {
-    if (attempts <= 0) {
-      this.snackBar.open('No se detectaron pagos con este código QR');
-      return;
-    }
-    setTimeout(() => {
-      this.paymentService
-        .checkPayedItems()
-        .subscribe((resp: any) => {
-          const paid: string[] = resp?.paid ?? [];
-          if (paid.length) {
-            const paidItem = paid.filter( payment => payment === this.data.externalId);
-            if (paidItem.length) {
-              this.snackBar.open('Pago comprobado');
-              if (this.data.canal_id) {
-                this.canalService.esMiembro(this.data.canal_id).subscribe();
-              }
-              this.dialogRef.close('payment-successful');
-            } else {
-              this.retryCheckPayment(attempts - 1);
-            }
-          } else {
-            this.retryCheckPayment(attempts - 1);
-          }
-        });
-    }, 2000);
-  }
 
   private trackSubscriptionPaymentCompletion(): void {
     if (!this.isSubscriptionPayment) {

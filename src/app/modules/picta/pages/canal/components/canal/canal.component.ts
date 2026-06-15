@@ -499,6 +499,7 @@ export class CanalComponent implements OnInit, OnDestroy {
       maxHeight: '90vh',
       enterAnimationDuration: '320',
       exitAnimationDuration: '240',
+      data: { canal: this.canal },
     });
 
     dialogRef.afterClosed().subscribe(result => {

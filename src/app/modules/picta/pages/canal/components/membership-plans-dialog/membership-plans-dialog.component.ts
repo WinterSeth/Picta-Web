@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
@@ -20,75 +20,77 @@ import { finalize } from 'rxjs';
     MatProgressSpinner
   ],
   template: `
-    <div class="dialog-header">
-      <div class="header-icon">
-        <mat-icon>workspace_premium</mat-icon>
+    <!-- Banner + Channel Info -->
+    <div class="channel-hero">
+      <div class="channel-banner">
+        <img [src]="canal?.url_imagen + '_960x200'" [alt]="canal?.nombre" class="banner-img" />
+        <div class="banner-overlay"></div>
       </div>
-      <h2 class="header-title">Planes de Membresía</h2>
-      <p class="header-subtitle">Desbloquea contenido exclusivo de tus canales favoritos</p>
+      <div class="channel-info">
+        <div class="avatar-wrap">
+          <img [src]="canal?.url_avatar + '_300x300'" [alt]="canal?.nombre" class="channel-avatar" />
+          <div class="avatar-ring"></div>
+        </div>
+        <div class="channel-meta">
+          <h2 class="channel-name">{{ canal?.nombre }}</h2>
+          <p class="channel-subs">{{ canal?.cantidad_suscripciones | number }} suscriptores</p>
+        </div>
+      </div>
+      <div class="channel-desc">
+        <p>{{ canal?.descripcion }}</p>
+      </div>
     </div>
 
+    <!-- Benefits -->
+    <div class="benefits-bar">
+      <div class="benefit">
+        <mat-icon>workspace_premium</mat-icon>
+        <span>Acceso a contenido exclusivo</span>
+      </div>
+    </div>
+
+    <!-- Plans -->
     <div class="dialog-content">
+      <h3 class="section-title">Elige tu plan</h3>
+
       @if (loading()) {
         <div class="loading-state">
-          <mat-spinner [diameter]="36" color="accent"></mat-spinner>
+          <mat-spinner [diameter]="32" color="accent"></mat-spinner>
           <p>Cargando planes...</p>
         </div>
       } @else if (plans().length === 0) {
         <div class="empty-state">
           <mat-icon class="empty-icon">info</mat-icon>
-          <p>No hay planes disponibles en este momento</p>
+          <p>No hay planes disponibles</p>
         </div>
       } @else {
-        <div class="plans-grid">
+        <div class="plans-list">
           @for (plan of plans(); track plan.id; let i = $index) {
-            <div 
+            <div
               class="plan-card"
               [class.plan-featured]="i === 0"
               (click)="selectPlan(plan)">
-              
-              <div class="card-accent"></div>
-              
-              <div class="card-content">
-                <div class="card-top">
-                  <span class="plan-type-badge">
-                    {{ plan.internacional ? 'Internacional' : 'Nacional' }}
-                  </span>
-                  <span class="plan-duration">{{ plan.duracion }} días</span>
-                </div>
 
-                <h3 class="plan-name">{{ plan.nombre }}</h3>
-                
-                <p class="plan-description">{{ plan.descripcion }}</p>
+              <div class="plan-left">
+                <span class="plan-duration">{{ plan.duracion }} días</span>
+                <span class="plan-type">{{ plan.internacional ? 'Internacional' : 'Nacional' }}</span>
+              </div>
 
-                <div class="plan-price-section">
+              <div class="plan-center">
+                <h4 class="plan-name">{{ plan.nombre }}</h4>
+                <p class="plan-desc">{{ plan.descripcion }}</p>
+              </div>
+
+              <div class="plan-right">
+                <div class="plan-price">
                   <span class="currency">{{ plan.moneda }}</span>
                   <span class="amount">{{ plan.precio }}</span>
                 </div>
-
-                <div class="plan-features">
-                  <div class="feature-item">
-                    <mat-icon class="feature-icon">check_circle</mat-icon>
-                    <span>Acceso completo</span>
-                  </div>
-                  <div class="feature-item">
-                    <mat-icon class="feature-icon">check_circle</mat-icon>
-                    <span>Sin anuncios</span>
-                  </div>
-                  <div class="feature-item">
-                    <mat-icon class="feature-icon">check_circle</mat-icon>
-                    <span>Contenido exclusivo</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-action">
-                <button 
-                  mat-flat-button 
+                <button
+                  mat-flat-button
                   class="select-btn"
                   (click)="selectPlan(plan); $event.stopPropagation()">
-                  <span>Seleccionar</span>
-                  <mat-icon>arrow_forward</mat-icon>
+                  Seleccionar
                 </button>
               </div>
             </div>
@@ -98,9 +100,7 @@ import { finalize } from 'rxjs';
     </div>
 
     <div class="dialog-footer">
-      <button mat-button (click)="dialogRef.close()" class="close-btn">
-        Cerrar
-      </button>
+      <button mat-button (click)="dialogRef.close()" class="close-btn">Cerrar</button>
     </div>
   `,
   styles: [`
@@ -109,77 +109,143 @@ import { finalize } from 'rxjs';
       color: white;
     }
 
-    /* Header */
-    .dialog-header {
-      text-align: center;
-      padding: 20px 20px 16px;
-      background: linear-gradient(135deg, rgba(243, 230, 40, 0.1) 0%, rgba(232, 70, 46, 0.1) 100%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    /* ── Hero / Channel Header ── */
+    .channel-hero {
+      position: relative;
     }
 
-    .header-icon {
-      width: 44px;
-      height: 44px;
-      margin: 0 auto 12px;
-      background: linear-gradient(135deg, #f3e628 0%, #e8c520 100%);
-      border-radius: 12px;
+    .channel-banner {
+      position: relative;
+      width: 100%;
+      height: 140px;
+      overflow: hidden;
+    }
+
+    .banner-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .banner-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(18, 18, 30, 0.95) 100%);
+    }
+
+    .channel-info {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      padding: 0 20px;
+      margin-top: -34px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .avatar-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .channel-avatar {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #12121e;
+      display: block;
+    }
+
+    .avatar-ring {
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 2px solid rgba(243, 230, 40, 0.4);
+      pointer-events: none;
+    }
+
+    .channel-meta {
+      padding-bottom: 6px;
+      min-width: 0;
+    }
+
+    .channel-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .channel-subs {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin: 2px 0 0;
+    }
+
+    .channel-desc {
+      padding: 10px 20px 0;
+    }
+
+    .channel-desc p {
+      font-size: 0.78rem;
+      color: rgba(255, 255, 255, 0.55);
+      margin: 0;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ── Benefits Bar ── */
+    .benefits-bar {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 14px 20px;
+      margin: 12px 16px 0;
+      background: rgba(243, 230, 40, 0.06);
+      border: 1px solid rgba(243, 230, 40, 0.12);
+      border-radius: 10px;
+    }
+
+    .benefit {
       display: flex;
       align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 16px rgba(243, 230, 40, 0.3);
+      gap: 5px;
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.7);
     }
 
-    .header-icon mat-icon {
-      font-size: 22px;
-      width: 22px;
-      height: 22px;
-      color: #1a1a2e;
+    .benefit mat-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+      color: #f3e628;
     }
 
-    .header-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin: 0 0 6px 0;
-      color: #ffffff;
-      letter-spacing: -0.02em;
-    }
-
-    .header-subtitle {
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.6);
-      margin: 0;
-      line-height: 1.4;
-    }
-
-    /* Content */
+    /* ── Content ── */
     .dialog-content {
-      padding: 16px;
-      max-height: 60vh;
+      padding: 16px 20px;
+      max-height: 45vh;
       overflow-y: auto;
-      
-      /* Scrollbar personalizada */
-      &::-webkit-scrollbar {
-        width: 6px;
-      }
 
-      &::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 3px;
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: rgba(243, 230, 40, 0.4);
-        border-radius: 3px;
-        transition: background 0.2s ease;
-      }
-
-      &::-webkit-scrollbar-thumb:hover {
-        background: rgba(243, 230, 40, 0.6);
-      }
-
-      /* Firefox */
+      &::-webkit-scrollbar { width: 5px; }
+      &::-webkit-scrollbar-track { background: rgba(255,255,255,0.04); border-radius: 3px; }
+      &::-webkit-scrollbar-thumb { background: rgba(243,230,40,0.35); border-radius: 3px; }
       scrollbar-width: thin;
-      scrollbar-color: rgba(243, 230, 40, 0.4) rgba(255, 255, 255, 0.05);
+      scrollbar-color: rgba(243,230,40,0.35) rgba(255,255,255,0.04);
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      margin: 0 0 12px;
     }
 
     .loading-state,
@@ -187,187 +253,151 @@ import { finalize } from 'rxjs';
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 32px 16px;
-      gap: 12px;
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .empty-icon {
-      font-size: 40px;
-      width: 40px;
-      height: 40px;
-      color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Plans Grid */
-    .plans-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* Plan Card */
-    .plan-card {
-      position: relative;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .plan-card:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(243, 230, 40, 0.4);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-
-    .plan-card.plan-featured {
-      border-color: rgba(243, 230, 40, 0.3);
-      background: linear-gradient(135deg, rgba(243, 230, 40, 0.08) 0%, rgba(232, 70, 46, 0.05) 100%);
-    }
-
-    .card-accent {
-      height: 3px;
-      background: linear-gradient(90deg, #f3e628 0%, #e8462e 100%);
-    }
-
-    .card-content {
-      padding: 14px;
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .plan-type-badge {
-      font-size: 0.65rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 3px 8px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.8);
-    }
-
-    .plan-duration {
-      font-size: 0.7rem;
+      padding: 28px 16px;
+      gap: 10px;
       color: rgba(255, 255, 255, 0.5);
     }
 
-    .plan-name {
-      font-size: 1rem;
-      font-weight: 700;
-      margin: 0 0 6px 0;
-      color: #ffffff;
-    }
+    .empty-icon { font-size: 36px; width: 36px; height: 36px; color: rgba(255,255,255,0.25); }
 
-    .plan-description {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.6);
-      margin: 0 0 12px 0;
-      line-height: 1.4;
-    }
-
-    .plan-price-section {
+    /* ── Plans List ── */
+    .plans-list {
       display: flex;
-      align-items: baseline;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .plan-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .plan-card:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(243, 230, 40, 0.35);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .plan-card.plan-featured {
+      border-color: rgba(243, 230, 40, 0.25);
+      background: linear-gradient(135deg, rgba(243, 230, 40, 0.07) 0%, rgba(232, 70, 46, 0.04) 100%);
+    }
+
+    .plan-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 4px;
-      margin-bottom: 12px;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
+      min-width: 56px;
     }
 
-    .currency {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .amount {
-      font-size: 1.5rem;
+    .plan-duration {
+      font-size: 1.1rem;
       font-weight: 800;
       color: #f3e628;
       line-height: 1;
     }
 
-    .plan-features {
+    .plan-type {
+      font-size: 0.6rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    .plan-center {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .plan-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      margin: 0 0 3px;
+    }
+
+    .plan-desc {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin: 0;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .plan-right {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
-
-    .feature-item {
-      display: flex;
-      align-items: center;
+      align-items: flex-end;
       gap: 8px;
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.8);
+      flex-shrink: 0;
     }
 
-    .feature-icon {
-      font-size: 14px;
-      width: 14px;
-      height: 14px;
-      color: #37d17c;
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
     }
 
-    /* Card Action */
-    .card-action {
-      padding: 0 14px 14px;
+    .plan-price .currency {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .plan-price .amount {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
     }
 
     .select-btn {
-      width: 100%;
-      height: 40px;
-      border-radius: 10px;
+      height: 32px;
+      padding: 0 16px;
+      border-radius: 8px;
       background: linear-gradient(135deg, #f3e628 0%, #e8c520 100%);
       color: #1a1a2e;
       font-weight: 600;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      font-size: 0.75rem;
       transition: all 0.2s ease;
     }
 
     .select-btn:hover {
       background: linear-gradient(135deg, #ffe94a 0%, #f3e628 100%);
-      box-shadow: 0 4px 12px rgba(243, 230, 40, 0.4);
+      box-shadow: 0 3px 10px rgba(243, 230, 40, 0.35);
     }
 
-    .select-btn mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
-
-    /* Footer */
+    /* ── Footer ── */
     .dialog-footer {
-      padding: 12px 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 10px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       justify-content: center;
     }
 
     .close-btn {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.8rem;
       border-radius: 8px;
-      font-size: 0.85rem;
     }
 
     .close-btn:hover {
-      color: rgba(255, 255, 255, 0.9);
-      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.07);
     }
   `]
 })
@@ -376,7 +406,9 @@ export class MembershipPlansDialogComponent implements OnInit {
   private planService = inject(PlanService);
   private paymentService = inject(PaymentService);
   private notificationService = inject(NotificationService);
+  data = inject<{ canal?: any }>(MAT_DIALOG_DATA);
 
+  canal = this.data?.canal;
   plans = signal<Plan[]>([]);
   loading = signal(true);
 
