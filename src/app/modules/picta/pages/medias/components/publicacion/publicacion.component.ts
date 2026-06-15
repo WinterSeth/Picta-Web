@@ -1,6 +1,7 @@
 import { CineModeService } from '../../../../services/cine-mode.service';
 import {
   Component,
+  DestroyRef,
   ElementRef,
   HostListener,
   Input,
@@ -154,6 +155,7 @@ export class PublicacionComponent implements OnInit, OnDestroy, AfterViewInit {
   private matomo = inject(MatomoTracker);
   private adsService = inject(AdsService);
   readonly cineModeService = inject(CineModeService);
+  private destroyRef = inject(DestroyRef);
 
   @Input() 'slug_url'!: any;
 
@@ -813,7 +815,19 @@ export class PublicacionComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     // Esperar a que el usuario esté disponible y activar modo cine si corresponde
     this.waitForUserAndActivateCineMode();
-    
+
+    // Escuchar notificaciones de pago para refetchear membresía y publicación
+    this.subs.add(
+      this.authService.payment$
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((notification: any) => {
+          if (notification && notification.tipo === 'notificacion_pago') {
+            this.checkMembership();
+            this.loadVideos(true);
+          }
+        })
+    );
+
     this.displayNext = false;
     // Obtener los segundos de publicidad del beneficio del plan
     const adConfig = this.getAdvertisementConfig();

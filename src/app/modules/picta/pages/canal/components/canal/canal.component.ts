@@ -253,6 +253,17 @@ export class CanalComponent implements OnInit, OnDestroy {
               this.subscribed = false;
             }
           });
+
+          // Escuchar notificaciones de pago para refetchear membresía
+          this.subs.add(
+            this.authService.payment$
+              .pipe(takeUntilDestroyed(this.destroyRef))
+              .subscribe((notification: any) => {
+                if (notification && notification.tipo === 'notificacion_pago') {
+                  this.checkMembership();
+                }
+              })
+          );
         }
       });
   }
