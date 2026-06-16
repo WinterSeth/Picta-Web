@@ -541,16 +541,16 @@
 }
 
 .canal-member-btn {
-  border-color: rgba(243, 230, 40, 0.55) !important;
+  border-color: rgba(232, 70, 46, 0.55) !important;
   color: #1a1a2e !important;
   font-weight: 600;
   min-height: 38px;
-  background: linear-gradient(135deg, #f3e628 0%, #d4c724 100%) !important;
-  transition: transform 170ms ease, box-shadow 170ms ease;
+  transition: transform 170ms ease, background-color 170ms ease;
+  background: #ffffff !important;
 }
 
 .canal-member-btn:hover {
-  box-shadow: 0 4px 16px rgba(243, 230, 40, 0.3);
+  box-shadow: 0 4px 16px rgba(232, 70, 46, 0.3);
   transform: translateY(-1px);
 }
 

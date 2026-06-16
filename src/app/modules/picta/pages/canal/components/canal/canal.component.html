@@ -54,12 +54,17 @@
                   <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
                   <button (click)="handleBecomeMember()"
                     [ngStyle]="{ width: '130px' }"
-                    class="canal-member-btn !rounded-full flex items-center"
+                    class="canal-member-btn channel-follow-button !rounded-full flex items-center"
                     [class.is-member]="isMember"
                     [disabled]="!authService.isLoggedIn() || isMember"
                     mat-stroked-button>
-                    <mat-icon class="mr-1">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
-                    <span class="text-black">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
+                    <div class="follow-content">
+                      <span class="follow-slot left">
+                        <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
+                      </span>
+                      <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
+                      <span class="follow-slot right" aria-hidden="true"></span>
+                    </div>
                   </button>
                   </span>
                   }
@@ -89,12 +94,17 @@
                   <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
                   <button (click)="handleBecomeMember()"
                     [ngStyle]="{ width: '130px' }"
-                    class="canal-member-btn !rounded-full flex items-center"
+                    class="canal-member-btn channel-follow-button !rounded-full flex items-center"
                     [class.is-member]="isMember"
                     [disabled]="!authService.isLoggedIn() || isMember"
                     mat-stroked-button>
-                    <mat-icon class="mr-1">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
-                    <span class="text-black">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
+                    <div class="follow-content">
+                      <span class="follow-slot left">
+                        <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
+                      </span>
+                      <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
+                      <span class="follow-slot right" aria-hidden="true"></span>
+                    </div>
                   </button>
                   </span>
                   }
@@ -377,12 +387,17 @@
                                   @if (canal.planes?.length > 0) {
                                   <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
                                 <button (click)="handleBecomeMember()"
-                                  class="canal-member-btn flex items-center !rounded-full"
+                                  class="canal-member-btn channel-follow-button flex items-center !rounded-full"
                                   [class.is-member]="isMember"
                                   [disabled]="!authService.isLoggedIn() || isMember"
                                   mat-stroked-button>
-                                  <mat-icon class="mr-1">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
-                                  <span class="text-black">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
+                                  <div class="follow-content">
+                                    <span class="follow-slot left">
+                                      <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
+                                    </span>
+                                    <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
+                                    <span class="follow-slot right" aria-hidden="true"></span>
+                                  </div>
                                 </button>
                                   </span>
                                   }
