@@ -1,13 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { PlanService, Plan } from '../../../../../../services/plan.service';
 import { PaymentService } from '../../../profile/services/payment.service';
 import { NotificationService } from '../../../../../../services/notification.service';
-import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-membership-plans-dialog',
@@ -16,8 +13,7 @@ import { finalize } from 'rxjs';
     CommonModule,
     MatDialogModule,
     MatIcon,
-    MatButton,
-    MatProgressSpinner
+    MatButton
   ],
   template: `
     <!-- Banner + Channel Info -->
@@ -53,43 +49,38 @@ import { finalize } from 'rxjs';
     <div class="dialog-content">
       <h3 class="section-title">Elige tu plan</h3>
 
-      @if (loading()) {
-        <div class="loading-state">
-          <mat-spinner [diameter]="32" color="accent"></mat-spinner>
-          <p>Cargando planes...</p>
-        </div>
-      } @else if (plans().length === 0) {
+      @if (!canal?.planes?.length) {
         <div class="empty-state">
           <mat-icon class="empty-icon">info</mat-icon>
           <p>No hay planes disponibles</p>
         </div>
       } @else {
         <div class="plans-list">
-          @for (plan of plans(); track plan.id; let i = $index) {
+          @for (item of canal.planes; track item.plan.id; let i = $index) {
             <div
               class="plan-card"
               [class.plan-featured]="i === 0"
-              (click)="selectPlan(plan)">
+              (click)="selectPlan(item.plan)">
 
               <div class="plan-left">
-                <span class="plan-duration">{{ plan.duracion }} días</span>
-                <span class="plan-type">{{ plan.internacional ? 'Internacional' : 'Nacional' }}</span>
+                <span class="plan-duration">{{ item.plan.duracion }} días</span>
+                <span class="plan-type">{{ item.plan.internacional ? 'Internacional' : 'Nacional' }}</span>
               </div>
 
               <div class="plan-center">
-                <h4 class="plan-name">{{ plan.nombre }}</h4>
-                <p class="plan-desc">{{ plan.descripcion }}</p>
+                <h4 class="plan-name">{{ item.plan.nombre }}</h4>
+                <p class="plan-desc">{{ item.plan.descripcion }}</p>
               </div>
 
               <div class="plan-right">
                 <div class="plan-price">
-                  <span class="currency">{{ plan.moneda }}</span>
-                  <span class="amount">{{ plan.precio }}</span>
+                  <span class="currency">{{ item.plan.moneda }}</span>
+                  <span class="amount">{{ item.plan.precio }}</span>
                 </div>
                 <button
                   mat-flat-button
                   class="select-btn"
-                  (click)="selectPlan(plan); $event.stopPropagation()">
+                  (click)="selectPlan(item.plan); $event.stopPropagation()">
                   Seleccionar
                 </button>
               </div>
@@ -248,7 +239,6 @@ import { finalize } from 'rxjs';
       margin: 0 0 12px;
     }
 
-    .loading-state,
     .empty-state {
       display: flex;
       flex-direction: column;
@@ -401,37 +391,15 @@ import { finalize } from 'rxjs';
     }
   `]
 })
-export class MembershipPlansDialogComponent implements OnInit {
+export class MembershipPlansDialogComponent {
   dialogRef = inject(MatDialogRef<MembershipPlansDialogComponent>);
-  private planService = inject(PlanService);
   private paymentService = inject(PaymentService);
   private notificationService = inject(NotificationService);
   data = inject<{ canal?: any }>(MAT_DIALOG_DATA);
 
   canal = this.data?.canal;
-  plans = signal<Plan[]>([]);
-  loading = signal(true);
 
-  ngOnInit(): void {
-    this.loadPlans();
-  }
-
-  loadPlans(): void {
-    this.loading.set(true);
-    this.planService.getAll({ page_size: 50 })
-      .pipe(finalize(() => this.loading.set(false)))
-      .subscribe({
-        next: (response) => {
-          this.plans.set(response.results.filter(plan => plan.visible));
-        },
-        error: (err) => {
-          console.error('Error loading plans:', err);
-          this.notificationService.open('error', 'Error al cargar los planes');
-        }
-      });
-  }
-
-  selectPlan(plan: Plan): void {
+  selectPlan(plan: any): void {
     const externalId = `suscripcion_canal_${plan.id}`;
     
     this.paymentService.getItem({ external_id: externalId }).subscribe({
