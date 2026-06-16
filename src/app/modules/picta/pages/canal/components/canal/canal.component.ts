@@ -2,7 +2,7 @@ import { Component, DestroyRef, HostListener, OnDestroy, OnInit, inject, ViewChi
 import { ActivatedRoute } from '@angular/router';
 import { CanalService } from '../../services/canal-service.service';
 import { PublicationService } from '../../../medias/services/publication-service';
-import { debounceTime, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, switchMap, tap, of, catchError } from 'rxjs';
 import { UntypedFormControl, ReactiveFormsModule } from '@angular/forms';
 import { SubscriptionService } from '../../../../../../services/subscription.service';
 import { AuthService } from '../../../../../../services/auth.service';
@@ -243,7 +243,7 @@ export class CanalComponent implements OnInit, OnDestroy {
           ]);
           this.canal.videos = [];
           this.initAll();
-          this.checkMembership();
+          this.checkMembership().subscribe();
           this.authService.user$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user: any) => {
             if (user) {
               this.user = user;
@@ -260,7 +260,7 @@ export class CanalComponent implements OnInit, OnDestroy {
               .pipe(takeUntilDestroyed(this.destroyRef))
               .subscribe((notification: any) => {
                 if (notification && notification.tipo === 'notificacion_pago') {
-                  this.checkMembership();
+                  this.checkMembership().subscribe();
                 }
               })
           );
@@ -368,15 +368,16 @@ export class CanalComponent implements OnInit, OnDestroy {
   }
 
   checkMembership() {
-    if (!this.canal) return;
-    this.canalService.esMiembro(this.canal.id).subscribe({
-      next: (res: any) => {
+    if (!this.canal) return of(false);
+    return this.canalService.esMiembro(this.canal.id).pipe(
+      tap((res: any) => {
         this.isMember = res.is_member || false;
-      },
-      error: () => {
+      }),
+      catchError(() => {
         this.isMember = false;
-      },
-    });
+        return of(false);
+      })
+    );
   }
 
   handleSubscribe() {

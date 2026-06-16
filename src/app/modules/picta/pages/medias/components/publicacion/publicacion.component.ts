@@ -37,7 +37,7 @@ import { ComentarioService } from '../../services/comentario.service';
 import { DomSanitizer, Meta, Title } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 import { ShareDialogComponent } from './share-dialog/share-dialog.component';
-import { finalize, lastValueFrom, Subject, Subscription, timer } from 'rxjs';
+import { finalize, lastValueFrom, Subject, Subscription, timer, of, tap, catchError } from 'rxjs';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { NotificationService } from '../../../../../../services/notification.service';
@@ -822,8 +822,9 @@ export class PublicacionComponent implements OnInit, OnDestroy, AfterViewInit {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((notification: any) => {
           if (notification && notification.tipo === 'notificacion_pago') {
-            this.checkMembership();
-            this.loadVideos(true);
+            this.checkMembership().subscribe(() => {
+              this.loadVideos(true);
+            });
           }
         })
     );
@@ -1512,7 +1513,7 @@ export class PublicacionComponent implements OnInit, OnDestroy, AfterViewInit {
         this.likes = this.video.cantidad_me_gusta;
         this.dislikes = this.video.cantidad_no_me_gusta;
         this.canal = this.video.canal;
-        this.checkMembership();
+        this.checkMembership().subscribe();
         // initialize notification mode based on localStorage silenced channels
         this.notificationMode = this.checkIfSilenced() ? 'none' : 'all';
         // Fallback mapping: la publicación 2502 corresponde a Telerebelde
@@ -2963,15 +2964,16 @@ exitCineMode() {
   }
 
   checkMembership() {
-    if (!this.canal) return;
-    this.canalService.esMiembro(this.canal.id).subscribe({
-      next: (res: any) => {
+    if (!this.canal) return of(false);
+    return this.canalService.esMiembro(this.canal.id).pipe(
+      tap((res: any) => {
         this.isMember = res.is_member || false;
-      },
-      error: () => {
+      }),
+      catchError(() => {
         this.isMember = false;
-      },
-    });
+        return of(false);
+      })
+    );
   }
 
   handleBecomeMember() {
@@ -3018,7 +3020,7 @@ exitCineMode() {
     paymentDialogRef.afterClosed().subscribe(result => {
       if (result === 'payment-successful') {
         this.notificationService.open('ok', 'Membresía activada correctamente');
-        this.checkMembership();
+        this.checkMembership().subscribe();
       }
     });
   }
