@@ -77,9 +77,10 @@
 
 // Acciones con mismo estilo
 .picta-confirm-actions {
-  display: flex;
+  display: flex !important;
   gap: 12px;
   margin-top: 8px;
+  justify-content: center !important;
 }
 
 .picta-confirm-actions button {
@@ -89,6 +90,9 @@
   font-weight: 600;
   font-size: 0.875rem;
   text-transform: none;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
 // Secondary button (No)
@@ -117,10 +121,13 @@
 
 @media (max-width: 480px) {
   .picta-confirm-actions {
-    flex-direction: column;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: center !important;
   }
   
   .picta-confirm-actions button {
     width: 100%;
+    margin: 0 !important;
   }
 }
