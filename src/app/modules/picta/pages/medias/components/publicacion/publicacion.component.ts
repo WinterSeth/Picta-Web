@@ -816,19 +816,6 @@ export class PublicacionComponent implements OnInit, OnDestroy, AfterViewInit {
     // Esperar a que el usuario esté disponible y activar modo cine si corresponde
     this.waitForUserAndActivateCineMode();
 
-    // Escuchar notificaciones de pago para refetchear membresía y publicación
-    this.subs.add(
-      this.authService.payment$
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((notification: any) => {
-          if (notification && notification.tipo === 'notificacion_pago') {
-            this.checkMembership().subscribe(() => {
-              this.loadVideos(true);
-            });
-          }
-        })
-    );
-
     this.displayNext = false;
     // Obtener los segundos de publicidad del beneficio del plan
     const adConfig = this.getAdvertisementConfig();
@@ -3020,7 +3007,7 @@ exitCineMode() {
     paymentDialogRef.afterClosed().subscribe(result => {
       if (result === 'payment-successful') {
         this.notificationService.open('ok', 'Membresía activada correctamente');
-        this.checkMembership().subscribe();
+        this.runAfterTracking(() => window.location.reload());
       }
     });
   }
