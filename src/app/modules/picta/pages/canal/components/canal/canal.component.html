@@ -1,517 +1,457 @@
 @if (!canal) {
-  <!-- Estado de carga -->
-  <div class="inset-0 flex flex-col items-center justify-center h-screen z-50" role="status" aria-live="polite">
-    <div class="p-4 !rounded-lg flex flex-col items-center">
-      <mat-spinner aria-label="cargando" [diameter]="50" color="warn"></mat-spinner>
-      <p class="mt-4">Cargando canal...</p>
-    </div>
+<!-- Estado de carga -->
+<div class="inset-0 flex flex-col items-center justify-center h-screen z-50" role="status" aria-live="polite">
+  <div class="p-4 !rounded-lg flex flex-col items-center">
+    <mat-spinner aria-label="cargando" [diameter]="50" color="warn"></mat-spinner>
+    <p class="mt-4">Cargando canal...</p>
   </div>
+</div>
 }
 @if (canal) {
-  <div id="wrapper" class="canal-page">
-    @if (canal) {
-      <div class="canal-container">
-        <app-portada [imagenPortada]="canal.url_imagen" [isLoggedIn]="!!user"></app-portada>
-        <div class="canal-sub-bar mt-4">
-          <div class="canal-profile-card !rounded-lg shadow-sm overflow-hidden">
-            <div class="canal-profile-content py-4 flex space-x-3 items-start">
-              <div class="canal-avatar-wrap flex-shrink-0 w-30">
-                <img class="canal-avatar h-30 w-30 !rounded-full" width="200" height="200" [ngSrc]="canal.url_avatar+'_200x200'" alt="Avatar del canal {{ canal.nombre }}">
-              </div>
-              <div class="canal-profile-meta flex flex-col space-x-3">
-                <h3 class="canal-title">{{ canal.nombre }}</h3>
-                <p class="canal-stats text-sm text-gray-500">{{ canal.cantidad_suscripciones | shortNumbers }} seguidores • {{total}} vídeos</p>
-                <div class="canal-description-wrap">
-                  <div class="canal-description text-sm text-gray-500 markdown clamped" markdown [data]="canal.descripcion" [disableSanitizer]="true"></div>
-                  @if (canal.descripcion && canal.descripcion.length > 240) {
-                    <div class="canal-description-overlay" (click)="openChannelDialog()" role="button" tabindex="0" (keydown.enter)="openChannelDialog()">
-                      <span class="ellipsis">…</span>
-                      <span class="ver-mas-inline">Ver más</span>
-                    </div>
-                  }
-                </div>
-                @if (!subscribed) {
-                <div class="canal-actions-row flex gap-2">
-                  <button (click)="authService.isLoggedIn() ? handleSubscribe() : null" [title]="authService.isLoggedIn() ? 'Seguir' : 'Debes estar autenticado para seguir'"
-                    [ngStyle]="{ width: '130px' }"
-                    class="canal-subscribe-btn channel-follow-button !rounded-full flex items-center"
-                    [class.is-subscribing]="subscribing || subscriptionLoading"
-                    [disabled]="subscribing || subscriptionLoading || !authService.isLoggedIn()"
-                    mat-stroked-button>
-                    <div class="follow-content">
-                      <span class="follow-slot left">
-                        @if (subscribing || subscriptionLoading) {
-                          <span class="subscribe-spinner">
-                            <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent" style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
-                          </span>
-                        }
-                      </span>
-                      <span class="channel-follow-label text-black" style="visibility: visible !important;">Seguir</span>
-                      <span class="follow-slot right" aria-hidden="true"></span>
-                    </div>
-                  </button>
-                  @if (canal.planes?.length > 0) {
-                  <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
-                  <button (click)="handleBecomeMember()"
-                    [ngStyle]="{ width: '130px' }"
-                    class="canal-member-btn channel-follow-button !rounded-full flex items-center"
-                    [class.is-member]="isMember"
-                    [disabled]="!authService.isLoggedIn() || isMember"
-                    mat-stroked-button>
-                    <div class="follow-content">
-                      <span class="follow-slot left">
-                        <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
-                      </span>
-                      <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
-                      <span class="follow-slot right" aria-hidden="true"></span>
-                    </div>
-                  </button>
-                  </span>
-                  }
-                </div>
-                } @else {
-                <div class="canal-actions-row flex gap-2">
-                  <button [matMenuTriggerFor]="subscribeMenu" (click)="$event.stopPropagation()" [title]="'Opciones de seguimiento'"
-                    [ngStyle]="{ width: '130px' }"
-                    class="canal-subscribe-btn channel-follow-button !rounded-full subscribed flex items-center"
-                    [class.is-subscribing]="subscribing || subscriptionLoading"
-                    [disabled]="subscribing || subscriptionLoading || !authService.isLoggedIn()"
-                    mat-stroked-button>
-                    <div class="follow-content">
-                      <span class="follow-slot left">
-                        @if (subscribing || subscriptionLoading) {
-                          <span class="subscribe-spinner">
-                            <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent" style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
-                          </span>
-                        } @else {
-                          <mat-icon class="channel-follow-icon">{{ notificationMode === 'all' ? 'notifications_active' : 'notifications_off' }}</mat-icon>
-                        }
-                      </span>
-                      <span class="channel-follow-label text-black" style="visibility: visible !important;">Siguiendo</span>
-                    </div>
-                  </button>
-                  @if (canal.planes?.length > 0) {
-                  <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
-                  <button (click)="handleBecomeMember()"
-                    [ngStyle]="{ width: '130px' }"
-                    class="canal-member-btn channel-follow-button !rounded-full flex items-center"
-                    [class.is-member]="isMember"
-                    [disabled]="!authService.isLoggedIn() || isMember"
-                    mat-stroked-button>
-                    <div class="follow-content">
-                      <span class="follow-slot left">
-                        <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
-                      </span>
-                      <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
-                      <span class="follow-slot right" aria-hidden="true"></span>
-                    </div>
-                  </button>
-                  </span>
-                  }
-                </div>
-                }
-                <mat-menu #subscribeMenu="matMenu" class="subscribe-menu header-menu-panel">
-                  <button mat-menu-item (click)="handleNotificationChange('all')" [class.active]="notificationMode === 'all'">
-                    <mat-icon>notifications_active</mat-icon>
-                    <span>Todas</span>
-                  </button>
-                  <button mat-menu-item (click)="handleNotificationChange('none')" [class.active]="notificationMode === 'none'">
-                    <mat-icon>notifications_off</mat-icon>
-                    <span>Ninguna</span>
-                  </button>
-                  <button mat-menu-item (click)="handleUnsubscribe()">
-                    <mat-icon>close</mat-icon>
-                    <span>Dejar de seguir</span>
-                  </button>
-                </mat-menu>
-              </div>
-            </div>
+<div id="wrapper" class="canal-page">
+  @if (canal) {
+  <div class="canal-container">
+    <app-portada [imagenPortada]="canal.url_imagen" [isLoggedIn]="!!user"></app-portada>
+    <div class="canal-sub-bar mt-4">
+      <div class="canal-profile-card !rounded-lg shadow-sm overflow-hidden">
+        <div class="canal-profile-content py-4 flex space-x-3 items-start">
+          <div class="canal-avatar-wrap flex-shrink-0 w-30">
+            <img class="canal-avatar h-30 w-30 !rounded-full" width="200" height="200"
+              [ngSrc]="canal.url_avatar+'_200x200'" alt="Avatar del canal {{ canal.nombre }}">
           </div>
-          <div class="canal-actions ml-auto">
-            @if (canal.donar && canal.seller) {
-              <button class="canal-donate-btn mr-2" (click)="user ? donate() : null" [title]=" user ? 'Premiar' : 'Debes estar autenticado para premiar'" [disabled]="!user" mat-stroked-button>
-                <mat-icon> attach_money </mat-icon>
-                Premiar
+          <div class="canal-profile-meta flex flex-col space-x-3">
+            <h3 class="canal-title">{{ canal.nombre }}</h3>
+            <p class="canal-stats text-sm text-gray-500">{{ canal.cantidad_suscripciones | shortNumbers }} seguidores •
+              {{total}} vídeos</p>
+            <div class="canal-description-wrap">
+              <div class="canal-description text-sm text-gray-500 markdown clamped" markdown [data]="canal.descripcion"
+                [disableSanitizer]="true"></div>
+              @if (canal.descripcion && canal.descripcion.length > 240) {
+              <div class="canal-description-overlay" (click)="openChannelDialog()" role="button" tabindex="0"
+                (keydown.enter)="openChannelDialog()">
+                <span class="ellipsis">…</span>
+                <span class="ver-mas-inline">Ver más</span>
+              </div>
+              }
+            </div>
+            @if (!subscribed) {
+            <div class="canal-actions-row flex gap-2">
+              <button (click)="authService.isLoggedIn() ? handleSubscribe() : null"
+                [title]="authService.isLoggedIn() ? 'Seguir' : 'Debes estar autenticado para seguir'"
+                [ngStyle]="{ width: '130px' }"
+                class="canal-subscribe-btn channel-follow-button !rounded-full flex items-center"
+                [class.is-subscribing]="subscribing || subscriptionLoading"
+                [disabled]="subscribing || subscriptionLoading || !authService.isLoggedIn()" mat-stroked-button>
+                <div class="follow-content">
+                  <span class="follow-slot left">
+                    @if (subscribing || subscriptionLoading) {
+                    <span class="subscribe-spinner">
+                      <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent"
+                        style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
+                    </span>
+                    }
+                  </span>
+                  <span class="channel-follow-label text-black" style="visibility: visible !important;">Seguir</span>
+                  <span class="follow-slot right" aria-hidden="true"></span>
+                </div>
               </button>
+              @if (canal.planes?.length > 0) {
+              <span
+                [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')"
+                matTooltipPosition="below">
+                <button (click)="handleBecomeMember()" [ngStyle]="{ width: '130px' }"
+                  class="canal-member-btn channel-follow-button !rounded-full flex items-center"
+                  [class.is-member]="isMember" [disabled]="!authService.isLoggedIn() || isMember" mat-stroked-button>
+                  <div class="follow-content">
+                    <span class="follow-slot left">
+                      <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium'
+                        }}</mat-icon>
+                    </span>
+                    <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ?
+                      'Miembro' : 'Unirme' }}</span>
+                    <span class="follow-slot right" aria-hidden="true"></span>
+                  </div>
+                </button>
+              </span>
+              }
+            </div>
+            } @else {
+            <div class="canal-actions-row flex gap-2">
+              <button [matMenuTriggerFor]="subscribeMenu" (click)="$event.stopPropagation()"
+                [title]="'Opciones de seguimiento'" [ngStyle]="{ width: '130px' }"
+                class="canal-subscribe-btn channel-follow-button !rounded-full subscribed flex items-center"
+                [class.is-subscribing]="subscribing || subscriptionLoading"
+                [disabled]="subscribing || subscriptionLoading || !authService.isLoggedIn()" mat-stroked-button>
+                <div class="follow-content">
+                  <span class="follow-slot left">
+                    @if (subscribing || subscriptionLoading) {
+                    <span class="subscribe-spinner">
+                      <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent"
+                        style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
+                    </span>
+                    } @else {
+                    <mat-icon class="channel-follow-icon">{{ notificationMode === 'all' ? 'notifications_active' :
+                      'notifications_off' }}</mat-icon>
+                    }
+                  </span>
+                  <span class="channel-follow-label text-black" style="visibility: visible !important;">Siguiendo</span>
+                </div>
+              </button>
+              @if (canal.planes?.length > 0) {
+              <span
+                [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')"
+                matTooltipPosition="below">
+                <button (click)="handleBecomeMember()" [ngStyle]="{ width: '130px' }"
+                  class="canal-member-btn channel-follow-button !rounded-full flex items-center"
+                  [class.is-member]="isMember" [disabled]="!authService.isLoggedIn() || isMember" mat-stroked-button>
+                  <div class="follow-content">
+                    <span class="follow-slot left">
+                      <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium'
+                        }}</mat-icon>
+                    </span>
+                    <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ?
+                      'Miembro' : 'Unirme' }}</span>
+                    <span class="follow-slot right" aria-hidden="true"></span>
+                  </div>
+                </button>
+              </span>
+              }
+            </div>
             }
+            <mat-menu #subscribeMenu="matMenu" class="subscribe-menu header-menu-panel">
+              <button mat-menu-item (click)="handleNotificationChange('all')"
+                [class.active]="notificationMode === 'all'">
+                <mat-icon>notifications_active</mat-icon>
+                <span>Todas</span>
+              </button>
+              <button mat-menu-item (click)="handleNotificationChange('none')"
+                [class.active]="notificationMode === 'none'">
+                <mat-icon>notifications_off</mat-icon>
+                <span>Ninguna</span>
+              </button>
+              <button mat-menu-item (click)="handleUnsubscribe()">
+                <mat-icon>close</mat-icon>
+                <span>Dejar de seguir</span>
+              </button>
+            </mat-menu>
           </div>
         </div>
-        <section class="canal-tabs-section px-md-5">
-          <mat-tab-group class="canal-tabs" mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="onTabChange($event)">
-            <mat-tab label="Inicio">
-              <ng-template matTabContent>
-                <div class="canal-filter-row flex justify-center items-center my-3">
-                  <mat-form-field class="search" appearance="fill">
-                    <mat-label>Filtrar</mat-label>
-                    <input #searchInput [formControl]="searchControl" matInput type="search" aria-label="Filtrar videos del canal" />
-                    <mat-icon matSuffix>search</mat-icon>
-                  </mat-form-field>
-                </div>
-                @if (canal && canal.videos) {
-                  <div class="canal-tab-pane canal-carousel">
-                    @if (canal.videos.length > 0) {
-                      <app-my-carousel
-                        (load)="loadData()"
-                        [controls]="false"
-                        [hasNext]="!!filters.page"
-                        [horizontal]="false"
-                      [videos]="canal.videos"></app-my-carousel>
-                    } @else {
-                      <div class="canal-empty-state w-100 flex justify-center items-center">
-                        @if (loadingVideos) {
-                          <mat-spinner aria-label="cargando" [diameter]="20" mode="indeterminate"></mat-spinner>
-                          <span class="ml-3">Cargando videos...</span>
-                        }
-                        @if (!loadingVideos) {
-                          <span class="mat-headline canal-empty-text">
-                            No se encontraron resultados para este criterio
-                          </span>
-                        }
-                      </div>
-                    }
-                  </div>
+      </div>
+      <div class="canal-actions ml-auto">
+        @if (canal.donar && canal.seller) {
+        <button class="canal-donate-btn mr-2" (click)="user ? donate() : null"
+          [title]=" user ? 'Premiar' : 'Debes estar autenticado para premiar'" [disabled]="!user" mat-stroked-button>
+          <mat-icon> attach_money </mat-icon>
+          Premiar
+        </button>
+        }
+      </div>
+    </div>
+    <section class="canal-tabs-section px-md-5">
+      <mat-tab-group class="canal-tabs" mat-stretch-tabs="false" mat-align-tabs="start"
+        (selectedTabChange)="onTabChange($event)">
+        <mat-tab label="Inicio">
+          <ng-template matTabContent>
+            <div class="canal-filter-row flex justify-center items-center my-3">
+              <mat-form-field class="search" appearance="fill">
+                <mat-label>Filtrar</mat-label>
+                <input #searchInput [formControl]="searchControl" matInput type="search"
+                  aria-label="Filtrar videos del canal" />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+            @if (canal && canal.videos) {
+            <div class="canal-tab-pane canal-carousel">
+              @if (canal.videos.length > 0) {
+              <app-my-carousel (load)="loadData()" [controls]="false" [hasNext]="!!filters.page" [horizontal]="false"
+                [videos]="canal.videos"></app-my-carousel>
+              } @else {
+              <div class="canal-empty-state w-100 flex justify-center items-center">
+                @if (loadingVideos) {
+                <mat-spinner aria-label="cargando" [diameter]="20" mode="indeterminate"></mat-spinner>
+                <span class="ml-3">Cargando videos...</span>
                 }
-              </ng-template>
-            </mat-tab>
-            @if (playlists?.length) {
-              <mat-tab label="Listas">
-                <ng-template matTabContent>
-                  <div class="py-3">
-                    <!-- <div class="container d-flex justify-content-center align-items-center my-3">
+                @if (!loadingVideos) {
+                <span class="mat-headline canal-empty-text">
+                  No se encontraron resultados para este criterio
+                </span>
+                }
+              </div>
+              }
+            </div>
+            }
+          </ng-template>
+        </mat-tab>
+        @if (playlists?.length) {
+        <mat-tab label="Listas">
+          <ng-template matTabContent>
+            <div class="py-3">
+              <!-- <div class="container d-flex justify-content-center align-items-center my-3">
                     <mat-form-field class="search" class="mx-auto" color="primary">
                       <mat-label style="color: white;">Filtrar</mat-label>
                       <input #searchInput [formControl]="searchControlSerie" matInput type="search">
                       <mat-icon matSuffix>search</mat-icon>
                     </mat-form-field>
                   </div>-->
-                  @if (playlists?.length > 0) {
-                    <app-my-carousel
-                      [controls]="false"
-                      [hasNext]="false"
-                      [horizontal]="false"
-                      [title]="''"
-                      [videos]="playlists"
-                    class="mt-3"></app-my-carousel>
-                  }
-                  @if (loadingPlaylists && playlists?.length) {
-                    <app-categoria-loading-state
-                      [label]="'Cargando más listas...'"
-                      [ariaLabel]="'Cargando más listas del canal'"
-                    ></app-categoria-loading-state>
-                  }
-                </div>
-              </ng-template>
-            </mat-tab>
-          }
-          @if (series.length) {
-            <mat-tab label="Series">
-              <ng-template matTabContent>
-                <!--<app-categoria-serie-item [showTitle]="true" [temporada]="serie"></app-categoria-serie-item>-->
-                <div class="canal-tab-pane py-3">
-                  <div class="canal-filter-row container flex justify-center items-center my-3">
-                    <mat-form-field class="search mx-auto" appearance="fill">
-                      <mat-label>Filtrar</mat-label>
-                      <input #searchInput [formControl]="searchControlSerie" matInput type="search" aria-label="Filtrar series del canal" />
-                      <mat-icon matSuffix>search</mat-icon>
-                    </mat-form-field>
-                    <button
-                      [matMenuTriggerFor]="menu"
-                      class="canal-sort-btn"
-                      mat-icon-button
-                      aria-label="Ordenar series"
-                      title="Ordenar">
-                      <mat-icon>sort</mat-icon>
-                      <span class="none md:inline-block ml-2">{{
-                        'Ordenar por' | uppercase
-                      }}</span>
-                    </button>
-                    <mat-menu #menu="matMenu">
-                      <button (click)="setOrder('-id')" mat-menu-item>
-                        @if (filtersSeries.ordering === '-id') {
-                          <mat-icon
-                            >done</mat-icon
-                            >
-                          }
-                          Más recientes
-                        </button>
-                        <button (click)="setOrder('nombre')" mat-menu-item>
-                          @if (filtersSeries.ordering === 'nombre') {
-                            <mat-icon
-                              >done</mat-icon
-                              >
-                            }
-                            Alfabéticamente
-                          </button>
-                        </mat-menu>
-                      </div>
-                      <app-serie-list [series]="series"></app-serie-list>
-                      @if (loadingSeries && series?.length) {
-                        <app-categoria-loading-state
-                          tone="serie"
-                          [label]="'Cargando más series...'"
-                          [ariaLabel]="'Cargando más series del canal'"
-                        ></app-categoria-loading-state>
-                      }
-                    </div>
-                  </ng-template>
-                </mat-tab>
+              @if (playlists?.length > 0) {
+              <app-my-carousel [controls]="false" [hasNext]="false" [horizontal]="false" [title]="''"
+                [videos]="playlists" class="mt-3"></app-my-carousel>
               }
-              @if (peliculasList.length) {
-                <mat-tab label="Películas">
-                  <ng-template matTabContent>
-                    <div class="canal-tab-pane py-3 mat-typography">
-                      <div class="canal-filter-row container flex justify-center items-center my-3">
-                        <mat-form-field class="search mx-auto" appearance="fill">
-                          <mat-label>Filtrar</mat-label>
-                          <input [formControl]="searchControlPelicula" matInput type="search" aria-label="Filtrar películas del canal" />
-                          <mat-icon matSuffix>search</mat-icon>
-                        </mat-form-field>
-                        <button
-                          [matMenuTriggerFor]="menu"
-                          class="canal-sort-btn"
-                          mat-button
-                          aria-label="Ordenar películas"
-                          title="Ordenar">
-                          <mat-icon>sort</mat-icon>
-                          <span class="none md:inline-block ml-2">{{
-                            'Ordenar por' | uppercase
-                          }}</span>
-                        </button>
-                        <mat-menu #menu="matMenu">
-                          <button
-                            (click)="setOrderMovie('-fecha_creacion')"
-                            mat-menu-item>
-                            @if (filtersMovie.ordering === '-fecha_creacion') {
-                              <mat-icon
-                                >done</mat-icon
-                                >
-                              }
-                              Más recientes
-                            </button>
-                            <button (click)="setOrderMovie('nombre')" mat-menu-item>
-                              @if (filtersMovie.ordering === 'nombre') {
-                                <mat-icon
-                                  >done</mat-icon
-                                  >
-                                }
-                                Alfabéticamente
-                              </button>
-                              <button
-                                (click)="setOrderMovie('-cantidad_reproducciones')"
-                                mat-menu-item>
-                                @if (
-                                  filtersMovie.ordering === '-cantidad_reproducciones'
-                                  ) {
-                                  <mat-icon
-                                    >done</mat-icon
-                                    >
-                                  }
-                                  Más vistos
-                                </button>
-                                <button
-                                  (click)="setOrderMovie('-cantidad_me_gusta')"
-                                  mat-menu-item>
-                                  @if (filtersMovie.ordering === '-cantidad_me_gusta') {
-                                    <mat-icon
-                                      >done</mat-icon
-                                      >
-                                    }
-                                    Mejores valorados
-                                  </button>
-                                  <button
-                                    (click)="setOrderMovie('-cantidad_comentarios')"
-                                    mat-menu-item>
-                                    @if (filtersMovie.ordering === '-cantidad_comentarios') {
-                                      <mat-icon
-                                        >done</mat-icon
-                                        >
-                                      }
-                                      Más comentados
-                                    </button>
-                                    <button
-                                      (click)="setOrderMovie('-cantidad_descargas')"
-                                      mat-menu-item>
-                                      @if (filtersMovie.ordering === '-cantidad_descargas') {
-                                        <mat-icon
-                                          >done</mat-icon
-                                          >
-                                        }
-                                        Más descargados
-                                      </button>
-                                    </mat-menu>
-                                  </div>
-                                  <app-movie-list [movies]="peliculasList"></app-movie-list>
-                                  @if (loadingMovies && peliculasList?.length) {
-                                    <app-categoria-loading-state
-                                      tone="movie"
-                                      [label]="'Cargando más películas...'"
-                                      [ariaLabel]="'Cargando más películas del canal'"
-                                    ></app-categoria-loading-state>
-                                  }
-                                </div>
-                              </ng-template>
-                            </mat-tab>
-                          }
-                          <!-- Channel full info dialog template -->
-                          <ng-template #channelDialog>
-                            <div class="channel-dialog">
-                              <div class="channel-dialog__header">
-                                    <img class="channel-dialog__avatar" [ngSrc]="canal.url_avatar + '_200x200'" width="80" height="80" alt="Avatar de {{canal.nombre}}" />
-                                    <div class="channel-dialog__meta">
-                                      <h2 class="channel-dialog__title">{{ canal.nombre }}</h2>
-                                      <div class="channel-dialog__stats">{{ canal.cantidad_suscripciones | shortNumbers }} seguidores • {{ total }} vídeos</div>
-                                      <div class="channel-dialog__published">Publicado: {{ canal.fecha_creacion | date:'longDate' }}</div>
-                                    </div>
-                                    <button mat-icon-button class="channel-dialog__close" (click)="closeChannelDialog()" aria-label="Cerrar">
-                                      <mat-icon>close</mat-icon>
-                                    </button>
-                              </div>
-                              <div class="channel-dialog__body">
-                                <div class="channel-dialog__description markdown" markdown [data]="canal.descripcion" [disableSanitizer]="true"></div>
-                              </div>
-                              <div class="channel-dialog__actions flex gap-2">
-                                  <button mat-stroked-button color="primary" class="channel-follow-btn channel-follow-button flex items-center" [class.subscribed]="subscribed" [class.is-subscribing]="subscribing || subscriptionLoading" (click)="authService.isLoggedIn() ? handleSubscribe() : null" [disabled]="subscribing || subscriptionLoading">
-                                  <div class="follow-content">
-                                    @if (subscribing || subscriptionLoading) {
-                                      <span class="subscribe-spinner">
-                                        <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent" style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
-                                      </span>
-                                    } @else {
-                                      @if (subscribed) {
-                                        <mat-icon class="channel-follow-icon">notifications_active</mat-icon>
-                                      }
-                                    }
-                                    <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ subscribed ? 'Siguiendo' : 'Seguir' }}</span>
-                                  </div>
-                                </button>
-                                  @if (canal.planes?.length > 0) {
-                                  <span [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')" matTooltipPosition="below">
-                                <button (click)="handleBecomeMember()"
-                                  class="canal-member-btn channel-follow-button flex items-center !rounded-full"
-                                  [class.is-member]="isMember"
-                                  [disabled]="!authService.isLoggedIn() || isMember"
-                                  mat-stroked-button>
-                                  <div class="follow-content">
-                                    <span class="follow-slot left">
-                                      <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium' }}</mat-icon>
-                                    </span>
-                                    <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ? 'Miembro' : 'Unirme' }}</span>
-                                    <span class="follow-slot right" aria-hidden="true"></span>
-                                  </div>
-                                </button>
-                                  </span>
-                                  }
-                              </div>
-                            </div>
-                          </ng-template>
-                          @if (documentalList.length) {
-                            <mat-tab label="Documentales">
-                              <ng-template matTabContent>
-                                @if (documentalList.length > 0) {
-                                  <app-my-carousel
-                                    [controls]="false"
-                                    [hasNext]="false"
-                                    [horizontal]="false"
-                                    [title]="'Documentales'"
-                                    [videos]="documentalList"
-                                  class="mt-3"></app-my-carousel>
-                                }
-                              </ng-template>
-                            </mat-tab>
-                          }
-                          @if (reportajeList.length) {
-                            <mat-tab label="Reportajes">
-                              <ng-template matTabContent>
-                                @if (reportajeList.length > 0) {
-                                  <app-my-carousel
-                                    [controls]="false"
-                                    [hasNext]="false"
-                                    [horizontal]="false"
-                                    [title]="'Reportajes'"
-                                    [videos]="reportajeList"
-                                  class="mt-3"></app-my-carousel>
-                                }
-                              </ng-template>
-                            </mat-tab>
-                          }
-                          @if (videoMusicalList.length) {
-                            <mat-tab label="Musicales">
-                              <ng-template matTabContent>
-                                @if (videoMusicalList.length > 0) {
-                                  <app-my-carousel
-                                    [controls]="false"
-                                    [hasNext]="false"
-                                    [horizontal]="false"
-                                    [title]="'Videos Musicales'"
-                                    [videos]="videoMusicalList"
-                                  class="mt-3"></app-my-carousel>
-                                }
-                              </ng-template>
-                            </mat-tab>
-                          }
-                          @if (audioList.length) {
-                            <mat-tab label="Audios">
-                              <ng-template matTabContent>
-                                @if (audioList.length > 0) {
-                                  <app-my-carousel
-                                    [controls]="false"
-                                    [hasNext]="false"
-                                    [horizontal]="false"
-                                    [title]="'Audio'"
-                                    [videos]="audioList"
-                                  class="mt-3"></app-my-carousel>
-                                }
-                              </ng-template>
-                            </mat-tab>
-                          }
-                          @if (cursoList.length) {
-                            <mat-tab label="Cursos">
-                              <ng-template matTabContent>
-                                @if (cursoList.length > 0) {
-                                  <app-my-carousel
-                                    [controls]="false"
-                                    [hasNext]="false"
-                                    [horizontal]="false"
-                                    [title]="'Cursos'"
-                                    [videos]="cursoList"
-                                  class="mt-3"></app-my-carousel>
-                                }
-                              </ng-template>
-                            </mat-tab>
-                          }
-                          @if (cancionlList.length) {
-                            <mat-tab label="Canciones">
-                              <ng-template matTabContent>
-                                @if (cancionlList.length > 0) {
-                                  <app-my-carousel
-                                    [controls]="false"
-                                    [hasNext]="false"
-                                    [horizontal]="false"
-                                    [title]="'Canciones'"
-                                    [videos]="cancionlList"
-                                  class="mt-3"></app-my-carousel>
-                                }
-                              </ng-template>
-                            </mat-tab>
-                          }
-                          @if (videoCliplList.length) {
-                            <mat-tab label="Videoclips">
-                              <ng-template matTabContent>
-                                @if (videoCliplList.length > 0) {
-                                  <app-my-carousel
-                                    [controls]="false"
-                                    [hasNext]="false"
-                                    [horizontal]="false"
-                                    [title]="'Videoclips'"
-                                    [videos]="videoCliplList"
-                                  class="mt-3"></app-my-carousel>
-                                }
-                              </ng-template>
-                            </mat-tab>
-                          }
-                        </mat-tab-group>
-                      </section>
-                    </div>
-                  }
-                </div>
+              @if (loadingPlaylists && playlists?.length) {
+              <app-categoria-loading-state [label]="'Cargando más listas...'"
+                [ariaLabel]="'Cargando más listas del canal'"></app-categoria-loading-state>
               }
+            </div>
+          </ng-template>
+        </mat-tab>
+        }
+        @if (series.length) {
+        <mat-tab label="Series">
+          <ng-template matTabContent>
+            <!--<app-categoria-serie-item [showTitle]="true" [temporada]="serie"></app-categoria-serie-item>-->
+            <div class="canal-tab-pane py-3">
+              <div class="canal-filter-row container flex justify-center items-center my-3">
+                <mat-form-field class="search mx-auto" appearance="fill">
+                  <mat-label>Filtrar</mat-label>
+                  <input #searchInput [formControl]="searchControlSerie" matInput type="search"
+                    aria-label="Filtrar series del canal" />
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                <button [matMenuTriggerFor]="menu" class="canal-sort-btn" mat-icon-button aria-label="Ordenar series"
+                  title="Ordenar">
+                  <mat-icon>sort</mat-icon>
+                  <span class="none md:inline-block ml-2">{{
+                    'Ordenar por' | uppercase
+                    }}</span>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button (click)="setOrder('-id')" mat-menu-item>
+                    @if (filtersSeries.ordering === '-id') {
+                    <mat-icon>done</mat-icon>
+                    }
+                    Más recientes
+                  </button>
+                  <button (click)="setOrder('nombre')" mat-menu-item>
+                    @if (filtersSeries.ordering === 'nombre') {
+                    <mat-icon>done</mat-icon>
+                    }
+                    Alfabéticamente
+                  </button>
+                </mat-menu>
+              </div>
+              <app-serie-list [series]="series"></app-serie-list>
+              @if (loadingSeries && series?.length) {
+              <app-categoria-loading-state tone="serie" [label]="'Cargando más series...'"
+                [ariaLabel]="'Cargando más series del canal'"></app-categoria-loading-state>
+              }
+            </div>
+          </ng-template>
+        </mat-tab>
+        }
+        @if (peliculasList.length) {
+        <mat-tab label="Películas">
+          <ng-template matTabContent>
+            <div class="canal-tab-pane py-3 mat-typography">
+              <div class="canal-filter-row container flex justify-center items-center my-3">
+                <mat-form-field class="search mx-auto" appearance="fill">
+                  <mat-label>Filtrar</mat-label>
+                  <input [formControl]="searchControlPelicula" matInput type="search"
+                    aria-label="Filtrar películas del canal" />
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+                <button [matMenuTriggerFor]="menu" class="canal-sort-btn" mat-button aria-label="Ordenar películas"
+                  title="Ordenar">
+                  <mat-icon>sort</mat-icon>
+                  <span class="none md:inline-block ml-2">{{
+                    'Ordenar por' | uppercase
+                    }}</span>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button (click)="setOrderMovie('-fecha_creacion')" mat-menu-item>
+                    @if (filtersMovie.ordering === '-fecha_creacion') {
+                    <mat-icon>done</mat-icon>
+                    }
+                    Más recientes
+                  </button>
+                  <button (click)="setOrderMovie('nombre')" mat-menu-item>
+                    @if (filtersMovie.ordering === 'nombre') {
+                    <mat-icon>done</mat-icon>
+                    }
+                    Alfabéticamente
+                  </button>
+                  <button (click)="setOrderMovie('-cantidad_reproducciones')" mat-menu-item>
+                    @if (
+                    filtersMovie.ordering === '-cantidad_reproducciones'
+                    ) {
+                    <mat-icon>done</mat-icon>
+                    }
+                    Más vistos
+                  </button>
+                  <button (click)="setOrderMovie('-cantidad_me_gusta')" mat-menu-item>
+                    @if (filtersMovie.ordering === '-cantidad_me_gusta') {
+                    <mat-icon>done</mat-icon>
+                    }
+                    Mejores valorados
+                  </button>
+                  <button (click)="setOrderMovie('-cantidad_comentarios')" mat-menu-item>
+                    @if (filtersMovie.ordering === '-cantidad_comentarios') {
+                    <mat-icon>done</mat-icon>
+                    }
+                    Más comentados
+                  </button>
+                  <button (click)="setOrderMovie('-cantidad_descargas')" mat-menu-item>
+                    @if (filtersMovie.ordering === '-cantidad_descargas') {
+                    <mat-icon>done</mat-icon>
+                    }
+                    Más descargados
+                  </button>
+                </mat-menu>
+              </div>
+              <app-movie-list [movies]="peliculasList"></app-movie-list>
+              @if (loadingMovies && peliculasList?.length) {
+              <app-categoria-loading-state tone="movie" [label]="'Cargando más películas...'"
+                [ariaLabel]="'Cargando más películas del canal'"></app-categoria-loading-state>
+              }
+            </div>
+          </ng-template>
+        </mat-tab>
+        }
+        <!-- Channel full info dialog template -->
+        <ng-template #channelDialog>
+          <div class="channel-dialog">
+            <div class="channel-dialog__header">
+              <img class="channel-dialog__avatar" [ngSrc]="canal.url_avatar + '_200x200'" width="80" height="80"
+                alt="Avatar de {{canal.nombre}}" />
+              <div class="channel-dialog__meta">
+                <h2 class="channel-dialog__title">{{ canal.nombre }}</h2>
+                <div class="channel-dialog__stats">{{ canal.cantidad_suscripciones | shortNumbers }} seguidores • {{
+                  total }} vídeos</div>
+                <div class="channel-dialog__published">Publicado: {{ canal.fecha_creacion | date:'longDate' }}</div>
+              </div>
+              <button mat-icon-button class="channel-dialog__close" (click)="closeChannelDialog()" aria-label="Cerrar">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <div class="channel-dialog__body">
+              <div class="channel-dialog__description markdown" markdown [data]="canal.descripcion"
+                [disableSanitizer]="true"></div>
+            </div>
+            <div class="channel-dialog__actions flex gap-2">
+              <button mat-stroked-button color="primary"
+                class="channel-follow-btn channel-follow-button flex items-center" [class.subscribed]="subscribed"
+                [class.is-subscribing]="subscribing || subscriptionLoading"
+                (click)="authService.isLoggedIn() ? handleSubscribe() : null"
+                [disabled]="subscribing || subscriptionLoading">
+                <div class="follow-content">
+                  @if (subscribing || subscriptionLoading) {
+                  <span class="subscribe-spinner">
+                    <mat-progress-spinner [diameter]="18" mode="indeterminate" color="accent"
+                      style="display:flex; vertical-align:middle; width:18px; height:18px;"></mat-progress-spinner>
+                  </span>
+                  } @else {
+                  @if (subscribed) {
+                  <mat-icon class="channel-follow-icon">notifications_active</mat-icon>
+                  }
+                  }
+                  <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ subscribed ?
+                    'Siguiendo' : 'Seguir' }}</span>
+                </div>
+              </button>
+              @if (canal.planes?.length > 0) {
+              <span
+                [matTooltip]="isMember ? 'Ya eres miembro de este canal' : (authService.isLoggedIn() ? 'Convertirse en miembro' : 'Debes estar autenticado para ser miembro')"
+                matTooltipPosition="below">
+                <button (click)="handleBecomeMember()" [ngStyle]="{ width: '130px' }"
+                  class="canal-member-btn channel-follow-button flex items-center !rounded-full"
+                  [class.is-member]="isMember" [disabled]="!authService.isLoggedIn() || isMember" mat-stroked-button>
+                  <div class="follow-content">
+                    <span class="follow-slot left">
+                      <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium'
+                        }}</mat-icon>
+                    </span>
+                    <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ?
+                      'Miembro' : 'Unirme' }}</span>
+                    <span class="follow-slot right" aria-hidden="true"></span>
+                  </div>
+                </button>
+              </span>
+              }
+            </div>
+          </div>
+        </ng-template>
+        @if (documentalList.length) {
+        <mat-tab label="Documentales">
+          <ng-template matTabContent>
+            @if (documentalList.length > 0) {
+            <app-my-carousel [controls]="false" [hasNext]="false" [horizontal]="false" [title]="'Documentales'"
+              [videos]="documentalList" class="mt-3"></app-my-carousel>
+            }
+          </ng-template>
+        </mat-tab>
+        }
+        @if (reportajeList.length) {
+        <mat-tab label="Reportajes">
+          <ng-template matTabContent>
+            @if (reportajeList.length > 0) {
+            <app-my-carousel [controls]="false" [hasNext]="false" [horizontal]="false" [title]="'Reportajes'"
+              [videos]="reportajeList" class="mt-3"></app-my-carousel>
+            }
+          </ng-template>
+        </mat-tab>
+        }
+        @if (videoMusicalList.length) {
+        <mat-tab label="Musicales">
+          <ng-template matTabContent>
+            @if (videoMusicalList.length > 0) {
+            <app-my-carousel [controls]="false" [hasNext]="false" [horizontal]="false" [title]="'Videos Musicales'"
+              [videos]="videoMusicalList" class="mt-3"></app-my-carousel>
+            }
+          </ng-template>
+        </mat-tab>
+        }
+        @if (audioList.length) {
+        <mat-tab label="Audios">
+          <ng-template matTabContent>
+            @if (audioList.length > 0) {
+            <app-my-carousel [controls]="false" [hasNext]="false" [horizontal]="false" [title]="'Audio'"
+              [videos]="audioList" class="mt-3"></app-my-carousel>
+            }
+          </ng-template>
+        </mat-tab>
+        }
+        @if (cursoList.length) {
+        <mat-tab label="Cursos">
+          <ng-template matTabContent>
+            @if (cursoList.length > 0) {
+            <app-my-carousel [controls]="false" [hasNext]="false" [horizontal]="false" [title]="'Cursos'"
+              [videos]="cursoList" class="mt-3"></app-my-carousel>
+            }
+          </ng-template>
+        </mat-tab>
+        }
+        @if (cancionlList.length) {
+        <mat-tab label="Canciones">
+          <ng-template matTabContent>
+            @if (cancionlList.length > 0) {
+            <app-my-carousel [controls]="false" [hasNext]="false" [horizontal]="false" [title]="'Canciones'"
+              [videos]="cancionlList" class="mt-3"></app-my-carousel>
+            }
+          </ng-template>
+        </mat-tab>
+        }
+        @if (videoCliplList.length) {
+        <mat-tab label="Videoclips">
+          <ng-template matTabContent>
+            @if (videoCliplList.length > 0) {
+            <app-my-carousel [controls]="false" [hasNext]="false" [horizontal]="false" [title]="'Videoclips'"
+              [videos]="videoCliplList" class="mt-3"></app-my-carousel>
+            }
+          </ng-template>
+        </mat-tab>
+        }
+      </mat-tab-group>
+    </section>
+  </div>
+  }
+</div>
+}

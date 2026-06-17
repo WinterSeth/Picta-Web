@@ -326,7 +326,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: auto;
   gap: 0.5rem;
   white-space: nowrap;
   overflow: hidden;
@@ -507,22 +506,13 @@
    and never overflow the fixed button width. */
 .channel-follow-button,
 .canal-subscribe-btn,
+.canal-member-btn,
 .channel-follow-btn {
   overflow: hidden; /* keep content inside the button */
   white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.channel-follow-button .channel-follow-label,
-.canal-subscribe-btn .channel-follow-label,
-.channel-follow-btn .channel-follow-label {
-  display: inline-flex;
-  align-items: center;
-  vertical-align: middle;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 
 .channel-follow-button .subscribe-spinner,
@@ -540,28 +530,26 @@
   opacity: 0.58;
 }
 
+/* canal-member-btn: same as canal-subscribe-btn but white bg, black text, no hover */
 .canal-member-btn {
-  border-color: rgba(232, 70, 46, 0.55) !important;
-  color: #1a1a2e !important;
-  font-weight: 600;
-  min-height: 38px;
-  transition: transform 170ms ease, background-color 170ms ease;
   background: #ffffff !important;
+  color: #1a1a2e !important;
+}
+
+.canal-member-btn mat-icon {
+  color: #1a1a2e !important;
 }
 
 .canal-member-btn:hover {
-  box-shadow: 0 4px 16px rgba(232, 70, 46, 0.3);
-  transform: translateY(-1px);
+  background: #ffffff !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .canal-member-btn[disabled] {
   opacity: 0.7;
   cursor: not-allowed;
   background: #f0f0f0 !important;
-}
-
-.canal-member-btn mat-icon {
-  color: #1a1a2e !important;
 }
 
 .canal-member-btn.is-member {

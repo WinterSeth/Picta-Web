@@ -56,31 +56,31 @@ import { NotificationService } from '../../../../../../services/notification.ser
         </div>
       } @else {
         <div class="plans-list">
-          @for (item of canal.planes; track item.plan.id; let i = $index) {
+          @for (item of canal.planes; track item.id; let i = $index) {
             <div
               class="plan-card"
               [class.plan-featured]="i === 0"
-              (click)="selectPlan(item.plan)">
+              (click)="selectPlan(item)">
 
               <div class="plan-left">
-                <span class="plan-duration">{{ item.plan.duracion }} días</span>
-                <span class="plan-type">{{ item.plan.internacional ? 'Internacional' : 'Nacional' }}</span>
+                <span class="plan-duration">{{ item.duracion }} días</span>
+                <span class="plan-type">{{ item.internacional ? 'Internacional' : 'Nacional' }}</span>
               </div>
 
               <div class="plan-center">
-                <h4 class="plan-name">{{ item.plan.nombre }}</h4>
-                <p class="plan-desc">{{ item.plan.descripcion }}</p>
+                <h4 class="plan-name">{{ item.nombre }}</h4>
+                <p class="plan-desc">{{ item.descripcion }}</p>
               </div>
 
               <div class="plan-right">
                 <div class="plan-price">
-                  <span class="currency">{{ item.plan.moneda }}</span>
-                  <span class="amount">{{ item.plan.precio }}</span>
+                  <span class="currency">{{ item.moneda }}</span>
+                  <span class="amount">{{ item.precio }}</span>
                 </div>
                 <button
                   mat-flat-button
                   class="select-btn"
-                  (click)="selectPlan(item.plan); $event.stopPropagation()">
+                  (click)="selectPlan(item); $event.stopPropagation()">
                   Seleccionar
                 </button>
               </div>
