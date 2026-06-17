@@ -387,7 +387,8 @@
   transform: translateY(-1px);
 }
 
-/* Disable hover visual changes for follow buttons in canal: keep background and transform static */
+/* Disable hover visual changes for follow buttons in canal: keep background and transform static.
+   Exclude .canal-member-btn so its premium hover effects survive. */
 .canal-subscribe-btn:hover,
 .channel-follow-button:hover,
 .channel-follow-btn:hover,
@@ -398,6 +399,21 @@
   background-color: inherit !important;
   transform: none !important;
   box-shadow: none !important;
+}
+
+/* Re-enable hover for member button (overrides the blanket rule above) */
+.canal-member-btn:hover {
+  background: #fffdf5 !important;
+  border-color: rgba(243, 230, 40, 0.7) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 16px rgba(243, 230, 40, 0.18),
+              0 0 0 1px rgba(243, 230, 40, 0.12) !important;
+}
+
+.canal-member-btn.is-member:hover {
+  background: #f5ec4a !important;
+  box-shadow: 0 4px 20px rgba(243, 230, 40, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Stronger override to defeat global/publicacion hover rules */
@@ -530,49 +546,115 @@
   opacity: 0.58;
 }
 
-/* canal-member-btn: same as canal-subscribe-btn but white bg, black text, no hover */
+/* ─── canal-member-btn — premium membership button ─── */
 .canal-member-btn {
+  /* base: crisp white with subtle premium border */
   background: #ffffff !important;
   color: #1a1a2e !important;
+  border: 1.5px solid rgba(243, 230, 40, 0.45) !important;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  /* subtle gold shimmer on the top edge */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(243, 230, 40, 0.06) 0%,
+      rgba(243, 230, 40, 0.0) 40%,
+      rgba(243, 230, 40, 0.08) 100%
+    );
+    pointer-events: none;
+  }
 }
 
 .canal-member-btn mat-icon {
-  color: #1a1a2e !important;
-}
-
-.canal-member-btn:hover {
-  background: #ffffff !important;
-  transform: none !important;
-  box-shadow: none !important;
+  color: #b8860b !important; /* dark gold for the icon — premium accent */
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 2px;
 }
 
 .canal-member-btn[disabled] {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: not-allowed;
-  background: #f0f0f0 !important;
+  background: #f5f5f5 !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  transform: none !important;
+  box-shadow: none !important;
+
+  &::before {
+    display: none;
+  }
+
+  mat-icon {
+    color: #aaa !important;
+  }
 }
 
+/* ─── is-member: active membership — golden glow ─── */
 .canal-member-btn.is-member {
-  background: linear-gradient(135deg, rgba(243, 230, 40, 0.08) 0%, rgba(212, 199, 36, 0.12) 100%) !important;
-  border: 1px solid rgba(243, 230, 40, 0.35) !important;
-  color: #f3e628 !important;
-  box-shadow: 0 0 16px rgba(243, 230, 40, 0.08), inset 0 1px 0 rgba(243, 230, 40, 0.1);
+  background: var(--picta-yellow, #f3e628) !important;
+  color: #1a1a2e !important;
+  border-color: rgba(243, 230, 40, 0.6) !important;
+  box-shadow: 0 2px 12px rgba(243, 230, 40, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4);
+
+  &::before {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.0) 50%,
+      rgba(255, 255, 255, 0.15) 100%
+    );
+  }
 }
 
-.canal-member-btn.is-member:hover {
-  background: linear-gradient(135deg, rgba(243, 230, 40, 0.14) 0%, rgba(212, 199, 36, 0.18) 100%) !important;
-  box-shadow: 0 0 24px rgba(243, 230, 40, 0.15), inset 0 1px 0 rgba(243, 230, 40, 0.15);
+/* Kill the invisible right slot so it doesn't push content off-center */
+.canal-member-btn.is-member .follow-slot.right {
+  width: 0;
+  min-width: 0;
+  height: 0;
+  visibility: hidden;
+  overflow: hidden;
 }
 
 .canal-member-btn.is-member mat-icon {
-  color: #f3e628 !important;
+  color: #1a1a2e !important;
 }
 
-.canal-member-btn.is-member span {
-  color: #f3e628 !important;
+.canal-member-btn.is-member .channel-follow-label {
+  color: #1a1a2e !important;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-shadow: 0 0 12px rgba(243, 230, 40, 0.2);
+  text-shadow: none;
+}
+
+/* Fix icon sizing & centering inside the member button */
+.canal-member-btn .follow-slot {
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+}
+
+.canal-member-btn .channel-follow-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center the whole content block inside the fixed-width button */
+.canal-member-btn .follow-content {
+  justify-content: center;
+  width: 100%;
 }
 
 .canal-actions-row {

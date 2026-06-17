@@ -100,9 +100,13 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       // Check if backend requires device ID re-registration
       // Also check error.error.detail (Django rest framework default error field)
-      const errorCode = error.error?.code || error.error?.error || error.error?.detail || '';
-      const isDeviceRequired = DEVICE_REQUIRED_CODES.some(code => 
-        errorCode.toUpperCase().includes(code) || 
+      console.log(error);
+      const errorBody = error.error;
+      const errorCode = errorBody?.code || (Array.isArray(errorBody?.error) ? errorBody.error[0] : errorBody?.error) || errorBody?.detail || '';
+      const errorText = typeof errorBody === 'string' ? errorBody : JSON.stringify(errorBody || '');
+      const isDeviceRequired = DEVICE_REQUIRED_CODES.some(code =>
+        errorText.toUpperCase().includes(code) ||
+        String(errorCode).toUpperCase().includes(code) ||
         error.message?.toUpperCase().includes(code)
       );
 

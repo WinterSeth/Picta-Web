@@ -19,6 +19,7 @@ import { QRCodeComponent } from 'angularx-qrcode';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
 import { MatomoTracker } from 'ngx-matomo-client';
+import { NotificationService } from '../../../../../../services/notification.service';
 
 @Component({
     selector: 'app-pay-item',
@@ -58,6 +59,7 @@ export class PayItemComponent implements OnDestroy {
   private canalService = inject(CanalService);
   private router = inject(Router);
   private matomo = inject(MatomoTracker);
+  private notification=inject(NotificationService)
 
   selectedPaymentMethod: string;
   currentStep = 0;
@@ -82,6 +84,17 @@ export class PayItemComponent implements OnDestroy {
   tmLink: SafeUrl = '';
   stopSubscription = new Subject();
   public myAngularxQrCode: string = null;
+
+  get isInternational(): boolean {
+    return this.data?.video?.internacional === true;
+  }
+
+  filterMethods(methods: string[]): string[] {
+    if (this.isInternational) {
+      return methods.filter(m => m === 'lp');
+    }
+    return methods.filter(m => m !== 'lp');
+  }
 
   paymentM$: any = this.paymentService.checkPayementMethods().pipe(
     map((res) => {
@@ -276,7 +289,7 @@ export class PayItemComponent implements OnDestroy {
 
     const payment = {
       gateway: 'lp',
-      return_url: this.router.url,
+      return_url: `https://www.picta.cu${this.router.url}`,
       type: 'payment',
       buyer: this.authService.userData.username.slice(0, 20),
       buyer_phone: this.authService.userData.phone_number,
@@ -293,17 +306,20 @@ export class PayItemComponent implements OnDestroy {
       this.paymentService.payTr(payment)
       .pipe(
         catchError((err: HttpErrorResponse) => {
-          this.snackBar.open(
-            'Ha ocurrido un error generando el pago. Intente más tarde.'
-          );
-          throw err;
+          console.error('Error generando el pago con Laberinto:', err);
+          const msg = (Array.isArray(err.error?.error) ? err.error.error[0] : err.error?.error) || err.error?.message || err.error?.detail || err.message || 'Ha ocurrido un error generando el pago. Intente más tarde.';
+          const snackBarRef = this.snackBar.open(msg, 'Ir a configurar', { duration: 8000 });
+          snackBarRef.onAction().subscribe(() => {
+            window.open('https://www.picta.cu/profile/configuracion', '_blank');
+          });
+          return throwError(() => err);
         }),
         finalize(() => {
           this.isMethodLoading = false;
         })
       )
       .subscribe((payItem: any) => {
-        const urlDinamica = payItem.payment_url_lite;
+        const urlDinamica = payItem.payment_url;
         this.urlSegura = this.sanitizer.bypassSecurityTrustResourceUrl(urlDinamica);
         this.stepperCmp().next();
       });
@@ -337,10 +353,10 @@ export class PayItemComponent implements OnDestroy {
     this.paymentService.payTr(payment)
       .pipe(
         catchError((err: HttpErrorResponse) => {
-          this.snackBar.open(
-            'Ha ocurrido un error generando el pago. Intente más tarde.'
-          );
-          throw err;
+          console.error('Error en pago EnZona:', err);
+          const msg = err.error?.message || err.error?.detail || 'Ha ocurrido un error generando el pago. Intente más tarde.';
+          this.snackBar.open(msg);
+          return throwError(() => err);
         }),
         finalize(() => {
           this.isMethodLoading = false;

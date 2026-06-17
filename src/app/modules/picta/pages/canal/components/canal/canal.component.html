@@ -63,13 +63,16 @@
                   class="canal-member-btn channel-follow-button !rounded-full flex items-center"
                   [class.is-member]="isMember" [disabled]="!authService.isLoggedIn() || isMember" mat-stroked-button>
                   <div class="follow-content">
+                    @if (isMember) {
                     <span class="follow-slot left">
-                      <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium'
-                        }}</mat-icon>
+                      <mat-icon class="channel-follow-icon">check_circle</mat-icon>
                     </span>
+                    }
                     <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ?
                       'Miembro' : 'Unirme' }}</span>
+                    @if (isMember) {
                     <span class="follow-slot right" aria-hidden="true"></span>
+                    }
                   </div>
                 </button>
               </span>
@@ -105,13 +108,16 @@
                   class="canal-member-btn channel-follow-button !rounded-full flex items-center"
                   [class.is-member]="isMember" [disabled]="!authService.isLoggedIn() || isMember" mat-stroked-button>
                   <div class="follow-content">
+                    @if (isMember) {
                     <span class="follow-slot left">
-                      <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium'
-                        }}</mat-icon>
+                      <mat-icon class="channel-follow-icon">check_circle</mat-icon>
                     </span>
+                    }
                     <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ?
                       'Miembro' : 'Unirme' }}</span>
+                    @if (isMember) {
                     <span class="follow-slot right" aria-hidden="true"></span>
+                    }
                   </div>
                 </button>
               </span>
@@ -365,13 +371,16 @@
                   class="canal-member-btn channel-follow-button flex items-center !rounded-full"
                   [class.is-member]="isMember" [disabled]="!authService.isLoggedIn() || isMember" mat-stroked-button>
                   <div class="follow-content">
+                    @if (isMember) {
                     <span class="follow-slot left">
-                      <mat-icon class="channel-follow-icon">{{ isMember ? 'check_circle' : 'workspace_premium'
-                        }}</mat-icon>
+                      <mat-icon class="channel-follow-icon">check_circle</mat-icon>
                     </span>
+                    }
                     <span class="channel-follow-label text-black" style="visibility: visible !important;">{{ isMember ?
                       'Miembro' : 'Unirme' }}</span>
+                    @if (isMember) {
                     <span class="follow-slot right" aria-hidden="true"></span>
+                    }
                   </div>
                 </button>
               </span>

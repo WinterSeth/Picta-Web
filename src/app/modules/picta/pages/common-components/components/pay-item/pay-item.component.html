@@ -20,7 +20,7 @@
                </div>
              }
             <div class="payment-methods-row">
-              @for (item of $any(paymentMethod).methods; track $index) {
+              @for (item of filterMethods($any(paymentMethod).methods); track $index) {
                 @switch (item) {
                   @case ('tr') {
                     <mat-list-option (click)="!isMethodLoading && handleTransfermovil()" value="tr" [disabled]="isMethodLoading" class="payment-option-inline">
@@ -30,10 +30,10 @@
                     </mat-list-option>
                   }
                   @case ('lp') {
-                    <mat-list-option [disabled]="true" value="lp" class="payment-option-inline">
-                      <img matListItemAvatar class="payment-method-img" alt="Laberinto logo" ngSrc="icons/logo-lab-rt-103x108.png" width="48" height="48"/>
-                      <span matListItemTitle>Laberinto</span>
-                      <span matListItemLine class="method-badge">No disponible</span>
+                    <mat-list-option (click)="handleLaberinto()" value="lp" class="payment-option-inline">
+                      <img matListItemAvatar class="payment-method-img" alt="Laberinto logo" ngSrc="icons/international.png" width="48" height="48"/>
+                      <span matListItemTitle>Pago Internacional</span>
+                      <!-- <span matListItemLine class="method-badge">No disponible</span> -->
                     </mat-list-option>
                   }
                   @case ('ez') {
@@ -77,11 +77,11 @@
             <ng-container
               [ngTemplateOutlet]="gatewayRedirectStep"
               [ngTemplateOutletContext]="{
-                logo: 'icons/logo-lab-rt-103x108.png',
+                logo: 'icons/international.png',
                 alt: 'Laberinto logo',
-                title: 'Pago con Laberinto',
+                title: 'Pago Internacional',
                 description: 'Serás redirigido a Laberinto para completar el pago.',
-                ariaLabel: 'Pago con Laberinto',
+                ariaLabel: 'Pago Internacional',
                 buttonLabel: 'Continuar con Laberinto'
               }">
             </ng-container>
