@@ -3802,6 +3802,10 @@ private getAdvertisementConfig(): { show: boolean; seconds: number } {
    * Obtiene la calidad máxima según el plan del usuario
    */
   private getCalidadMaximaPlan(): number {
+    if(this.checkMembership()){
+      return 1080;
+    }
+
     const beneficioCalidad = this.user?.subscription_plan?.beneficios?.find(
       beneficio => beneficio.nombre_raw === 'calidad',
     );
