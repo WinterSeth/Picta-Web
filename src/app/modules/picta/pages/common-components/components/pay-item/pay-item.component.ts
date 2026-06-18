@@ -301,7 +301,7 @@ export class PayItemComponent implements OnDestroy {
         },
       ],
     };
-    if(this.authService.userData.phone_number){
+    if(this.authService.userData.phone_number||this.authService.userData.email){
       this.isMethodLoading = true;
       this.paymentService.payTr(payment)
       .pipe(
@@ -324,9 +324,11 @@ export class PayItemComponent implements OnDestroy {
         this.stepperCmp().next();
       });
     } else {
-      this.snackBar.open(
-        'Para realizar el pago debe asociar un número de teléfono a su cuenta.'
-      );
+      const snackBarRef = this.snackBar.open('Para realizar el pago debe asociar un número de teléfono o correo electrónico a su cuenta.', 'Ir a configurar', { duration: 8000 });
+          snackBarRef.onAction().subscribe(() => {
+            window.open('https://www.picta.cu/profile/configuracion', '_blank');
+          });
+      
     }
   }
 
