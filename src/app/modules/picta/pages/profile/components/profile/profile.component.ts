@@ -158,7 +158,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.profileForm = this.fb.group({
       first_name: [this.user?.first_name, []],
       last_name: [this.user?.last_name, []],
-      phone_number: [this.user?.phone_number?.slice(3), [Validators.required]],
+      phone_number: [this.user?.phone_number?.slice(3), []],
       fecha_nacimiento: [this.user?.fecha_nacimiento, [Validators.required]],
       email: [this.user?.email, [Validators.email]],
       avatar: [this.user?.avatar, []],
@@ -190,6 +190,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
   updateUser() {
     if (this.profileForm.dirty && this.profileForm.valid) {
       const update: any = this.getDirtyValues(this.profileForm);
+      console.table(this.profileForm.value);
+      if (!update.phone_number && this.profileForm.value.phone_number) {
+      update.phone_number = this.profileForm.value.phone_number;
+      console.log(update.phone_number);
+      }
+
+      if (!update.email && this.profileForm.value.email) {
+        update.email = this.profileForm.value.email;
+      }
+
+      if(!update.phone_number && !update.email){
+        console.table([update]);
+        this.notificationService.open(
+          'error',
+          'Debes proporcionar un número de teléfono o correo electrónico.'
+        );
+        return;
+      }
+
       if (update.fecha_nacimiento) {
         update.fecha_nacimiento = format(update.fecha_nacimiento, this.format, {
           locale: es,

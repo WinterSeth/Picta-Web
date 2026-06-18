@@ -24,7 +24,9 @@ export class UserService {
     for (const field in user) {
       body.append(field, user[field]);
     }
+    if(user.phone_number){
     body.append("country_code", "+53");
+    }
     return this.httpClient.patch(`${url}/${id}/`, body);
   }
 
