@@ -42,16 +42,27 @@
           <mat-form-field appearance="fill" color="accent" floatLabel="auto" class="w-full">
             <mat-label>Nombre</mat-label>
             <input formControlName="first_name" matInput type="text" />
+            <mat-error>El nombre es obligatorio.</mat-error>
           </mat-form-field>
           <mat-form-field appearance="fill" color="accent" floatLabel="auto" class="w-full">
             <mat-label>Apellidos</mat-label>
             <input formControlName="last_name" matInput type="text" />
+            <mat-error>El apellido es obligatorio.</mat-error>
           </mat-form-field>
           <mat-form-field appearance="fill" floatLabel="auto" class="w-full">
             <mat-label>Fecha de nacimiento</mat-label>
             <input (dateInput)="addEvent($event)" [matDatepicker]="picker" [max]="maxDate" [min]="minDate" formControlName="fecha_nacimiento" matInput />
             <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
+            @if (profileForm.get('fecha_nacimiento')?.hasError('minYear')) {
+              <mat-error>El año de nacimiento no puede ser anterior a 1905.</mat-error>
+            }
+            @if (profileForm.get('fecha_nacimiento')?.hasError('futureDate')) {
+              <mat-error>La fecha de nacimiento no puede ser en el futuro.</mat-error>
+            }
+            @if (profileForm.get('fecha_nacimiento')?.hasError('invalidDate')) {
+              <mat-error>La fecha ingresada no es válida.</mat-error>
+            }
           </mat-form-field>
           <mat-form-field appearance="fill" color="accent" floatLabel="auto" class="w-full">
             <mat-label>Teléfono</mat-label>

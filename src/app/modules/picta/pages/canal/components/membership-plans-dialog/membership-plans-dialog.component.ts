@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { PaymentService } from '../../../profile/services/payment.service';
 import { NotificationService } from '../../../../../../services/notification.service';
+import { PlanService } from '../../../../../../services/plan.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-membership-plans-dialog',
@@ -396,12 +398,25 @@ export class MembershipPlansDialogComponent {
   private paymentService = inject(PaymentService);
   private notificationService = inject(NotificationService);
   data = inject<{ canal?: any }>(MAT_DIALOG_DATA);
-
+  private plansSvc = inject(PlanService)
+  plans
   canal = this.data?.canal;
+
+
+  constructor() {
+    console.log(this.data?.canal.id)
+    this.getPlasns()
+  }
+
+  getPlasns() {
+    this.plans = this.plansSvc.getAll({canal_id:this.data?.canal.id}).subscribe((res: any) => {
+      console.log(res)
+    })
+  }
 
   selectPlan(plan: any): void {
     const externalId = `suscripcion_canal_${plan.id}`;
-    
+
     this.paymentService.getItem({ external_id: externalId }).subscribe({
       next: (data: any) => {
         if (data.results.length) {

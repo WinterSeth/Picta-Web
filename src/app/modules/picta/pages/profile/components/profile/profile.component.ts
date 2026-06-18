@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, viewChild, inject } from '@angular/core';
 import { AuthService } from '../../../../../../services/auth.service';
-import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { UserModel } from '../../../../models/user.model';
 import { UserService } from '../../../../../../services/user.service';
 import { Title } from '@angular/platform-browser';
@@ -77,7 +77,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   long_token: string;
   changedPassword: boolean;
   tokenInvalid: boolean;
-  minDate = new Date(1900, 0, 1);
+  minDate = new Date(1905, 0, 1);
   maxDate = new Date();
   selectedAvatar: File;
   readonly avatarInput = viewChild<ElementRef>('avatarInput');
@@ -101,6 +101,59 @@ export class ProfileComponent implements OnInit, OnDestroy {
       } else {
         this.router.navigate(['']);
       }
+    });
+  }
+
+  /**
+   * Parsea una fecha proveniente del backend ("YYYY-MM-DD") a un objeto Date
+   * usando componentes locales para evitar el offset de timezone (UTC vs local).
+   * Sin esto, new Date("1902-01-01") se interpreta como UTC midnight,
+   * y en GMT-5 se muestra como 1901-12-31, desplazando un día.
+   */
+  private parseBackendDate(dateStr: string | Date): Date | null {
+    if (!dateStr) {
+      return null;
+    }
+    if (dateStr instanceof Date) {
+      return dateStr;
+    }
+    const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      return new Date(+match[1], +match[2] - 1, +match[3]);
+    }
+    return new Date(dateStr);
+  }
+
+  /**
+   * Valida que la fecha sea:
+   * - Una fecha real (no NaN)
+   * - Año >= 1905
+   * - No en el futuro
+   */
+  private dateValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+    const date = control.value;
+    if (!(date instanceof Date) || isNaN(date.getTime())) {
+      return { invalidDate: true };
+    }
+    if (date.getFullYear() < 1905) {
+      return { minYear: true };
+    }
+    if (date > new Date()) {
+      return { futureDate: true };
+    }
+    return null;
+  }
+
+  /**
+   * Marca todos los campos como touched para que los <mat-error> se muestren.
+   */
+  private markAllAsTouched() {
+    Object.keys(this.profileForm.controls).forEach(key => {
+      this.profileForm.get(key)?.markAsTouched();
+      this.profileForm.get(key)?.updateValueAndValidity();
     });
   }
 
@@ -156,10 +209,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   initProfileFrom() {
     this.profileForm = this.fb.group({
-      first_name: [this.user?.first_name, []],
-      last_name: [this.user?.last_name, []],
+      first_name: [this.user?.first_name, [Validators.required]],
+      last_name: [this.user?.last_name, [Validators.required]],
       phone_number: [this.user?.phone_number?.slice(3), []],
-      fecha_nacimiento: [this.user?.fecha_nacimiento, [Validators.required]],
+      fecha_nacimiento: [this.parseBackendDate(this.user?.fecha_nacimiento), [this.dateValidator.bind(this)]],
       email: [this.user?.email, [Validators.email]],
       avatar: [this.user?.avatar, []],
     });
@@ -188,20 +241,24 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   updateUser() {
+    this.markAllAsTouched();
+
+    if (!this.profileForm.valid) {
+      return;
+    }
+
     if (this.profileForm.dirty && this.profileForm.valid) {
       const update: any = this.getDirtyValues(this.profileForm);
-      console.table(this.profileForm.value);
+
       if (!update.phone_number && this.profileForm.value.phone_number) {
-      update.phone_number = this.profileForm.value.phone_number;
-      console.log(update.phone_number);
+        update.phone_number = this.profileForm.value.phone_number;
       }
 
       if (!update.email && this.profileForm.value.email) {
         update.email = this.profileForm.value.email;
       }
 
-      if(!update.phone_number && !update.email){
-        console.table([update]);
+      if (!update.phone_number && !update.email) {
         this.notificationService.open(
           'error',
           'Debes proporcionar un número de teléfono o correo electrónico.'
