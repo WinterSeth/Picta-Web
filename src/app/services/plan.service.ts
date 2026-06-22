@@ -34,6 +34,7 @@ export interface PlanFilters {
   alias__icontains?: string;
   page?: number;
   page_size?: number;
+  canal_id?:number
 }
 
 const url = `${environment.baseUrlV2}/plan/`;
